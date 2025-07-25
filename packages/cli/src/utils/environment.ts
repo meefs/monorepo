@@ -63,14 +63,18 @@ async function getGitVersion(): Promise<Result<string, Error>> {
 /**
  * Detect the primary package manager in use.
  */
-async function detectPackageManager(): Promise<EnvironmentInfo['packageManager']> {
+async function detectPackageManager(): Promise<
+  EnvironmentInfo['packageManager']
+> {
   // Check for package manager executables
   const managers = ['pnpm', 'yarn', 'bun'];
 
   for (const manager of managers) {
     try {
       const { stdout: pathOutput } = await execa('which', [manager]);
-      const { stdout: versionOutput } = await execa(manager, ['--version'], { timeout: 5000 });
+      const { stdout: versionOutput } = await execa(manager, ['--version'], {
+        timeout: 5000,
+      });
       const version = extractVersion(versionOutput);
 
       if (version) {
@@ -93,7 +97,9 @@ async function detectPackageManager(): Promise<EnvironmentInfo['packageManager']
  * Validate the current environment meets minimum requirements.
  * @returns Result containing environment information or validation errors
  */
-export async function validateEnvironment(): Promise<Result<EnvironmentInfo, Error>> {
+export async function validateEnvironment(): Promise<
+  Result<EnvironmentInfo, Error>
+> {
   const errors: string[] = [];
 
   // Check Node.js version
@@ -101,7 +107,7 @@ export async function validateEnvironment(): Promise<Result<EnvironmentInfo, Err
   const nodeValid = semver.gte(nodeVersion, MINIMUM_VERSIONS.node);
   if (!nodeValid) {
     errors.push(
-      `Node.js ${nodeVersion} is below minimum required version ${MINIMUM_VERSIONS.node}`,
+      `Node.js ${nodeVersion} is below minimum required version ${MINIMUM_VERSIONS.node}`
     );
   }
 
@@ -113,7 +119,9 @@ export async function validateEnvironment(): Promise<Result<EnvironmentInfo, Err
     npmVersion = stdout.trim();
     npmValid = semver.gte(npmVersion, MINIMUM_VERSIONS.npm);
     if (!npmValid) {
-      errors.push(`npm ${npmVersion} is below minimum required version ${MINIMUM_VERSIONS.npm}`);
+      errors.push(
+        `npm ${npmVersion} is below minimum required version ${MINIMUM_VERSIONS.npm}`
+      );
     }
   } catch {
     errors.push('npm is not available');
@@ -128,7 +136,9 @@ export async function validateEnvironment(): Promise<Result<EnvironmentInfo, Err
     gitVersion = gitResult.data;
     gitValid = semver.gte(gitVersion, MINIMUM_VERSIONS.git);
     if (!gitValid) {
-      errors.push(`Git ${gitVersion} is below minimum required version ${MINIMUM_VERSIONS.git}`);
+      errors.push(
+        `Git ${gitVersion} is below minimum required version ${MINIMUM_VERSIONS.git}`
+      );
     }
   } else {
     errors.push(gitResult.error.message);
@@ -136,7 +146,9 @@ export async function validateEnvironment(): Promise<Result<EnvironmentInfo, Err
 
   // If there are critical errors, return early
   if (errors.length > 0) {
-    return failure(new Error(`Environment validation failed:\n${errors.join('\n')}`));
+    return failure(
+      new Error(`Environment validation failed:\n${errors.join('\n')}`)
+    );
   }
 
   // Detect package manager (non-critical)
@@ -179,7 +191,9 @@ export function formatEnvironmentInfo(info: EnvironmentInfo): string {
   ];
 
   if (info.packageManager) {
-    lines.push(`Package Manager: ${info.packageManager.name} v${info.packageManager.version} ✅`);
+    lines.push(
+      `Package Manager: ${info.packageManager.name} v${info.packageManager.version} ✅`
+    );
   }
 
   lines.push('', `Platform: ${info.platform} (${info.arch})`);

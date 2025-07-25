@@ -6,7 +6,13 @@ import { z } from 'zod';
 
 export type SupportedTool = 'biome' | 'eslint' | 'prettier' | 'rightdown';
 
-export type FileType = 'typescript' | 'javascript' | 'json' | 'markdown' | 'css' | 'yaml';
+export type FileType =
+  | 'typescript'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'css'
+  | 'yaml';
 
 export type StrictnessLevel = 'relaxed' | 'strict' | 'pedantic';
 

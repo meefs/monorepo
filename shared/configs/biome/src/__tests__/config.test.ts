@@ -64,7 +64,9 @@ describe('@outfitter/biome-config', () => {
       const generatedAsNeeded = generate({
         semicolons: 'asNeeded',
       });
-      expect(generatedAsNeeded.javascript.formatter.semicolons).toBe('asNeeded');
+      expect(generatedAsNeeded.javascript.formatter.semicolons).toBe(
+        'asNeeded'
+      );
 
       const generatedTrue = generate({
         semicolons: true,

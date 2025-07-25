@@ -7,7 +7,9 @@ import type { OutfitterConfig, ESLintConfig } from '../types/index.js';
  *
  * @returns An array of ESLint configuration objects tailored to the input configuration.
  */
-export function generateESLintConfig(config: OutfitterConfig): Array<ESLintConfig> {
+export function generateESLintConfig(
+  config: OutfitterConfig
+): Array<ESLintConfig> {
   const { overrides } = config;
 
   // Base ESLint bridge configuration
@@ -43,7 +45,7 @@ export function generateESLintConfig(config: OutfitterConfig): Array<ESLintConfi
  */
 function applyESLintOverrides(
   baseConfig: Array<ESLintConfig>,
-  eslintOverrides: NonNullable<OutfitterConfig['overrides']>['eslint'],
+  eslintOverrides: NonNullable<OutfitterConfig['overrides']>['eslint']
 ): Array<ESLintConfig> {
   if (!eslintOverrides) {
     return baseConfig;
@@ -78,7 +80,11 @@ function applyESLintOverrides(
 
   // Handle any other ESLint config properties that might be added in the future
   // Using underscore prefix for intentionally unused destructured variables
-  const { ignores: _ignores, rules: _rules, ...otherOverrides } = eslintOverrides;
+  const {
+    ignores: _ignores,
+    rules: _rules,
+    ...otherOverrides
+  } = eslintOverrides;
   if (Object.keys(otherOverrides).length > 0) {
     result.push(otherOverrides);
   }

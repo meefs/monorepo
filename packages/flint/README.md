@@ -5,6 +5,7 @@ Unified formatting and linting setup for JavaScript/TypeScript projects.
 ## Overview
 
 Flint brings together best-in-class tools for code quality:
+
 - **Biome** (via Ultracite) - Fast JS/TS formatting
 - **Oxlint** - Lightning-fast JS/TS linting
 - **Prettier** - Formatting for non-JS/TS files
@@ -42,6 +43,7 @@ npx @outfitter/flint init
 Initialize formatting and linting tools in your project.
 
 Options:
+
 - `-y, --yes` - Skip prompts and use defaults
 - `--dry-run` - Show what would happen without making changes
 - `--keep-existing` - Keep existing configurations
@@ -55,6 +57,7 @@ Options:
 Remove old configuration files (creates backup first).
 
 Options:
+
 - `--force` - Skip confirmation prompt
 
 ### `flint doctor`
@@ -70,6 +73,6 @@ Diagnose configuration issues and suggest fixes.
 5. **Updates** package.json scripts for the new workflow
 6. **Configures** VS Code for optimal developer experience
 
-## License
+## Licence
 
 MIT

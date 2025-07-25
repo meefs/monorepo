@@ -7,7 +7,9 @@ interface VSCodeSettings {
 /**
  * Generates VS Code settings from OutfitterConfig
  */
-export function generateVSCodeSettings(config: OutfitterConfig): VSCodeSettings {
+export function generateVSCodeSettings(
+  config: OutfitterConfig
+): VSCodeSettings {
   const { tools } = config.baselayer;
 
   const settings: VSCodeSettings = {
@@ -35,7 +37,10 @@ export function generateVSCodeSettings(config: OutfitterConfig): VSCodeSettings 
     settings['[typescriptreact]'] = jstsSettings;
 
     // Biome code actions
-    const codeActions = settings['editor.codeActionsOnSave'] as Record<string, string>;
+    const codeActions = settings['editor.codeActionsOnSave'] as Record<
+      string,
+      string
+    >;
     codeActions['quickfix.biome'] = 'explicit';
     codeActions['source.organizeImports.biome'] = 'explicit';
   }

@@ -1,9 +1,23 @@
 /**
  * Install dependencies with package manager
  */
-import { Result, success, failure, makeError, isSuccess, isFailure, ErrorCode } from '@outfitter/contracts';
+import {
+  Result,
+  success,
+  failure,
+  makeError,
+  isSuccess,
+  isFailure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { readPackageJson } from '../utils/file-system';
-import { getPackageManager, getAddCommand, getInstallCommand, isCI, getCIFlags } from '../utils/package-manager';
+import {
+  getPackageManager,
+  getAddCommand,
+  getInstallCommand,
+  isCI,
+  getCIFlags,
+} from '../utils/package-manager';
 import { execSync } from 'node:child_process';
 import { console } from '../utils/console';
 
@@ -36,10 +50,17 @@ const REQUIRED_DEPENDENCIES = [
 /**
  * Get missing dependencies that need to be installed
  */
-export async function getMissingDependencies(): Promise<Result<string[], InstallerError>> {
+export async function getMissingDependencies(): Promise<
+  Result<string[], InstallerError>
+> {
   const pkgJsonResult = await readPackageJson();
   if (isFailure(pkgJsonResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read package.json: ${pkgJsonResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read package.json: ${pkgJsonResult.error.message}`
+      )
+    );
   }
 
   const pkg = pkgJsonResult.data;
@@ -48,7 +69,7 @@ export async function getMissingDependencies(): Promise<Result<string[], Install
     ...pkg.devDependencies,
   };
 
-  const missing = REQUIRED_DEPENDENCIES.filter(dep => !(dep in allDeps));
+  const missing = REQUIRED_DEPENDENCIES.filter((dep) => !(dep in allDeps));
   return success(missing);
 }
 
@@ -67,7 +88,12 @@ export async function installDependencies(
 
   const pmResult = await getPackageManager();
   if (isFailure(pmResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to detect package manager: ${pmResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to detect package manager: ${pmResult.error.message}`
+      )
+    );
   }
 
   const pm = pmResult.data.type;
@@ -92,19 +118,31 @@ export async function installDependencies(
     return success(undefined);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to install dependencies: ${message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to install dependencies: ${message}`
+      )
+    );
   }
 }
 
 /**
  * Run npm/yarn/pnpm/bun install
  */
-export async function runInstall(options: { silent?: boolean } = {}): Promise<Result<void, InstallerError>> {
+export async function runInstall(
+  options: { silent?: boolean } = {}
+): Promise<Result<void, InstallerError>> {
   const { silent = false } = options;
 
   const pmResult = await getPackageManager();
   if (isFailure(pmResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to detect package manager: ${pmResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to detect package manager: ${pmResult.error.message}`
+      )
+    );
   }
 
   const pm = pmResult.data.type;
@@ -135,17 +173,26 @@ export async function runInstall(options: { silent?: boolean } = {}): Promise<Re
     return success(undefined);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to run install: ${message}`));
+    return failure(
+      makeError(ErrorCode.INTERNAL_ERROR, `Failed to run install: ${message}`)
+    );
   }
 }
 
 /**
  * Check if a package is installed
  */
-export async function isPackageInstalled(packageName: string): Promise<Result<boolean, InstallerError>> {
+export async function isPackageInstalled(
+  packageName: string
+): Promise<Result<boolean, InstallerError>> {
   const pkgJsonResult = await readPackageJson();
   if (isFailure(pkgJsonResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read package.json: ${pkgJsonResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read package.json: ${pkgJsonResult.error.message}`
+      )
+    );
   }
 
   const pkg = pkgJsonResult.data;
@@ -160,10 +207,17 @@ export async function isPackageInstalled(packageName: string): Promise<Result<bo
 /**
  * Get version of installed package
  */
-export async function getPackageVersion(packageName: string): Promise<Result<string | null, InstallerError>> {
+export async function getPackageVersion(
+  packageName: string
+): Promise<Result<string | null, InstallerError>> {
   const pkgJsonResult = await readPackageJson();
   if (isFailure(pkgJsonResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read package.json: ${pkgJsonResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read package.json: ${pkgJsonResult.error.message}`
+      )
+    );
   }
 
   const pkg = pkgJsonResult.data;

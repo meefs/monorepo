@@ -85,7 +85,7 @@ function unwrapMarkdownProse(content) {
       const marker = markerMatch ? markerMatch[1] : '';
       const content = listItemLines
         .map((l, idx) =>
-          idx === 0 ? l.replace(/^([\s]*([-*+]\s|\d+\.\s))/, '') : l,
+          idx === 0 ? l.replace(/^([\s]*([-*+]\s|\d+\.\s))/, '') : l
         )
         .join(' ')
         .replace(/\s+/g, ' ')
@@ -263,7 +263,7 @@ Examples:
   }
 
   console.log(
-    `🔍 Processing ${filePaths.length} files${isDryRun ? ' (dry run)' : ''}...\n`,
+    `🔍 Processing ${filePaths.length} files${isDryRun ? ' (dry run)' : ''}...\n`
   );
 
   let processedCount = 0;
@@ -295,7 +295,7 @@ Examples:
   console.log(`\n📊 Summary:`);
   console.log(`   Processed: ${processedCount} files`);
   console.log(
-    `   ${isDryRun ? 'Would change' : 'Changed'}: ${changedCount} files`,
+    `   ${isDryRun ? 'Would change' : 'Changed'}: ${changedCount} files`
   );
 
   if (isDryRun && changedCount > 0) {

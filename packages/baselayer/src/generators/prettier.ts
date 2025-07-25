@@ -3,7 +3,9 @@ import type { OutfitterConfig, PrettierConfig } from '../types/index.js';
 /**
  * Generates Prettier configuration from OutfitterConfig
  */
-export function generatePrettierConfig(config: OutfitterConfig): PrettierConfig {
+export function generatePrettierConfig(
+  config: OutfitterConfig
+): PrettierConfig {
   const { codeStyle, overrides } = config;
 
   // Base configuration from declarative preferences

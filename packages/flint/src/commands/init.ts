@@ -423,18 +423,14 @@ export async function init(options: InitOptions): Promise<Result<void, Error>> {
 
 async function detectCSSFiles(projectRoot: string): Promise<boolean> {
   try {
-    // Check for common CSS file patterns
+    const { findFiles } = await import('../utils/file-system.js');
     const patterns = ['**/*.css', '**/*.scss', '**/*.sass', '**/*.less'];
+
     for (const pattern of patterns) {
-      const result = execSync(
-        `find . -name "${pattern.replace('**/', '')}" -type f | head -1`,
-        {
-          cwd: projectRoot,
-          encoding: 'utf-8',
-          stdio: 'pipe',
-        }
-      ).trim();
-      if (result) return true;
+      const filesResult = await findFiles(pattern, { cwd: projectRoot });
+      if (isSuccess(filesResult) && filesResult.data.length > 0) {
+        return true;
+      }
     }
     return false;
   } catch {

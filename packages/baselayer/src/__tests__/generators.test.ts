@@ -81,7 +81,9 @@ describe('configuration generators', () => {
       expect(config.singleQuote).toBe(true);
       expect(config.overrides).toBeDefined();
 
-      const markdownOverride = config.overrides?.find((o) => o.files === '*.md');
+      const markdownOverride = config.overrides?.find(
+        (o) => o.files === '*.md'
+      );
       expect(markdownOverride?.options.printWidth).toBe(80);
       expect(markdownOverride?.options.proseWrap).toBe('always');
     });

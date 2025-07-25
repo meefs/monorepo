@@ -9,7 +9,12 @@ type: template
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Custom test utilities for React applications with dual Jest/Vitest support
-import { type RenderOptions, render as rtlRender, screen, waitFor } from '@testing-library/react';
+import {
+  type RenderOptions,
+  render as rtlRender,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactElement, ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
@@ -93,7 +98,10 @@ function createTestQueryClient() {
   });
 }
 
-function _AllTheProviders({ children, initialEntries = ['/'] }: ProvidersProps) {
+function _AllTheProviders({
+  children,
+  initialEntries = ['/'],
+}: ProvidersProps) {
   const queryClient = createTestQueryClient();
 
   return (
@@ -140,7 +148,12 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 
 export function render(
   ui: ReactElement,
-  { initialEntries = ['/'], route = '/', providerProps = {}, ...options }: CustomRenderOptions = {},
+  {
+    initialEntries = ['/'],
+    route = '/',
+    providerProps = {},
+    ...options
+  }: CustomRenderOptions = {}
 ) {
   // Set initial route
   window.history.pushState({}, 'Test page', route);
@@ -174,18 +187,22 @@ export function expectToHaveError(element: HTMLElement, error: string) {
 }
 
 // Enhanced wait helpers
-export async function waitForLoadingToFinish(container: HTMLElement | Document = document) {
+export async function waitForLoadingToFinish(
+  container: HTMLElement | Document = document
+) {
   await waitFor(
     () => {
-      expect(container.querySelector('[aria-busy="true"]')).not.toBeInTheDocument();
+      expect(
+        container.querySelector('[aria-busy="true"]')
+      ).not.toBeInTheDocument();
     },
-    { timeout: 3000 },
+    { timeout: 3000 }
   );
 }
 
 export async function waitForElementToBeRemoved(
   callback: () => HTMLElement | null,
-  options = { timeout: 3000 },
+  options = { timeout: 3000 }
 ) {
   await waitFor(() => {
     expect(callback()).not.toBeInTheDocument();
@@ -233,7 +250,7 @@ export function createMockPost(overrides = {}) {
 // Test utilities for forms
 export async function fillForm(
   user: ReturnType<typeof userEvent.setup>,
-  fields: Record<string, string>,
+  fields: Record<string, string>
 ) {
   for (const [name, value] of Object.entries(fields)) {
     const input = screen.getByLabelText(new RegExp(name, 'i'));

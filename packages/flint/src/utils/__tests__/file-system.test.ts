@@ -35,7 +35,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.access).mockResolvedValue(undefined);
 
       const result = await fileExists('/test/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -48,7 +48,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.access).mockRejectedValue(error);
 
       const result = await fileExists('/test/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -59,7 +59,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.access).mockRejectedValue(new Error('Permission denied'));
 
       const result = await fileExists('/test/file.txt');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -69,7 +69,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readFile).mockResolvedValue('file content');
 
       const result = await readFile('/test/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('file content');
@@ -81,7 +81,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readFile).mockRejectedValue(new Error('Read failed'));
 
       const result = await readFile('/test/file.txt');
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.message).toContain('Read failed');
@@ -94,16 +94,20 @@ describe('file-system utilities', () => {
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
       const result = await writeFile('/test/file.txt', 'content');
-      
+
       expect(isSuccess(result)).toBe(true);
-      expect(fs.writeFile).toHaveBeenCalledWith('/test/file.txt', 'content', 'utf-8');
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        '/test/file.txt',
+        'content',
+        'utf-8'
+      );
     });
 
     it('should return error on failure', async () => {
       vi.mocked(fs.writeFile).mockRejectedValue(new Error('Write failed'));
 
       const result = await writeFile('/test/file.txt', 'content');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -113,7 +117,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readFile).mockResolvedValue('{"key": "value"}');
 
       const result = await readJSON('/test/file.json');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({ key: 'value' });
@@ -124,7 +128,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readFile).mockResolvedValue('invalid json');
 
       const result = await readJSON('/test/file.json');
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.message).toContain('Failed to parse JSON');
@@ -135,7 +139,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readFile).mockRejectedValue(new Error('Read failed'));
 
       const result = await readJSON('/test/file.json');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -145,7 +149,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
       const result = await writeJSON('/test/file.json', { key: 'value' });
-      
+
       expect(isSuccess(result)).toBe(true);
       expect(fs.writeFile).toHaveBeenCalledWith(
         '/test/file.json',
@@ -159,7 +163,7 @@ describe('file-system utilities', () => {
       circular.self = circular;
 
       const result = await writeJSON('/test/file.json', circular);
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.message).toContain('Failed to stringify JSON');
@@ -172,7 +176,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.mkdir).mockResolvedValue(undefined);
 
       const result = await ensureDir('/test/dir');
-      
+
       expect(isSuccess(result)).toBe(true);
       expect(fs.mkdir).toHaveBeenCalledWith('/test/dir', { recursive: true });
     });
@@ -181,7 +185,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.mkdir).mockRejectedValue(new Error('Mkdir failed'));
 
       const result = await ensureDir('/test/dir');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -191,16 +195,19 @@ describe('file-system utilities', () => {
       vi.mocked(fs.rm).mockResolvedValue(undefined);
 
       const result = await remove('/test/target');
-      
+
       expect(isSuccess(result)).toBe(true);
-      expect(fs.rm).toHaveBeenCalledWith('/test/target', { recursive: true, force: true });
+      expect(fs.rm).toHaveBeenCalledWith('/test/target', {
+        recursive: true,
+        force: true,
+      });
     });
 
     it('should return error on failure', async () => {
       vi.mocked(fs.rm).mockRejectedValue(new Error('Remove failed'));
 
       const result = await remove('/test/target');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -210,16 +217,19 @@ describe('file-system utilities', () => {
       vi.mocked(fs.copyFile).mockResolvedValue(undefined);
 
       const result = await copyFile('/src/file.txt', '/dest/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
-      expect(fs.copyFile).toHaveBeenCalledWith('/src/file.txt', '/dest/file.txt');
+      expect(fs.copyFile).toHaveBeenCalledWith(
+        '/src/file.txt',
+        '/dest/file.txt'
+      );
     });
 
     it('should return error on failure', async () => {
       vi.mocked(fs.copyFile).mockRejectedValue(new Error('Copy failed'));
 
       const result = await copyFile('/src/file.txt', '/dest/file.txt');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -229,7 +239,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.rename).mockResolvedValue(undefined);
 
       const result = await moveFile('/src/file.txt', '/dest/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
       expect(fs.rename).toHaveBeenCalledWith('/src/file.txt', '/dest/file.txt');
     });
@@ -238,17 +248,20 @@ describe('file-system utilities', () => {
       vi.mocked(fs.rename).mockRejectedValue(new Error('Move failed'));
 
       const result = await moveFile('/src/file.txt', '/dest/file.txt');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
 
   describe('listFiles', () => {
     it('should list files in directory', async () => {
-      vi.mocked(fs.readdir).mockResolvedValue(['file1.txt', 'file2.txt'] as any);
+      vi.mocked(fs.readdir).mockResolvedValue([
+        'file1.txt',
+        'file2.txt',
+      ] as any);
 
       const result = await listFiles('/test/dir');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual(['file1.txt', 'file2.txt']);
@@ -259,7 +272,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readdir).mockRejectedValue(new Error('List failed'));
 
       const result = await listFiles('/test/dir');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -270,7 +283,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.stat).mockResolvedValue(mockStats as any);
 
       const result = await getStats('/test/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data.size).toBe(1024);
@@ -281,7 +294,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.stat).mockRejectedValue(new Error('Stat failed'));
 
       const result = await getStats('/test/file.txt');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -292,7 +305,7 @@ describe('file-system utilities', () => {
       vi.mocked(glob.glob).mockResolvedValue(['file1.js', 'file2.js']);
 
       const result = await findFiles('**/*.js');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual(['file1.js', 'file2.js']);
@@ -304,7 +317,7 @@ describe('file-system utilities', () => {
       vi.mocked(glob.glob).mockRejectedValue(new Error('Glob failed'));
 
       const result = await findFiles('**/*.js');
-      
+
       expect(isFailure(result)).toBe(true);
     });
   });
@@ -314,7 +327,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.readFile).mockResolvedValue('{"name": "test-package"}');
 
       const result = await readPackageJson();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({ name: 'test-package' });
@@ -328,7 +341,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
       const result = await writePackageJson({ name: 'test-package' });
-      
+
       expect(isSuccess(result)).toBe(true);
       expect(fs.writeFile).toHaveBeenCalledWith(
         'package.json',
@@ -342,23 +355,29 @@ describe('file-system utilities', () => {
     it('should create backup of existing file', async () => {
       // Mock file exists
       vi.mocked(fs.access).mockResolvedValue(undefined);
-      
+
       // Mock read file
       vi.mocked(fs.readFile).mockResolvedValue('original content');
-      
+
       // Mock mkdir
       vi.mocked(fs.mkdir).mockResolvedValue(undefined);
-      
+
       // Mock write file
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
       const result = await backupFile('/test/file.txt');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
-        expect(result.data).toMatch(/\.flint-backup\/file\.txt\.\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z\.backup$/);
+        expect(result.data).toMatch(
+          /\.flint-backup\/file\.txt\.\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z\.backup$/
+        );
       }
-      expect(fs.writeFile).toHaveBeenCalledWith(expect.any(String), 'original content', 'utf-8');
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        expect.any(String),
+        'original content',
+        'utf-8'
+      );
     });
 
     it('should fail if file does not exist', async () => {
@@ -367,7 +386,7 @@ describe('file-system utilities', () => {
       vi.mocked(fs.access).mockRejectedValue(error);
 
       const result = await backupFile('/test/file.txt');
-      
+
       expect(isFailure(result)).toBe(true);
       expect(result.error.message).toBe('File does not exist');
     });
@@ -379,12 +398,14 @@ describe('file-system utilities', () => {
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
       const result = await backupFile('/test/file.txt', '/custom/backup');
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toMatch(/^\/custom\/backup\/file\.txt\./);
       }
-      expect(fs.mkdir).toHaveBeenCalledWith('/custom/backup', { recursive: true });
+      expect(fs.mkdir).toHaveBeenCalledWith('/custom/backup', {
+        recursive: true,
+      });
     });
   });
 });

@@ -96,8 +96,12 @@ describe('Package Exports Integration', () => {
 
   describe('Export functionality', () => {
     test('exported functions should work correctly', async () => {
-      const { makeError, ErrorCode } = await import('@outfitter/contracts/error');
-      const { success, failure, isSuccess } = await import('@outfitter/contracts/result');
+      const { makeError, ErrorCode } = await import(
+        '@outfitter/contracts/error'
+      );
+      const { success, failure, isSuccess } = await import(
+        '@outfitter/contracts/result'
+      );
       const { assert } = await import('@outfitter/contracts/assert');
 
       // Test error creation
@@ -136,7 +140,9 @@ describe('Package Exports Integration', () => {
 
       for (const file of declarationFiles) {
         const fullPath = join(packageRoot, file);
-        expect(existsSync(fullPath), `Missing declaration file: ${file}`).toBe(true);
+        expect(existsSync(fullPath), `Missing declaration file: ${file}`).toBe(
+          true
+        );
       }
     });
   });

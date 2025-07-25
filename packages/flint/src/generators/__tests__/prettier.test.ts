@@ -12,21 +12,23 @@ describe('generatePrettierConfig', () => {
 
   it('should generate prettier config with correct settings', async () => {
     let writtenConfig: any;
-    vi.mocked(fileSystem.writeJSON).mockImplementation(async (_path, config) => {
-      writtenConfig = config;
-      return {
-        success: true,
-        data: undefined,
-      } as any;
-    });
-    
+    vi.mocked(fileSystem.writeJSON).mockImplementation(
+      async (_path, config) => {
+        writtenConfig = config;
+        return {
+          success: true,
+          data: undefined,
+        } as any;
+      }
+    );
+
     vi.mocked(fileSystem.writeFile).mockResolvedValue({
       success: true,
       data: undefined,
     } as any);
-    
+
     const result = await generatePrettierConfig();
-    
+
     expect(isSuccess(result)).toBe(true);
     expect(writtenConfig).toEqual({
       semi: true,
@@ -41,16 +43,16 @@ describe('generatePrettierConfig', () => {
         {
           files: '*.md',
           options: {
-            proseWrap: 'preserve'
-          }
+            proseWrap: 'preserve',
+          },
         },
         {
           files: '*.json',
           options: {
-            singleQuote: false
-          }
-        }
-      ]
+            singleQuote: false,
+          },
+        },
+      ],
     });
   });
 
@@ -59,18 +61,20 @@ describe('generatePrettierConfig', () => {
       success: true,
       data: undefined,
     } as any);
-    
+
     let writtenIgnore: string;
-    vi.mocked(fileSystem.writeFile).mockImplementation(async (_path, content) => {
-      writtenIgnore = content;
-      return {
-        success: true,
-        data: undefined,
-      } as any;
-    });
-    
+    vi.mocked(fileSystem.writeFile).mockImplementation(
+      async (_path, content) => {
+        writtenIgnore = content;
+        return {
+          success: true,
+          data: undefined,
+        } as any;
+      }
+    );
+
     const result = await generatePrettierConfig();
-    
+
     expect(isSuccess(result)).toBe(true);
     expect(writtenIgnore!).toContain('*.js');
     expect(writtenIgnore!).toContain('*.jsx');
@@ -86,9 +90,9 @@ describe('generatePrettierConfig', () => {
       success: false,
       error,
     } as any);
-    
+
     const result = await generatePrettierConfig();
-    
+
     expect(isFailure(result)).toBe(true);
     if (isFailure(result)) {
       expect(result.error).toBe(error);

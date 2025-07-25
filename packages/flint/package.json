@@ -35,7 +35,7 @@
     "dev": "tsup --watch",
     "test": "vitest",
     "test:run": "vitest run",
-    "type-check": "../../node_modules/.bin/tsc --noEmit",
+    "type-check": "tsc --noEmit",
     "lint": "oxlint",
     "format": "biome format --write .",
     "ci": "bun run type-check && bun run test:run",

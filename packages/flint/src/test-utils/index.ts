@@ -31,7 +31,9 @@ export function createMockFileSystem(files: MockFileSystem): MockFileSystem {
 /**
  * Create a test context with common mocks
  */
-export function createTestContext(initialFiles: MockFileSystem = {}): TestContext {
+export function createTestContext(
+  initialFiles: MockFileSystem = {}
+): TestContext {
   const mockFs = createMockFileSystem(initialFiles);
   const mockExec = vi.fn<[string], MockExecResult>();
   const mockConsole = {
@@ -59,8 +61,8 @@ export function createTestContext(initialFiles: MockFileSystem = {}): TestContex
     readdirSync: vi.fn((dir: string) => {
       const prefix = dir.endsWith('/') ? dir : `${dir}/`;
       return Object.keys(mockFs)
-        .filter(path => path.startsWith(prefix))
-        .map(path => path.slice(prefix.length).split('/')[0])
+        .filter((path) => path.startsWith(prefix))
+        .map((path) => path.slice(prefix.length).split('/')[0])
         .filter((name, index, arr) => arr.indexOf(name) === index);
     }),
   }));
@@ -94,7 +96,8 @@ export function createTestContext(initialFiles: MockFileSystem = {}): TestContex
 
   // Mock path module
   vi.mock('node:path', async () => {
-    const actual = await vi.importActual<typeof import('node:path')>('node:path');
+    const actual =
+      await vi.importActual<typeof import('node:path')>('node:path');
     return {
       ...actual,
       join: (...args: string[]) => args.filter(Boolean).join('/'),
@@ -136,23 +139,31 @@ export function createPackageJson(overrides: Record<string, any> = {}): string {
  * Create ESLint config for testing
  */
 export function createEslintConfig(): string {
-  return JSON.stringify({
-    extends: ['eslint:recommended'],
-    rules: {
-      semi: ['error', 'always'],
+  return JSON.stringify(
+    {
+      extends: ['eslint:recommended'],
+      rules: {
+        semi: ['error', 'always'],
+      },
     },
-  }, null, 2);
+    null,
+    2
+  );
 }
 
 /**
  * Create Prettier config for testing
  */
 export function createPrettierConfig(): string {
-  return JSON.stringify({
-    semi: false,
-    singleQuote: true,
-    tabWidth: 2,
-  }, null, 2);
+  return JSON.stringify(
+    {
+      semi: false,
+      singleQuote: true,
+      tabWidth: 2,
+    },
+    null,
+    2
+  );
 }
 
 /**
@@ -161,13 +172,15 @@ export function createPrettierConfig(): string {
 export function mockPrompts(responses: Record<string, any>) {
   vi.mock('@inquirer/prompts', () => ({
     confirm: vi.fn(async ({ message }: { message: string }) => {
-      const key = Object.keys(responses).find(k => message.includes(k));
+      const key = Object.keys(responses).find((k) => message.includes(k));
       return key ? responses[key] : false;
     }),
-    select: vi.fn(async ({ message, choices }: { message: string; choices: any[] }) => {
-      const key = Object.keys(responses).find(k => message.includes(k));
-      return key ? responses[key] : choices[0].value;
-    }),
+    select: vi.fn(
+      async ({ message, choices }: { message: string; choices: any[] }) => {
+        const key = Object.keys(responses).find((k) => message.includes(k));
+        return key ? responses[key] : choices[0].value;
+      }
+    ),
   }));
 }
 

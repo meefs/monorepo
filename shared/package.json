@@ -6,7 +6,7 @@
   "type": "module",
   "exports": {
     "./configs/typescript": "./configs/typescript/index.js",
-    "./configs/biome": "./configs/biome/index.js", 
+    "./configs/biome": "./configs/biome/index.js",
     "./configs/remark": "./configs/remark/index.js",
     "./configs/changeset": "./configs/changeset/index.js",
     "./testing/vitest": "./testing/vitest.config.base.js",
@@ -14,7 +14,7 @@
   },
   "files": [
     "configs",
-    "testing", 
+    "testing",
     "build"
   ],
   "scripts": {

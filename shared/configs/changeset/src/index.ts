@@ -13,7 +13,11 @@ export interface ChangesetInitOptions {
 interface ChangesetConfig {
   access: 'public' | 'restricted';
   baseBranch: string;
-  changelog?: string | Array<string> | false | [string, Record<string, unknown>];
+  changelog?:
+    | string
+    | Array<string>
+    | false
+    | [string, Record<string, unknown>];
   commit?: boolean;
   fixed?: Array<Array<string>>;
   linked?: Array<Array<string>>;
@@ -27,7 +31,11 @@ interface PackageJson {
 }
 
 export function initChangesets(options: ChangesetInitOptions = {}): void {
-  const { cwd = process.cwd(), access = 'public', baseBranch = 'main' } = options;
+  const {
+    cwd = process.cwd(),
+    access = 'public',
+    baseBranch = 'main',
+  } = options;
 
   try {
     // Create .changeset directory
@@ -42,7 +50,9 @@ export function initChangesets(options: ChangesetInitOptions = {}): void {
 
     if (!existsSync(configTarget)) {
       // Read and modify config based on options
-      const configData = JSON.parse(readFileSync(configSource, 'utf8')) as ChangesetConfig;
+      const configData = JSON.parse(
+        readFileSync(configSource, 'utf8')
+      ) as ChangesetConfig;
       const config: ChangesetConfig = {
         ...configData,
         access,

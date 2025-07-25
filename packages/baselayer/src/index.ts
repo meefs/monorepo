@@ -2,7 +2,13 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import type { Result } from '@outfitter/contracts';
-import { ErrorCode, failure, isFailure, makeError, success } from '@outfitter/contracts';
+import {
+  ErrorCode,
+  failure,
+  isFailure,
+  makeError,
+  success,
+} from '@outfitter/contracts';
 import { parse } from 'comment-json';
 import {
   generateBiomeConfig,
@@ -40,7 +46,9 @@ export interface SetupResult {
  *
  * @returns A result containing the used configuration and a list of generated files, or an error if setup fails.
  */
-export async function setup(options: SetupOptions = {}): Promise<Result<SetupResult, Error>> {
+export async function setup(
+  options: SetupOptions = {}
+): Promise<Result<SetupResult, Error>> {
   const { cwd = process.cwd(), dryRun = false } = options;
 
   // Read and validate configuration
@@ -56,7 +64,11 @@ export async function setup(options: SetupOptions = {}): Promise<Result<SetupRes
   // Generate Biome config if needed
   if (shouldGenerateBiomeConfig(config)) {
     const biomeConfig = generateBiomeConfig(config);
-    const biomeResult = await writeConfigFile(join(cwd, 'biome.json'), biomeConfig, dryRun);
+    const biomeResult = await writeConfigFile(
+      join(cwd, 'biome.json'),
+      biomeConfig,
+      dryRun
+    );
     if (isFailure(biomeResult)) {
       return failure(biomeResult.error);
     }
@@ -68,7 +80,7 @@ export async function setup(options: SetupOptions = {}): Promise<Result<SetupRes
   const eslintResult = await writeConfigFile(
     join(cwd, 'eslint.config.js'),
     `export default ${JSON.stringify(eslintConfig, null, 2)};`,
-    dryRun,
+    dryRun
   );
   if (isFailure(eslintResult)) {
     return failure(eslintResult.error);
@@ -78,7 +90,11 @@ export async function setup(options: SetupOptions = {}): Promise<Result<SetupRes
   // Generate Prettier config if needed
   if (shouldGeneratePrettierConfig(config)) {
     const prettierConfig = generatePrettierConfig(config);
-    const prettierResult = await writeConfigFile(join(cwd, '.prettierrc'), prettierConfig, dryRun);
+    const prettierResult = await writeConfigFile(
+      join(cwd, '.prettierrc'),
+      prettierConfig,
+      dryRun
+    );
     if (isFailure(prettierResult)) {
       return failure(prettierResult.error);
     }
@@ -91,7 +107,7 @@ export async function setup(options: SetupOptions = {}): Promise<Result<SetupRes
     const rightdownResult = await writeConfigFile(
       join(cwd, '.rightdown.config.jsonc'),
       rightdownConfig,
-      dryRun,
+      dryRun
     );
     if (isFailure(rightdownResult)) {
       return failure(rightdownResult.error);
@@ -105,7 +121,7 @@ export async function setup(options: SetupOptions = {}): Promise<Result<SetupRes
     const vscodeResult = await writeConfigFile(
       join(cwd, '.vscode', 'settings.json'),
       vscodeSettings,
-      dryRun,
+      dryRun
     );
     if (isFailure(vscodeResult)) {
       return failure(vscodeResult.error);
@@ -133,7 +149,11 @@ export async function setup(options: SetupOptions = {}): Promise<Result<SetupRes
  */
 function shouldGenerateBiomeConfig(config: OutfitterConfig): boolean {
   const { tools } = config.baselayer;
-  return tools.typescript === 'biome' || tools.javascript === 'biome' || tools.json === 'biome';
+  return (
+    tools.typescript === 'biome' ||
+    tools.javascript === 'biome' ||
+    tools.json === 'biome'
+  );
 }
 
 /**
@@ -144,7 +164,11 @@ function shouldGenerateBiomeConfig(config: OutfitterConfig): boolean {
  */
 function shouldGeneratePrettierConfig(config: OutfitterConfig): boolean {
   const { tools } = config.baselayer;
-  return tools.css === 'prettier' || tools.yaml === 'prettier' || tools.markdown === 'prettier';
+  return (
+    tools.css === 'prettier' ||
+    tools.yaml === 'prettier' ||
+    tools.markdown === 'prettier'
+  );
 }
 
 /**
@@ -163,7 +187,7 @@ function shouldGenerateRightdownConfig(config: OutfitterConfig): boolean {
 async function writeConfigFile(
   filePath: string,
   content: unknown,
-  dryRun: boolean,
+  dryRun: boolean
 ): Promise<Result<void, Error>> {
   try {
     if (dryRun) {
@@ -177,7 +201,8 @@ async function writeConfigFile(
     }
 
     // Write file
-    const fileContent = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+    const fileContent =
+      typeof content === 'string' ? content : JSON.stringify(content, null, 2);
 
     await writeFile(filePath, fileContent, 'utf-8');
     return success(undefined);
@@ -187,8 +212,8 @@ async function writeConfigFile(
         ErrorCode.INTERNAL_ERROR,
         `Failed to write config file: ${filePath}`,
         { filePath, dryRun },
-        error as Error,
-      ),
+        error as Error
+      )
     );
   }
 }
@@ -206,7 +231,7 @@ async function writeConfigFile(
 async function generatePackageScripts(
   config: OutfitterConfig,
   cwd: string,
-  dryRun: boolean,
+  dryRun: boolean
 ): Promise<Result<boolean, Error>> {
   const packageJsonPath = join(cwd, 'package.json');
 
@@ -227,7 +252,8 @@ async function generatePackageScripts(
 
     if (tools.typescript === 'biome' || tools.javascript === 'biome') {
       if (!scripts.lint || !scripts.lint.includes('biome')) {
-        const markdownLint = tools.markdown === 'rightdown' ? ' && rightdown "**/*.md"' : '';
+        const markdownLint =
+          tools.markdown === 'rightdown' ? ' && rightdown "**/*.md"' : '';
         scripts.lint = `biome lint . && eslint . --config=./eslint.config.js --max-warnings 0${markdownLint}`;
         scripts['lint:fix'] =
           `biome lint . --write && eslint . --fix --config=./eslint.config.js${tools.markdown === 'rightdown' ? ' && rightdown --fix "**/*.md"' : ''}`;
@@ -247,7 +273,8 @@ async function generatePackageScripts(
       }
     } else if (tools.typescript === 'eslint' || tools.javascript === 'eslint') {
       if (!scripts.lint || !scripts.lint.includes('eslint')) {
-        const markdownLint = tools.markdown === 'rightdown' ? ' && rightdown "**/*.md"' : '';
+        const markdownLint =
+          tools.markdown === 'rightdown' ? ' && rightdown "**/*.md"' : '';
         scripts.lint = `eslint . --max-warnings 0${markdownLint}`;
         scripts['lint:fix'] =
           `eslint . --fix${tools.markdown === 'rightdown' ? ' && rightdown --fix "**/*.md"' : ''}`;
@@ -265,7 +292,11 @@ async function generatePackageScripts(
         return success(true); // Report that an update would occur
       }
       packageJson.scripts = scripts;
-      await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf-8');
+      await writeFile(
+        packageJsonPath,
+        JSON.stringify(packageJson, null, 2),
+        'utf-8'
+      );
     }
 
     return success(updated);
@@ -275,8 +306,8 @@ async function generatePackageScripts(
         ErrorCode.INTERNAL_ERROR,
         'Failed to update package.json scripts',
         { packageJsonPath, dryRun },
-        error as Error,
-      ),
+        error as Error
+      )
     );
   }
 }

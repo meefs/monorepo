@@ -51,8 +51,10 @@ describe('clean command', () => {
     const result = await clean({});
 
     expect(isSuccess(result)).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('No configuration files found to clean up'));
-    
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('No configuration files found to clean up')
+    );
+
     consoleSpy.mockRestore();
   });
 
@@ -60,9 +62,9 @@ describe('clean command', () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['.prettierrc'] = createPrettierConfig();
     ctx.mockFs['.husky/pre-commit'] = '#!/bin/sh\nnpm test';
-    
+
     const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     // Mock prompts to cancel
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('cancel'),
@@ -72,18 +74,21 @@ describe('clean command', () => {
     const result = await clean({});
 
     expect(isSuccess(result)).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Old tool configurations:'));
-    
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Old tool configurations:')
+    );
+
     consoleSpy.mockRestore();
   });
 
   it('should detect Flint-generated configurations', async () => {
-    ctx.mockFs['biome.json'] = '{"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json"}';
+    ctx.mockFs['biome.json'] =
+      '{"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json"}';
     ctx.mockFs['oxlint.json'] = '{}';
     ctx.mockFs['.markdownlint.json'] = '{}';
-    
+
     const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     // Mock prompts to cancel
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('cancel'),
@@ -93,8 +98,10 @@ describe('clean command', () => {
     const result = await clean({});
 
     expect(isSuccess(result)).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Flint-generated configurations:'));
-    
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Flint-generated configurations:')
+    );
+
     consoleSpy.mockRestore();
   });
 
@@ -115,12 +122,13 @@ describe('clean command', () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['.prettierrc'] = createPrettierConfig();
     ctx.mockFs['biome.json'] = '{}';
-    
+
     // Mock prompts for individual selection
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('select'),
-      confirm: vi.fn()
-        .mockResolvedValueOnce(true)  // Remove .eslintrc.json
+      confirm: vi
+        .fn()
+        .mockResolvedValueOnce(true) // Remove .eslintrc.json
         .mockResolvedValueOnce(false) // Keep .prettierrc
         .mockResolvedValueOnce(false) // Keep biome.json
         .mockResolvedValueOnce(true), // Proceed with cleanup
@@ -138,7 +146,7 @@ describe('clean command', () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['.prettierrc'] = createPrettierConfig();
     ctx.mockFs['biome.json'] = '{}';
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('old'),
       confirm: vi.fn().mockResolvedValue(true),
@@ -156,7 +164,7 @@ describe('clean command', () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['biome.json'] = '{}';
     ctx.mockFs['oxlint.json'] = '{}';
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('flint'),
       confirm: vi.fn().mockResolvedValue(true),
@@ -172,7 +180,7 @@ describe('clean command', () => {
 
   it('should create backup before cleaning', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('all'),
       confirm: vi.fn().mockResolvedValue(true),
@@ -181,30 +189,35 @@ describe('clean command', () => {
     const result = await clean({});
 
     expect(isSuccess(result)).toBe(true);
-    const backupFiles = Object.keys(ctx.mockFs).filter(f => f.includes('flint-backup'));
+    const backupFiles = Object.keys(ctx.mockFs).filter((f) =>
+      f.includes('flint-backup')
+    );
     expect(backupFiles.length).toBeGreaterThan(0);
   });
 
   it('should clean dependencies when removing old tools', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockExec.mockReturnValue({ stdout: '', stderr: '' });
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('old'),
-      confirm: vi.fn()
-        .mockResolvedValueOnce(true)  // Proceed with cleanup
+      confirm: vi
+        .fn()
+        .mockResolvedValueOnce(true) // Proceed with cleanup
         .mockResolvedValueOnce(true), // Clean dependencies
     }));
 
     const result = await clean({});
 
     expect(isSuccess(result)).toBe(true);
-    expect(ctx.mockExec).toHaveBeenCalledWith(expect.stringContaining('uninstall'));
+    expect(ctx.mockExec).toHaveBeenCalledWith(
+      expect.stringContaining('uninstall')
+    );
   });
 
   it('should handle cleanup errors gracefully', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
-    
+
     // Mock file removal to fail
     vi.mock('node:fs', async () => {
       const actual = await vi.importActual<typeof import('node:fs')>('node:fs');
@@ -215,7 +228,7 @@ describe('clean command', () => {
         }),
       };
     });
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('all'),
       confirm: vi.fn().mockResolvedValue(true),
@@ -231,7 +244,7 @@ describe('clean command', () => {
 
   it('should cancel when user selects cancel', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('cancel'),
     }));
@@ -244,7 +257,7 @@ describe('clean command', () => {
 
   it('should cancel when user declines confirmation', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('all'),
       confirm: vi.fn().mockResolvedValue(false),
@@ -259,7 +272,7 @@ describe('clean command', () => {
   it('should show next steps after cleaning old tools', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     vi.mock('@inquirer/prompts', () => ({
       select: vi.fn().mockResolvedValue('old'),
       confirm: vi.fn().mockResolvedValue(true),
@@ -268,9 +281,13 @@ describe('clean command', () => {
     const result = await clean({});
 
     expect(isSuccess(result)).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Next steps:'));
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('flint init'));
-    
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Next steps:')
+    );
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('flint init')
+    );
+
     consoleSpy.mockRestore();
   });
 });

@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateOxlintConfig } from '../oxlint.js';
-import { isSuccess, type Result } from '@outfitter/contracts';
 import * as childProcess from 'node:child_process';
+import { isSuccess, type Result } from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as fileSystem from '../../utils/file-system.js';
+import { generateOxlintConfig } from '../oxlint.js';
 
 vi.mock('node:child_process');
 vi.mock('../../utils/file-system.js');

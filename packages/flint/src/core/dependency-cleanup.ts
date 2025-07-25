@@ -1,7 +1,15 @@
 /**
  * Clean up unwanted dependencies
  */
-import { Result, success, failure, makeError, isSuccess, isFailure, ErrorCode } from '@outfitter/contracts';
+import {
+  Result,
+  success,
+  failure,
+  makeError,
+  isSuccess,
+  isFailure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { readPackageJson } from '../utils/file-system';
 import { getPackageManager, getRemoveCommand } from '../utils/package-manager';
 import { execSync } from 'node:child_process';
@@ -52,7 +60,12 @@ export async function findDependenciesToRemove(
 
   const pkgResult = await readPackageJson();
   if (isFailure(pkgResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read package.json: ${pkgResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read package.json: ${pkgResult.error.message}`
+      )
+    );
   }
 
   const pkg = pkgResult.data;
@@ -76,7 +89,7 @@ export async function findDependenciesToRemove(
     }
 
     // Check if matches any unwanted pattern
-    if (patterns.some(pattern => pattern.test(dep))) {
+    if (patterns.some((pattern) => pattern.test(dep))) {
       toRemove.push(dep);
     }
   }
@@ -107,7 +120,7 @@ export async function cleanupDependencies(
 
   if (!silent) {
     console.section('Dependencies to remove:');
-    depsToRemove.forEach(dep => console.step(dep));
+    depsToRemove.forEach((dep) => console.step(dep));
   }
 
   if (dryRun) {
@@ -116,7 +129,12 @@ export async function cleanupDependencies(
 
   const pmResult = await getPackageManager();
   if (isFailure(pmResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to detect package manager: ${pmResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to detect package manager: ${pmResult.error.message}`
+      )
+    );
   }
 
   const pm = pmResult.data.type;
@@ -133,20 +151,27 @@ export async function cleanupDependencies(
     });
 
     if (!silent) {
-      console.success(`Successfully removed ${depsToRemove.length} dependencies`);
+      console.success(
+        `Successfully removed ${depsToRemove.length} dependencies`
+      );
     }
 
     return success(depsToRemove);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (!force) {
-      return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to remove dependencies: ${message}`));
+      return failure(
+        makeError(
+          ErrorCode.INTERNAL_ERROR,
+          `Failed to remove dependencies: ${message}`
+        )
+      );
     }
-    
+
     if (!silent) {
       console.warning('Some dependencies could not be removed, continuing...');
     }
-    
+
     return success(depsToRemove);
   }
 }
@@ -169,7 +194,12 @@ export async function removeDependency(
 
   const pmResult = await getPackageManager();
   if (isFailure(pmResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to detect package manager: ${pmResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to detect package manager: ${pmResult.error.message}`
+      )
+    );
   }
 
   const pm = pmResult.data.type;
@@ -188,7 +218,12 @@ export async function removeDependency(
     return success(undefined);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to remove ${packageName}: ${message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to remove ${packageName}: ${message}`
+      )
+    );
   }
 }
 
@@ -198,7 +233,12 @@ export async function removeDependency(
 export async function getEslintDependencies(): Promise<Result<string[], any>> {
   const pkgResult = await readPackageJson();
   if (isFailure(pkgResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read package.json: ${pkgResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read package.json: ${pkgResult.error.message}`
+      )
+    );
   }
 
   const pkg = pkgResult.data;
@@ -207,11 +247,12 @@ export async function getEslintDependencies(): Promise<Result<string[], any>> {
     ...pkg.devDependencies,
   };
 
-  const eslintDeps = Object.keys(allDeps).filter(dep => 
-    dep === 'eslint' ||
-    dep.startsWith('eslint-') ||
-    dep.startsWith('@typescript-eslint/') ||
-    dep.startsWith('@eslint/')
+  const eslintDeps = Object.keys(allDeps).filter(
+    (dep) =>
+      dep === 'eslint' ||
+      dep.startsWith('eslint-') ||
+      dep.startsWith('@typescript-eslint/') ||
+      dep.startsWith('@eslint/')
   );
 
   return success(eslintDeps);

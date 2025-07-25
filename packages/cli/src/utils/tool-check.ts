@@ -42,7 +42,9 @@ async function checkTool(tool: string): Promise<Result<ToolVersion, Error>> {
  */
 export async function checkRequiredTools(): Promise<Result<void, Error>> {
   const requiredTools = ['git', 'node'];
-  const results = await Promise.all(requiredTools.map((tool) => checkTool(tool)));
+  const results = await Promise.all(
+    requiredTools.map((tool) => checkTool(tool))
+  );
 
   const missing = results
     .filter((result) => !result.success)
@@ -51,8 +53,8 @@ export async function checkRequiredTools(): Promise<Result<void, Error>> {
   if (missing.length > 0) {
     return failure(
       new Error(
-        `Required tools not found: ${missing.join(', ')}. Please install them and try again.`,
-      ),
+        `Required tools not found: ${missing.join(', ')}. Please install them and try again.`
+      )
     );
   }
 
@@ -79,7 +81,9 @@ export async function checkOptionalTools(): Promise<Map<string, boolean>> {
  * Get detailed information about the Node.js environment.
  * @returns Result containing Node.js version info or an error
  */
-export async function getNodeInfo(): Promise<Result<ToolVersion & { npm: string }, Error>> {
+export async function getNodeInfo(): Promise<
+  Result<ToolVersion & { npm: string }, Error>
+> {
   const nodeResult = await checkTool('node');
   if (!nodeResult.success) {
     return failure(nodeResult.error);
@@ -87,7 +91,9 @@ export async function getNodeInfo(): Promise<Result<ToolVersion & { npm: string 
 
   try {
     // Get npm version as well
-    const { stdout: npmVersion } = await execa('npm', ['--version'], { timeout: 5000 });
+    const { stdout: npmVersion } = await execa('npm', ['--version'], {
+      timeout: 5000,
+    });
 
     return success({
       ...nodeResult.data,

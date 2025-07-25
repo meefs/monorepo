@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import { ErrorCode, isAppError, makeError, toAppError } from '../error';
-import { failure, isFailure, isSuccess, success, tryAsync, trySync } from '../result';
+import {
+  failure,
+  isFailure,
+  isSuccess,
+  success,
+  tryAsync,
+  trySync,
+} from '../result';
 
 describe('Result Pattern Integration', () => {
   describe('Error handling with Result pattern', () => {
@@ -60,14 +67,18 @@ describe('Result Pattern Integration', () => {
     it('should chain Result operations correctly', async () => {
       const step1 = async (input: string) => {
         if (input === 'fail-step1') {
-          return failure(makeError(ErrorCode.VALIDATION_ERROR, 'Step 1 failed'));
+          return failure(
+            makeError(ErrorCode.VALIDATION_ERROR, 'Step 1 failed')
+          );
         }
         return success(`step1-${input}`);
       };
 
       const step2 = async (input: string) => {
         if (input.includes('fail-step2')) {
-          return failure(makeError(ErrorCode.EXTERNAL_SERVICE_ERROR, 'Step 2 failed'));
+          return failure(
+            makeError(ErrorCode.EXTERNAL_SERVICE_ERROR, 'Step 2 failed')
+          );
         }
         return success(`step2-${input}`);
       };
@@ -126,10 +137,17 @@ describe('Result Pattern Integration', () => {
       // Simulate database operations that can fail
       const fetchUser = async (id: string) => {
         if (id === 'not-found') {
-          return failure(makeError(ErrorCode.NOT_FOUND, 'User not found', { userId: id }));
+          return failure(
+            makeError(ErrorCode.NOT_FOUND, 'User not found', { userId: id })
+          );
         }
         if (id === 'db-error') {
-          return failure(makeError(ErrorCode.EXTERNAL_SERVICE_ERROR, 'Database connection failed'));
+          return failure(
+            makeError(
+              ErrorCode.EXTERNAL_SERVICE_ERROR,
+              'Database connection failed'
+            )
+          );
         }
         return success({
           id,

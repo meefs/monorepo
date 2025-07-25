@@ -1,7 +1,15 @@
 /**
  * Remove old configs and dependencies
  */
-import { Result, success, failure, makeError, isSuccess, isFailure, ErrorCode } from '@outfitter/contracts';
+import {
+  Result,
+  success,
+  failure,
+  makeError,
+  isSuccess,
+  isFailure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { remove, fileExists } from '../utils/file-system';
 import { getConfigsToCleanup } from './detector';
 import { console } from '../utils/console';
@@ -40,7 +48,12 @@ export async function removeOldConfigs(
       const removeResult = await remove(config);
       if (isFailure(removeResult)) {
         if (!force) {
-          return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to remove ${config}: ${removeResult.error.message}`));
+          return failure(
+            makeError(
+              ErrorCode.INTERNAL_ERROR,
+              `Failed to remove ${config}: ${removeResult.error.message}`
+            )
+          );
         }
         console.warning(`Failed to remove ${config}, continuing...`);
       } else {
@@ -66,7 +79,12 @@ export async function cleanupOldTools(
 ): Promise<Result<string[], any>> {
   const configsResult = await getConfigsToCleanup();
   if (isFailure(configsResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to detect configs: ${configsResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to detect configs: ${configsResult.error.message}`
+      )
+    );
   }
 
   return removeOldConfigs(configsResult.data, options);
@@ -121,17 +139,15 @@ export async function removeToolConfigs(
       'stylelint.config.mjs',
       '.stylelintignore',
     ],
-    tslint: [
-      'tslint.json',
-    ],
-    standard: [
-      '.standard.json',
-    ],
+    tslint: ['tslint.json'],
+    standard: ['.standard.json'],
   };
 
   const configs = toolConfigs[tool.toLowerCase()];
   if (!configs) {
-    return failure(makeError(ErrorCode.VALIDATION_ERROR, `Unknown tool: ${tool}`));
+    return failure(
+      makeError(ErrorCode.VALIDATION_ERROR, `Unknown tool: ${tool}`)
+    );
   }
 
   return removeOldConfigs(configs, options);
@@ -143,7 +159,7 @@ export async function removeToolConfigs(
 export async function cleanupVSCodeSettings(): Promise<Result<void, any>> {
   const settingsPath = '.vscode/settings.json';
   const existsResult = await fileExists(settingsPath);
-  
+
   if (isFailure(existsResult) || !existsResult.data) {
     return success(undefined);
   }
@@ -170,7 +186,12 @@ export async function removeOldGitHooks(
     if (!dryRun) {
       const removeResult = await remove('.husky');
       if (isFailure(removeResult)) {
-        return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to remove .husky: ${removeResult.error.message}`));
+        return failure(
+          makeError(
+            ErrorCode.INTERNAL_ERROR,
+            `Failed to remove .husky: ${removeResult.error.message}`
+          )
+        );
       }
     }
   }

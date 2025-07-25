@@ -78,12 +78,10 @@ bun run test packages/contracts/typescript/src/__tests__/result.test.ts
 The monorepo follows a clear separation of concerns:
 
 1. **Core Libraries** (must build first):
-
    - `contracts/typescript`: Zero-dependency utilities using Result pattern for error handling (renamed from typescript-utils)
    - `packlist`: Configuration manager that orchestrates development setup
 
 2. **Configuration Packages** (shared configs):
-
    - `typescript-config`: Base tsconfig.json files for different project types
    - `husky-config`: Git hooks configuration
    - `changeset-config`: Release management configuration
@@ -169,11 +167,10 @@ Use conventional commits (enforced by commitlint):
 ### Package Publishing
 
 - All packages are published to npm under `@outfitter/` scope
-- Packages use `tsup` for building (except `cli` and `fieldguides` which use `tsc`)
+- Packages use Bun native builds with custom build scripts (hybrid approach with tsc for declarations)
 - Both CJS and ESM formats are built for maximum compatibility
 
 ## Known Issues & Workarounds
-
 
 ### CJS/ESM Compatibility
 

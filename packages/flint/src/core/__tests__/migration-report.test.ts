@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
-import { MigrationReporter } from '../migration-report';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as fs from '../../utils/file-system';
+import { MigrationReporter } from '../migration-report';
 
 vi.mock('../../utils/file-system');
 
@@ -109,7 +109,9 @@ describe('MigrationReporter', () => {
       });
 
       await reporter.generateReport();
-      expect(writtenContent).toContain('Backup created at: `/backup/flint-backup.md`');
+      expect(writtenContent).toContain(
+        'Backup created at: `/backup/flint-backup.md`'
+      );
     });
   });
 

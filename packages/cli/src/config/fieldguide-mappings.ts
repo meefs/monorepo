@@ -16,7 +16,7 @@ export interface FieldguideRecommendation {
  * @returns An array of unique {@link FieldguideRecommendation} objects, sorted by descending priority.
  */
 export function getRecommendedFieldguides(
-  terrain: TerrainFeatures,
+  terrain: TerrainFeatures
 ): Array<FieldguideRecommendation> {
   const recommendations: Array<FieldguideRecommendation> = [];
 
@@ -153,7 +153,10 @@ export function getRecommendedFieldguides(
   const seen = new Map<string, FieldguideRecommendation>();
   for (const rec of recommendations) {
     const existing = seen.get(rec.id);
-    if (!existing || getPriorityWeight(rec.priority) > getPriorityWeight(existing.priority)) {
+    if (
+      !existing ||
+      getPriorityWeight(rec.priority) > getPriorityWeight(existing.priority)
+    ) {
       seen.set(rec.id, rec);
     }
   }
@@ -171,7 +174,9 @@ export function getRecommendedFieldguides(
  * @param priority - The priority level: 'essential', 'recommended', or 'optional'.
  * @returns The numeric weight for the specified {@link priority} ('essential' = 3, 'recommended' = 2, 'optional' = 1).
  */
-function getPriorityWeight(priority: 'essential' | 'recommended' | 'optional'): number {
+function getPriorityWeight(
+  priority: 'essential' | 'recommended' | 'optional'
+): number {
   switch (priority) {
     case 'essential':
       return 3;
@@ -190,8 +195,12 @@ function getPriorityWeight(priority: 'essential' | 'recommended' | 'optional'): 
  * @param terrain - The detected terrain features of the project.
  * @returns An array of fieldguide IDs with priority 'essential' or 'recommended'.
  */
-export function getRecommendedFieldguideIds(terrain: TerrainFeatures): Array<string> {
+export function getRecommendedFieldguideIds(
+  terrain: TerrainFeatures
+): Array<string> {
   return getRecommendedFieldguides(terrain)
-    .filter((fg) => fg.priority === 'essential' || fg.priority === 'recommended')
+    .filter(
+      (fg) => fg.priority === 'essential' || fg.priority === 'recommended'
+    )
     .map((fg) => fg.id);
 }

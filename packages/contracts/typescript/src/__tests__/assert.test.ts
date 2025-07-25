@@ -37,7 +37,9 @@ describe('assertDefined', () => {
 
 describe('assertNever', () => {
   it('should throw an error when called', () => {
-    expect(() => assertNever(undefined as never)).toThrow('Unhandled value: undefined');
+    expect(() => assertNever(undefined as never)).toThrow(
+      'Unhandled value: undefined'
+    );
   });
 
   it('should handle different never-like inputs for runtime check', () => {

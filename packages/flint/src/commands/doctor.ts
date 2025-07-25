@@ -1,17 +1,17 @@
-import type { Result } from '@outfitter/contracts';
-import {
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
-} from '@outfitter/contracts';
-import * as pc from 'picocolors';
 import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { DoctorReport, DoctorIssue } from '../types.js';
+import type { Result } from '@outfitter/contracts';
+import {
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  success,
+} from '@outfitter/contracts';
+import * as pc from 'picocolors';
 import { detectExistingTools } from '../core/detector.js';
+import type { DoctorIssue, DoctorReport } from '../types.js';
 
 interface ToolVersion {
   tool: string;
@@ -141,7 +141,8 @@ export async function doctor(): Promise<Result<DoctorReport, Error>> {
 
     if (!detectedPackageManager) {
       issues.push({
-        description: 'No alternative package manager detected (pnpm, yarn, or bun)',
+        description:
+          'No alternative package manager detected (pnpm, yarn, or bun)',
         severity: 'error',
         fix: 'Install pnpm (recommended): npm install -g pnpm',
       });
@@ -180,8 +181,10 @@ export async function doctor(): Promise<Result<DoctorReport, Error>> {
 
     for (const dep of flintDependencies) {
       if (
-        !installedDeps[dep] &&
-        !existsSync(join(projectRoot, 'node_modules', dep))
+        !(
+          installedDeps[dep] ||
+          existsSync(join(projectRoot, 'node_modules', dep))
+        )
       ) {
         if (dep === 'ultracite') {
           issues.push({

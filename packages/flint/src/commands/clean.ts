@@ -1,20 +1,20 @@
-import type { Result } from '@outfitter/contracts';
-import {
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
-} from '@outfitter/contracts';
-import { confirm, select } from '@inquirer/prompts';
-import * as pc from 'picocolors';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { CleanOptions } from '../types.js';
-import { detectExistingTools, type DetectedConfig } from '../core/detector.js';
+import { confirm, select } from '@inquirer/prompts';
+import type { Result } from '@outfitter/contracts';
+import {
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  success,
+} from '@outfitter/contracts';
+import * as pc from 'picocolors';
 import { createBackup } from '../core/backup.js';
 import { removeOldConfigs } from '../core/cleanup.js';
 import { cleanupDependencies } from '../core/dependency-cleanup.js';
+import { type DetectedConfig, detectExistingTools } from '../core/detector.js';
+import type { CleanOptions } from '../types.js';
 
 /**
  * Clean up old configuration files
@@ -98,7 +98,10 @@ export async function clean(
     // Ask what to clean
     let configsToClean: DetectedConfig[] = [];
 
-    if (!options.force) {
+    if (options.force) {
+      // Force mode - clean all
+      configsToClean = detectedTools.configs;
+    } else {
       const cleanupMode = await select({
         message: 'What would you like to clean?',
         choices: [
@@ -177,9 +180,6 @@ export async function clean(
         console.log(pc.yellow('Cleanup cancelled.'));
         return success(undefined);
       }
-    } else {
-      // Force mode - clean all
-      configsToClean = detectedTools.configs;
     }
 
     // 2. Create backup

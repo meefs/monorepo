@@ -46,7 +46,7 @@ describe('baselayer setup', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
@@ -83,7 +83,7 @@ describe('baselayer setup', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(invalidConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });

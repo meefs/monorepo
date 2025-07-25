@@ -31,7 +31,9 @@ export async function init(options: InitOptions = {}): Promise<void> {
     await fs.access(packageJsonPath);
   } catch {
     console.error(
-      pc.red('❌ No package.json found. Please run this command in your project root.'),
+      pc.red(
+        '❌ No package.json found. Please run this command in your project root.'
+      )
     );
     process.exit(1);
   }
@@ -41,7 +43,10 @@ export async function init(options: InitOptions = {}): Promise<void> {
   const packageJsonResult = readPackageJson(packageJsonPath);
 
   if (!packageJsonResult.success) {
-    console.error(pc.red('❌ Error reading package.json:'), packageJsonResult.error.message);
+    console.error(
+      pc.red('❌ Error reading package.json:'),
+      packageJsonResult.error.message
+    );
     process.exit(1);
   }
 
@@ -102,7 +107,10 @@ export async function init(options: InitOptions = {}): Promise<void> {
   }
 
   // Write updated package.json
-  await fs.writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\\n`);
+  await fs.writeFile(
+    packageJsonPath,
+    `${JSON.stringify(packageJson, null, 2)}\\n`
+  );
 
   console.log(pc.green('\\n✅ Packlist initialized successfully!'));
   console.log(pc.gray('\\nRun the following commands to get started:'));
@@ -123,7 +131,9 @@ async function detectPackageManager(): Promise<string> {
   } catch (error) {
     // File doesn't exist is expected, other errors should be logged
     if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') {
-      console.warn(`Warning: Error checking for pnpm-lock.yaml: ${error.message}`);
+      console.warn(
+        `Warning: Error checking for pnpm-lock.yaml: ${error.message}`
+      );
     }
   }
 
@@ -150,7 +160,11 @@ async function detectPackageManager(): Promise<string> {
   return 'npm';
 }
 
-async function installDependencies(packageManager: string, deps: Array<string>, dev: boolean) {
+async function installDependencies(
+  packageManager: string,
+  deps: Array<string>,
+  dev: boolean
+) {
   const args = dev ? ['add', '-D'] : ['add'];
 
   if (packageManager === 'npm') {
@@ -186,7 +200,9 @@ async function createEslintConfig(projectRoot: string, force?: boolean) {
   if (!force) {
     try {
       await fs.access(eslintConfigPath);
-      console.log(pc.yellow('⚠️  .eslintrc.js already exists. Use --force to overwrite.'));
+      console.log(
+        pc.yellow('⚠️  .eslintrc.js already exists. Use --force to overwrite.')
+      );
       return;
     } catch {
       // File doesn't exist, continue with creation
@@ -219,7 +235,9 @@ async function createTsConfig(projectRoot: string, force?: boolean) {
   if (!force) {
     try {
       await fs.access(tsconfigPath);
-      console.log(pc.yellow('⚠️  tsconfig.json already exists. Use --force to overwrite.'));
+      console.log(
+        pc.yellow('⚠️  tsconfig.json already exists. Use --force to overwrite.')
+      );
       return;
     } catch {
       // File doesn't exist, continue with creation

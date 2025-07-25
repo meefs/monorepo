@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { isSuccess, isFailure, success, failure, ErrorCode } from '@outfitter/contracts';
+import {
+  isSuccess,
+  isFailure,
+  success,
+  failure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import * as path from 'node:path';
 import {
   detectPackageManager,
@@ -27,12 +33,12 @@ describe('package-manager utilities', () => {
 
   describe('detectPackageManager', () => {
     it('should detect npm from package-lock.json', async () => {
-      vi.mocked(fs.fileExists).mockImplementation(async (path) => 
+      vi.mocked(fs.fileExists).mockImplementation(async (path) =>
         success(path.endsWith('package-lock.json'))
       );
 
       const result = await detectPackageManager();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({
@@ -43,12 +49,12 @@ describe('package-manager utilities', () => {
     });
 
     it('should detect yarn from yarn.lock', async () => {
-      vi.mocked(fs.fileExists).mockImplementation(async (path) => 
+      vi.mocked(fs.fileExists).mockImplementation(async (path) =>
         success(path.endsWith('yarn.lock'))
       );
 
       const result = await detectPackageManager();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({
@@ -59,12 +65,12 @@ describe('package-manager utilities', () => {
     });
 
     it('should detect pnpm from pnpm-lock.yaml', async () => {
-      vi.mocked(fs.fileExists).mockImplementation(async (path) => 
+      vi.mocked(fs.fileExists).mockImplementation(async (path) =>
         success(path.endsWith('pnpm-lock.yaml'))
       );
 
       const result = await detectPackageManager();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({
@@ -75,12 +81,12 @@ describe('package-manager utilities', () => {
     });
 
     it('should detect bun from bun.lockb', async () => {
-      vi.mocked(fs.fileExists).mockImplementation(async (path) => 
+      vi.mocked(fs.fileExists).mockImplementation(async (path) =>
         success(path.endsWith('bun.lockb'))
       );
 
       const result = await detectPackageManager();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({
@@ -94,7 +100,7 @@ describe('package-manager utilities', () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
 
       const result = await detectPackageManager();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toEqual({
@@ -107,7 +113,7 @@ describe('package-manager utilities', () => {
     it('should check parent directory in monorepo', async () => {
       const cwd = '/project/packages/mypackage';
       let callCount = 0;
-      
+
       vi.mocked(fs.fileExists).mockImplementation(async (filePath) => {
         callCount++;
         // First round: check current directory - no lock files
@@ -119,7 +125,7 @@ describe('package-manager utilities', () => {
       });
 
       const result = await detectPackageManager(cwd);
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data.type).toBe('pnpm');
@@ -139,31 +145,55 @@ describe('package-manager utilities', () => {
   describe('getAddCommand', () => {
     it('should return correct add command for dependencies', () => {
       const packages = ['react', 'react-dom'];
-      
-      expect(getAddCommand('npm', false, packages)).toBe('npm install react react-dom');
-      expect(getAddCommand('yarn', false, packages)).toBe('yarn add react react-dom');
-      expect(getAddCommand('pnpm', false, packages)).toBe('pnpm add react react-dom');
-      expect(getAddCommand('bun', false, packages)).toBe('bun add react react-dom');
+
+      expect(getAddCommand('npm', false, packages)).toBe(
+        'npm install react react-dom'
+      );
+      expect(getAddCommand('yarn', false, packages)).toBe(
+        'yarn add react react-dom'
+      );
+      expect(getAddCommand('pnpm', false, packages)).toBe(
+        'pnpm add react react-dom'
+      );
+      expect(getAddCommand('bun', false, packages)).toBe(
+        'bun add react react-dom'
+      );
     });
 
     it('should return correct add command for dev dependencies', () => {
       const packages = ['vitest', 'typescript'];
-      
-      expect(getAddCommand('npm', true, packages)).toBe('npm install --save-dev vitest typescript');
-      expect(getAddCommand('yarn', true, packages)).toBe('yarn add --dev vitest typescript');
-      expect(getAddCommand('pnpm', true, packages)).toBe('pnpm add --save-dev vitest typescript');
-      expect(getAddCommand('bun', true, packages)).toBe('bun add --dev vitest typescript');
+
+      expect(getAddCommand('npm', true, packages)).toBe(
+        'npm install --save-dev vitest typescript'
+      );
+      expect(getAddCommand('yarn', true, packages)).toBe(
+        'yarn add --dev vitest typescript'
+      );
+      expect(getAddCommand('pnpm', true, packages)).toBe(
+        'pnpm add --save-dev vitest typescript'
+      );
+      expect(getAddCommand('bun', true, packages)).toBe(
+        'bun add --dev vitest typescript'
+      );
     });
   });
 
   describe('getRemoveCommand', () => {
     it('should return correct remove command', () => {
       const packages = ['eslint', 'prettier'];
-      
-      expect(getRemoveCommand('npm', packages)).toBe('npm uninstall eslint prettier');
-      expect(getRemoveCommand('yarn', packages)).toBe('yarn remove eslint prettier');
-      expect(getRemoveCommand('pnpm', packages)).toBe('pnpm remove eslint prettier');
-      expect(getRemoveCommand('bun', packages)).toBe('bun remove eslint prettier');
+
+      expect(getRemoveCommand('npm', packages)).toBe(
+        'npm uninstall eslint prettier'
+      );
+      expect(getRemoveCommand('yarn', packages)).toBe(
+        'yarn remove eslint prettier'
+      );
+      expect(getRemoveCommand('pnpm', packages)).toBe(
+        'pnpm remove eslint prettier'
+      );
+      expect(getRemoveCommand('bun', packages)).toBe(
+        'bun remove eslint prettier'
+      );
     });
   });
 
@@ -190,7 +220,7 @@ describe('package-manager utilities', () => {
       process.env.FLINT_PACKAGE_MANAGER = 'pnpm';
 
       const result = await getPreferredPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value).toBe('pnpm');
     });
@@ -200,11 +230,15 @@ describe('package-manager utilities', () => {
       vi.mocked(fs.readFile).mockResolvedValue({
         isSuccess: () => false,
         value: '',
-        error: { type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' },
+        error: {
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        },
       });
 
       const result = await getPreferredPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value).toBe(null);
     });
@@ -217,7 +251,7 @@ describe('package-manager utilities', () => {
       });
 
       const result = await getPreferredPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value).toBe('yarn');
     });
@@ -230,7 +264,7 @@ describe('package-manager utilities', () => {
       });
 
       const result = await getPreferredPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value).toBe(null);
     });
@@ -239,11 +273,15 @@ describe('package-manager utilities', () => {
       vi.mocked(fs.readFile).mockResolvedValue({
         isSuccess: () => false,
         value: '',
-        error: { type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' },
+        error: {
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        },
       });
 
       const result = await getPreferredPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value).toBe(null);
     });
@@ -252,9 +290,9 @@ describe('package-manager utilities', () => {
   describe('getPackageManager', () => {
     it('should use preferred package manager if set', async () => {
       process.env.FLINT_PACKAGE_MANAGER = 'bun';
-      
+
       const result = await getPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value).toEqual({
         type: 'bun',
@@ -268,15 +306,19 @@ describe('package-manager utilities', () => {
         value: path.endsWith('pnpm-lock.yaml'),
         error: null as any,
       }));
-      
+
       vi.mocked(fs.readFile).mockResolvedValue({
         isSuccess: () => false,
         value: '',
-        error: { type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' },
+        error: {
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        },
       });
 
       const result = await getPackageManager();
-      
+
       expect(result.isSuccess()).toBe(true);
       expect(result.value.type).toBe('pnpm');
     });
