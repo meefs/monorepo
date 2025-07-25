@@ -13,13 +13,13 @@ import * as pc from 'picocolors';
 export async function generateBiomeConfig(): Promise<Result<void, Error>> {
   try {
     console.log(pc.blue('→ Setting up Biome via Ultracite...'));
-    
+
     // Ultracite init handles everything for Biome setup
-    execSync('bunx ultracite init --yes', { 
+    execSync('bunx ultracite init --yes', {
       stdio: 'inherit',
-      env: { ...process.env, FORCE_COLOR: '1' }
+      env: { ...process.env, FORCE_COLOR: '1' },
     });
-    
+
     console.log(pc.green('✓ Biome configured successfully'));
     return success(undefined);
   } catch (error) {

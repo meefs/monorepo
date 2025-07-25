@@ -75,7 +75,7 @@ export async function installPackages(
   options?: {
     filter?: string; // For targeting specific workspace packages
     isWorkspace?: boolean; // Pre-detected workspace status
-  },
+  }
 ): Promise<void> {
   if (packages.length === 0) return;
 

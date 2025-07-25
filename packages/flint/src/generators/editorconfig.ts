@@ -5,10 +5,12 @@ import { writeFile } from '../utils/file-system.js';
 /**
  * Generates .editorconfig for cross-editor consistency
  */
-export async function generateEditorconfigConfig(): Promise<Result<void, Error>> {
+export async function generateEditorconfigConfig(): Promise<
+  Result<void, Error>
+> {
   try {
     console.log(pc.blue('→ Setting up EditorConfig...'));
-    
+
     const config = `# EditorConfig is awesome: https://EditorConfig.org
 
 # top-most EditorConfig file
@@ -76,12 +78,12 @@ indent_size = 2
 [{Dockerfile,docker-compose.yml}]
 indent_size = 2
 `;
-    
+
     const writeResult = await writeFile('.editorconfig', config);
     if (isFailure(writeResult)) {
       return failure(writeResult.error);
     }
-    
+
     console.log(pc.green('✓ EditorConfig configured successfully'));
     return success(undefined);
   } catch (error) {

@@ -80,7 +80,14 @@ describe('Branded Types', () => {
     });
 
     it('should reject invalid emails', () => {
-      const invalidEmails = ['', '  ', 'not-an-email', '@example.com', 'user@', 'user@.com'];
+      const invalidEmails = [
+        '',
+        '  ',
+        'not-an-email',
+        '@example.com',
+        'user@',
+        'user@.com',
+      ];
 
       for (const email of invalidEmails) {
         const result = createEmail(email);
@@ -351,7 +358,7 @@ describe('Branded Types', () => {
 
     const createProductSku = createBrandedType<string, 'ProductSku'>(
       (value) => /^PROD-[0-9]{4}$/.test(value),
-      'Product SKU must be in format PROD-XXXX',
+      'Product SKU must be in format PROD-XXXX'
     );
 
     it('should create custom branded types', () => {
@@ -367,7 +374,9 @@ describe('Branded Types', () => {
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.code).toBe(ErrorCode.VALIDATION_ERROR);
-        expect(result.error.message).toBe('Product SKU must be in format PROD-XXXX');
+        expect(result.error.message).toBe(
+          'Product SKU must be in format PROD-XXXX'
+        );
       }
     });
   });

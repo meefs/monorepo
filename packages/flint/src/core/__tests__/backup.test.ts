@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { isSuccess, isFailure, success, failure, ErrorCode } from '@outfitter/contracts';
+import {
+  isSuccess,
+  isFailure,
+  success,
+  failure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { createBackup, createBackupSummary } from '../backup';
 import * as fs from '../../utils/file-system';
 import { DetectedConfig } from '../detector';
@@ -37,12 +43,12 @@ describe('backup', () => {
       vi.mocked(fs.writeFile).mockResolvedValue(success(undefined));
 
       const result = await createBackup(configs);
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('.flint-backup/flint-backup-2024-01-15.md');
       }
-      
+
       expect(fs.ensureDir).toHaveBeenCalledWith('.flint-backup');
       expect(fs.writeFile).toHaveBeenCalledWith(
         '.flint-backup/flint-backup-2024-01-15.md',
@@ -68,7 +74,7 @@ describe('backup', () => {
       });
 
       await createBackup(configs);
-      
+
       expect(writtenContent).toContain('## Eslint Configuration');
       expect(writtenContent).toContain('**File**: `.eslintrc.json`');
       expect(writtenContent).toContain('```json');
@@ -93,7 +99,7 @@ describe('backup', () => {
       });
 
       await createBackup(configs);
-      
+
       expect(writtenContent).toContain('## Restoration Instructions');
       expect(writtenContent).toContain('Individual File Restoration');
       expect(writtenContent).toContain('Remove Flint Configuration');
@@ -117,7 +123,7 @@ describe('backup', () => {
       });
 
       await createBackup(configs, { includeRestoreInstructions: false });
-      
+
       expect(writtenContent).not.toContain('## Restoration Instructions');
     });
 
@@ -134,8 +140,10 @@ describe('backup', () => {
 
       vi.mocked(fs.writeFile).mockResolvedValue(success(undefined));
 
-      const result = await createBackup(configs, { backupDir: '/custom/backup' });
-      
+      const result = await createBackup(configs, {
+        backupDir: '/custom/backup',
+      });
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('/custom/backup/flint-backup-2024-01-15.md');
@@ -145,7 +153,7 @@ describe('backup', () => {
 
     it('should fail when no configurations provided', async () => {
       const result = await createBackup([]);
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.code).toBe(ErrorCode.VALIDATION_ERROR);
@@ -163,15 +171,21 @@ describe('backup', () => {
       ];
 
       vi.mocked(fs.ensureDir).mockResolvedValue(
-        failure({ type: 'FILE_SYSTEM_ERROR', code: 'EACCES', message: 'Permission denied' })
+        failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'EACCES',
+          message: 'Permission denied',
+        })
       );
 
       const result = await createBackup(configs);
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.code).toBe(ErrorCode.INTERNAL_ERROR);
-        expect(result.error.message).toContain('Failed to create backup directory');
+        expect(result.error.message).toContain(
+          'Failed to create backup directory'
+        );
       }
     });
 
@@ -187,11 +201,15 @@ describe('backup', () => {
       vi.mocked(fs.ensureDir).mockResolvedValue(success(undefined));
 
       vi.mocked(fs.writeFile).mockResolvedValue(
-        failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOSPC', message: 'No space left' })
+        failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOSPC',
+          message: 'No space left',
+        })
       );
 
       const result = await createBackup(configs);
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.code).toBe(ErrorCode.INTERNAL_ERROR);
@@ -222,7 +240,7 @@ describe('backup', () => {
       });
 
       await createBackup(configs);
-      
+
       expect(writtenContent).toContain('## Eslint Configuration');
       expect(writtenContent).toContain('### File: `.eslintrc.json`');
       expect(writtenContent).toContain('### File: `eslint.config.js`');
@@ -252,8 +270,11 @@ describe('backup', () => {
         return success(undefined);
       });
 
-      const result = await createBackupSummary(configs, '/backup/flint-backup.md');
-      
+      const result = await createBackupSummary(
+        configs,
+        '/backup/flint-backup.md'
+      );
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('/backup/flint-backup-summary.txt');
@@ -261,7 +282,9 @@ describe('backup', () => {
       expect(summaryContent).toContain('Flint Backup Summary');
       expect(summaryContent).toContain('- eslint: .eslintrc.json');
       expect(summaryContent).toContain('- prettier: .prettierrc');
-      expect(summaryContent).toContain('Full backup available at: /backup/flint-backup.md');
+      expect(summaryContent).toContain(
+        'Full backup available at: /backup/flint-backup.md'
+      );
     });
 
     it('should fail when write fails', async () => {
@@ -274,11 +297,18 @@ describe('backup', () => {
       ];
 
       vi.mocked(fs.writeFile).mockResolvedValue(
-        failure({ type: 'FILE_SYSTEM_ERROR', code: 'EACCES', message: 'Permission denied' })
+        failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'EACCES',
+          message: 'Permission denied',
+        })
       );
 
-      const result = await createBackupSummary(configs, '/backup/flint-backup.md');
-      
+      const result = await createBackupSummary(
+        configs,
+        '/backup/flint-backup.md'
+      );
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.code).toBe(ErrorCode.INTERNAL_ERROR);

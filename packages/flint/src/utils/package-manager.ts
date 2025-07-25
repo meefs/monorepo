@@ -1,7 +1,15 @@
 /**
  * Package manager detection and operations
  */
-import { Result, success, failure, makeError, isSuccess, isFailure, ErrorCode } from '@outfitter/contracts';
+import {
+  Result,
+  success,
+  failure,
+  makeError,
+  isSuccess,
+  isFailure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { fileExists, readFile } from './file-system';
 import * as path from 'node:path';
 
@@ -68,11 +76,16 @@ const COMMANDS = {
 /**
  * Detect package manager from lock file
  */
-export async function detectPackageManager(cwd: string = process.cwd()): Promise<Result<PackageManagerInfo, PackageManagerError>> {
-  for (const [pm, lockFile] of Object.entries(LOCK_FILES) as [PackageManager, string][]) {
+export async function detectPackageManager(
+  cwd: string = process.cwd()
+): Promise<Result<PackageManagerInfo, PackageManagerError>> {
+  for (const [pm, lockFile] of Object.entries(LOCK_FILES) as [
+    PackageManager,
+    string,
+  ][]) {
     const lockPath = path.join(cwd, lockFile);
     const existsResult = await fileExists(lockPath);
-    
+
     if (isSuccess(existsResult) && existsResult.data) {
       return success({
         type: pm,
@@ -107,7 +120,11 @@ export function getInstallCommand(pm: PackageManager): string {
 /**
  * Get add command for package manager
  */
-export function getAddCommand(pm: PackageManager, dev: boolean = false, packages: string[]): string {
+export function getAddCommand(
+  pm: PackageManager,
+  dev: boolean = false,
+  packages: string[]
+): string {
   const command = dev ? COMMANDS.addDev[pm] : COMMANDS.add[pm];
   return `${command} ${packages.join(' ')}`;
 }
@@ -115,7 +132,10 @@ export function getAddCommand(pm: PackageManager, dev: boolean = false, packages
 /**
  * Get remove command for package manager
  */
-export function getRemoveCommand(pm: PackageManager, packages: string[]): string {
+export function getRemoveCommand(
+  pm: PackageManager,
+  packages: string[]
+): string {
   return `${COMMANDS.remove[pm]} ${packages.join(' ')}`;
 }
 
@@ -136,7 +156,9 @@ export function getExecCommand(pm: PackageManager, command: string): string {
 /**
  * Check if user prefers a specific package manager from env or config
  */
-export async function getPreferredPackageManager(): Promise<Result<PackageManager | null, PackageManagerError>> {
+export async function getPreferredPackageManager(): Promise<
+  Result<PackageManager | null, PackageManagerError>
+> {
   // Check environment variable
   const pmFromEnv = process.env.FLINT_PACKAGE_MANAGER;
   if (pmFromEnv && isValidPackageManager(pmFromEnv)) {
@@ -148,7 +170,10 @@ export async function getPreferredPackageManager(): Promise<Result<PackageManage
   if (isSuccess(flintrcResult)) {
     try {
       const config = JSON.parse(flintrcResult.data);
-      if (config.packageManager && isValidPackageManager(config.packageManager)) {
+      if (
+        config.packageManager &&
+        isValidPackageManager(config.packageManager)
+      ) {
         return success(config.packageManager as PackageManager);
       }
     } catch {
@@ -169,7 +194,9 @@ function isValidPackageManager(pm: string): boolean {
 /**
  * Get package manager with fallback to preference or detection
  */
-export async function getPackageManager(cwd?: string): Promise<Result<PackageManagerInfo, PackageManagerError>> {
+export async function getPackageManager(
+  cwd?: string
+): Promise<Result<PackageManagerInfo, PackageManagerError>> {
   // First check for user preference
   const preferredResult = await getPreferredPackageManager();
   if (isSuccess(preferredResult) && preferredResult.data) {
@@ -187,12 +214,14 @@ export async function getPackageManager(cwd?: string): Promise<Result<PackageMan
  * Check if running in CI environment
  */
 export function isCI(): boolean {
-  return process.env.CI === 'true' || 
-         process.env.CONTINUOUS_INTEGRATION === 'true' ||
-         process.env.GITHUB_ACTIONS === 'true' ||
-         process.env.GITLAB_CI === 'true' ||
-         process.env.CIRCLECI === 'true' ||
-         process.env.TRAVIS === 'true';
+  return (
+    process.env.CI === 'true' ||
+    process.env.CONTINUOUS_INTEGRATION === 'true' ||
+    process.env.GITHUB_ACTIONS === 'true' ||
+    process.env.GITLAB_CI === 'true' ||
+    process.env.CIRCLECI === 'true' ||
+    process.env.TRAVIS === 'true'
+  );
 }
 
 /**
@@ -205,6 +234,6 @@ export function getCIFlags(pm: PackageManager): string {
     pnpm: '--frozen-lockfile',
     bun: '',
   };
-  
+
   return flags[pm];
 }

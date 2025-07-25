@@ -86,7 +86,12 @@ function _AllTheProviders({ children, initialEntries = ['/'] }) {
     </QueryClientProvider>
   );
 }
-function ExtendedProviders({ children, initialEntries = ['/'], theme = 'light', user = null }) {
+function ExtendedProviders({
+  children,
+  initialEntries = ['/'],
+  theme = 'light',
+  user = null,
+}) {
   const queryClient = createTestQueryClient();
   return (
     <QueryClientProvider client={queryClient}>
@@ -103,7 +108,7 @@ function ExtendedProviders({ children, initialEntries = ['/'], theme = 'light', 
 }
 export function render(
   ui,
-  { initialEntries = ['/'], route = '/', providerProps = {}, ...options } = {},
+  { initialEntries = ['/'], route = '/', providerProps = {}, ...options } = {}
 ) {
   // Set initial route
   window.history.pushState({}, 'Test page', route);
@@ -132,12 +137,17 @@ export function expectToHaveError(element, error) {
 export async function waitForLoadingToFinish(container = document) {
   await waitFor(
     () => {
-      expect(container.querySelector('[aria-busy="true"]')).not.toBeInTheDocument();
+      expect(
+        container.querySelector('[aria-busy="true"]')
+      ).not.toBeInTheDocument();
     },
-    { timeout: 3000 },
+    { timeout: 3000 }
   );
 }
-export async function waitForElementToBeRemoved(callback, options = { timeout: 3000 }) {
+export async function waitForElementToBeRemoved(
+  callback,
+  options = { timeout: 3000 }
+) {
   await waitFor(() => {
     expect(callback()).not.toBeInTheDocument();
   }, options);

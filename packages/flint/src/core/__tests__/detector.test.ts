@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as path from 'node:path';
-import { isSuccess, isFailure, success, failure, ErrorCode } from '@outfitter/contracts';
+import {
+  isSuccess,
+  isFailure,
+  success,
+  failure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import {
   detectExistingTools,
   detectEslintConfig,
@@ -27,16 +33,20 @@ describe('detector', () => {
       vi.mocked(fs.fileExists).mockImplementation(async (filePath) =>
         success(filePath.endsWith('.eslintrc.json'))
       );
-      
+
       vi.mocked(fs.readFile).mockImplementation(async (filePath) => {
         if (filePath.endsWith('.eslintrc.json')) {
           return success('{"extends": ["standard"]}');
         }
-        return failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' });
+        return failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        });
       });
 
       const result = await detectExistingTools();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data.hasConfigs).toBe(true);
@@ -52,9 +62,12 @@ describe('detector', () => {
 
     it('should detect multiple configuration files', async () => {
       vi.mocked(fs.fileExists).mockImplementation(async (filePath) =>
-        success(filePath.endsWith('.eslintrc.json') || filePath.endsWith('.prettierrc'))
+        success(
+          filePath.endsWith('.eslintrc.json') ||
+            filePath.endsWith('.prettierrc')
+        )
       );
-      
+
       vi.mocked(fs.readFile).mockImplementation(async (filePath) => {
         if (filePath.endsWith('.eslintrc.json')) {
           return success('{"extends": ["standard"]}');
@@ -62,11 +75,15 @@ describe('detector', () => {
         if (filePath.endsWith('.prettierrc')) {
           return success('{"semi": false}');
         }
-        return failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' });
+        return failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        });
       });
 
       const result = await detectExistingTools();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data.hasConfigs).toBe(true);
@@ -79,24 +96,30 @@ describe('detector', () => {
 
     it('should detect embedded configs in package.json', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.readFile).mockImplementation(async (filePath) => {
         if (filePath.endsWith('package.json')) {
-          return success(JSON.stringify({
-            name: 'test-project',
-            eslintConfig: {
-              extends: ['standard'],
-            },
-            prettier: {
-              semi: false,
-            },
-          }));
+          return success(
+            JSON.stringify({
+              name: 'test-project',
+              eslintConfig: {
+                extends: ['standard'],
+              },
+              prettier: {
+                semi: false,
+              },
+            })
+          );
         }
-        return failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' });
+        return failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        });
       });
 
       const result = await detectExistingTools();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data.hasConfigs).toBe(true);
@@ -109,13 +132,17 @@ describe('detector', () => {
 
     it('should handle no configurations found', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.readFile).mockResolvedValue(
-        failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' })
+        failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        })
       );
 
       const result = await detectExistingTools();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data.hasConfigs).toBe(false);
@@ -126,16 +153,20 @@ describe('detector', () => {
 
     it('should handle invalid package.json', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.readFile).mockImplementation(async (filePath) => {
         if (filePath.endsWith('package.json')) {
           return success('invalid json');
         }
-        return failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' });
+        return failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        });
       });
 
       const result = await detectExistingTools();
-      
+
       expect(isFailure(result)).toBe(true);
       if (isFailure(result)) {
         expect(result.error.code).toBe(ErrorCode.VALIDATION_ERROR);
@@ -149,16 +180,20 @@ describe('detector', () => {
       vi.mocked(fs.fileExists).mockImplementation(async (filePath) =>
         success(filePath.endsWith('.eslintrc.js'))
       );
-      
+
       vi.mocked(fs.readFile).mockImplementation(async (filePath) => {
         if (filePath.endsWith('.eslintrc.js')) {
           return success('module.exports = {};');
         }
-        return failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' });
+        return failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        });
       });
 
       const result = await detectEslintConfig();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -167,13 +202,17 @@ describe('detector', () => {
 
     it('should return false when ESLint is not configured', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.readFile).mockResolvedValue(
-        failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' })
+        failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        })
       );
 
       const result = await detectEslintConfig();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -186,16 +225,20 @@ describe('detector', () => {
       vi.mocked(fs.fileExists).mockImplementation(async (filePath) =>
         success(filePath.endsWith('.prettierrc.json'))
       );
-      
+
       vi.mocked(fs.readFile).mockImplementation(async (filePath) => {
         if (filePath.endsWith('.prettierrc.json')) {
           return success('{"semi": false}');
         }
-        return failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' });
+        return failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        });
       });
 
       const result = await detectPrettierConfig();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -210,7 +253,7 @@ describe('detector', () => {
       );
 
       const result = await detectTypeScript();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -219,11 +262,13 @@ describe('detector', () => {
 
     it('should return true when TypeScript files exist', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
-      vi.mocked(fs.findFiles).mockResolvedValue(success(['src/index.ts', 'src/component.tsx']));
+
+      vi.mocked(fs.findFiles).mockResolvedValue(
+        success(['src/index.ts', 'src/component.tsx'])
+      );
 
       const result = await detectTypeScript();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -232,11 +277,11 @@ describe('detector', () => {
 
     it('should return false when no TypeScript is detected', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.findFiles).mockResolvedValue(success([]));
 
       const result = await detectTypeScript();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -247,16 +292,18 @@ describe('detector', () => {
   describe('detectReact', () => {
     it('should return true when React is in dependencies', async () => {
       vi.mocked(fs.readFile).mockResolvedValue(
-        success(JSON.stringify({
-          dependencies: {
-            react: '^18.0.0',
-            'react-dom': '^18.0.0',
-          },
-        }))
+        success(
+          JSON.stringify({
+            dependencies: {
+              react: '^18.0.0',
+              'react-dom': '^18.0.0',
+            },
+          })
+        )
       );
 
       const result = await detectReact();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -265,15 +312,17 @@ describe('detector', () => {
 
     it('should return true when React is in devDependencies', async () => {
       vi.mocked(fs.readFile).mockResolvedValue(
-        success(JSON.stringify({
-          devDependencies: {
-            react: '^18.0.0',
-          },
-        }))
+        success(
+          JSON.stringify({
+            devDependencies: {
+              react: '^18.0.0',
+            },
+          })
+        )
       );
 
       const result = await detectReact();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -282,15 +331,17 @@ describe('detector', () => {
 
     it('should return false when React is not found', async () => {
       vi.mocked(fs.readFile).mockResolvedValue(
-        success(JSON.stringify({
-          dependencies: {
-            express: '^4.0.0',
-          },
-        }))
+        success(
+          JSON.stringify({
+            dependencies: {
+              express: '^4.0.0',
+            },
+          })
+        )
       );
 
       const result = await detectReact();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -299,11 +350,15 @@ describe('detector', () => {
 
     it('should return false when package.json is not found', async () => {
       vi.mocked(fs.readFile).mockResolvedValue(
-        failure({ type: 'FILE_SYSTEM_ERROR', code: 'ENOENT', message: 'Not found' })
+        failure({
+          type: 'FILE_SYSTEM_ERROR',
+          code: 'ENOENT',
+          message: 'Not found',
+        })
       );
 
       const result = await detectReact();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -318,7 +373,7 @@ describe('detector', () => {
       );
 
       const result = await detectStyles();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -329,7 +384,7 @@ describe('detector', () => {
       vi.mocked(fs.findFiles).mockResolvedValue(success([]));
 
       const result = await detectStyles();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -344,7 +399,7 @@ describe('detector', () => {
       );
 
       const result = await detectMarkdown();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -355,7 +410,7 @@ describe('detector', () => {
       vi.mocked(fs.findFiles).mockResolvedValue(success([]));
 
       const result = await detectMarkdown();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -368,7 +423,7 @@ describe('detector', () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(true));
 
       const result = await detectVSCode();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(true);
@@ -379,7 +434,7 @@ describe('detector', () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
 
       const result = await detectVSCode();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(false);
@@ -394,7 +449,7 @@ describe('detector', () => {
       );
 
       const result = await detectGitHooks();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('husky');
@@ -407,7 +462,7 @@ describe('detector', () => {
       );
 
       const result = await detectGitHooks();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('lefthook');
@@ -416,17 +471,19 @@ describe('detector', () => {
 
     it('should detect simple-git-hooks in package.json', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.readFile).mockResolvedValue(
-        success(JSON.stringify({
-          'simple-git-hooks': {
-            'pre-commit': 'npm test',
-          },
-        }))
+        success(
+          JSON.stringify({
+            'simple-git-hooks': {
+              'pre-commit': 'npm test',
+            },
+          })
+        )
       );
 
       const result = await detectGitHooks();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe('simple-git-hooks');
@@ -435,11 +492,11 @@ describe('detector', () => {
 
     it('should return null when no git hooks detected', async () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
-      
+
       vi.mocked(fs.readFile).mockResolvedValue(success(JSON.stringify({})));
 
       const result = await detectGitHooks();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toBe(null);
@@ -450,11 +507,14 @@ describe('detector', () => {
   describe('getConfigsToCleanup', () => {
     it('should return list of existing config files', async () => {
       vi.mocked(fs.fileExists).mockImplementation(async (filePath) =>
-        success(filePath.endsWith('.eslintrc.json') || filePath.endsWith('.prettierrc'))
+        success(
+          filePath.endsWith('.eslintrc.json') ||
+            filePath.endsWith('.prettierrc')
+        )
       );
 
       const result = await getConfigsToCleanup();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toContain('.eslintrc.json');
@@ -466,7 +526,7 @@ describe('detector', () => {
       vi.mocked(fs.fileExists).mockResolvedValue(success(false));
 
       const result = await getConfigsToCleanup();
-      
+
       expect(isSuccess(result)).toBe(true);
       if (isSuccess(result)) {
         expect(result.data).toHaveLength(0);

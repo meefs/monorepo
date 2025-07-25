@@ -1,17 +1,17 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import * as os from 'node:os';
+import * as path from 'node:path';
 import { isSuccess } from '@outfitter/contracts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   generateBiomeConfig,
+  generateCommitlintConfig,
+  generateEditorconfigConfig,
+  generateLefthookConfig,
+  generateMarkdownlintConfig,
   generateOxlintConfig,
   generatePrettierConfig,
-  generateMarkdownlintConfig,
   generateStylelintConfig,
-  generateLefthookConfig,
-  generateEditorconfigConfig,
-  generateCommitlintConfig,
   setupVSCode,
   updatePackageScripts,
 } from '../index.js';

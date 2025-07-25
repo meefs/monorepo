@@ -23,7 +23,11 @@ async function findMarkdownFiles(dir: string): Promise<Array<string>> {
 
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
-    if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules') {
+    if (
+      entry.isDirectory() &&
+      !entry.name.startsWith('.') &&
+      entry.name !== 'node_modules'
+    ) {
       files.push(...(await findMarkdownFiles(fullPath)));
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       files.push(fullPath);
@@ -110,7 +114,7 @@ async function validateCrossReferences() {
         acc[relativeFile].push(link);
         return acc;
       },
-      {} as Record<string, Array<LinkInfo>>,
+      {} as Record<string, Array<LinkInfo>>
     );
 
     for (const [file, links] of Object.entries(groupedByFile)) {

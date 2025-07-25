@@ -10,7 +10,7 @@
   "arrowParens": "always",
   "overrides": [
     {
-      "files": "*.md, *.mdc",
+      "files": ["*.md", "*.mdc"],
       "options": {
         "proseWrap": "never"
       }

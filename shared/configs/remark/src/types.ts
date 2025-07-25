@@ -51,4 +51,6 @@ export interface RemarkConfigOptions {
 /**
  * Function type for generating remark configurations
  */
-export type RemarkConfigGenerator = (options?: RemarkConfigOptions) => RemarkConfig;
+export type RemarkConfigGenerator = (
+  options?: RemarkConfigOptions
+) => RemarkConfig;

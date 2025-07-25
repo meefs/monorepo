@@ -11,14 +11,17 @@ import {
 } from '@outfitter/contracts';
 import { fromZod } from '@outfitter/contracts-zod';
 import { parse } from 'comment-json';
-import type { OutfitterConfig, PartialOutfitterConfig } from '../types/index.js';
+import type {
+  OutfitterConfig,
+  PartialOutfitterConfig,
+} from '../types/index.js';
 import { DEFAULT_CONFIG, OutfitterConfigSchema } from '../types/index.js';
 
 /**
  * Reads and parses the .outfitter/config.jsonc file
  */
 export async function readConfig(
-  cwd: string = process.cwd(),
+  cwd: string = process.cwd()
 ): Promise<Result<OutfitterConfig, AppError>> {
   const configPath = join(cwd, '.outfitter', 'config.jsonc');
 
@@ -46,8 +49,8 @@ export async function readConfig(
         ErrorCode.INTERNAL_ERROR,
         `Failed to read or parse config from ${configPath}`,
         { path: configPath },
-        error instanceof Error ? error : undefined,
-      ),
+        error instanceof Error ? error : undefined
+      )
     );
   }
 }
@@ -63,7 +66,7 @@ export async function readConfig(
  */
 function mergeConfigs(
   defaultConfig: OutfitterConfig,
-  userConfig: PartialOutfitterConfig,
+  userConfig: PartialOutfitterConfig
 ): OutfitterConfig {
   const result: OutfitterConfig = {
     ...defaultConfig,

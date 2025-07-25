@@ -1,7 +1,15 @@
 /**
  * Smart config merging utilities
  */
-import { Result, success, failure, makeError, isSuccess, isFailure, ErrorCode } from '@outfitter/contracts';
+import {
+  Result,
+  success,
+  failure,
+  makeError,
+  isSuccess,
+  isFailure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { readJSON, writeJSON, fileExists } from '../utils/file-system';
 
 export interface MergeOptions {
@@ -84,7 +92,12 @@ export async function mergeJSONFile(
   if (existsResult.data) {
     const readResult = await readJSON(filePath);
     if (isFailure(readResult)) {
-      return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read existing file: ${readResult.error.message}`));
+      return failure(
+        makeError(
+          ErrorCode.INTERNAL_ERROR,
+          `Failed to read existing file: ${readResult.error.message}`
+        )
+      );
     }
     existingData = readResult.data;
   }
@@ -93,7 +106,12 @@ export async function mergeJSONFile(
 
   const writeResult = await writeJSON(filePath, merged);
   if (isFailure(writeResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to write merged file: ${writeResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to write merged file: ${writeResult.error.message}`
+      )
+    );
   }
 
   return success(undefined);
@@ -136,7 +154,12 @@ export async function mergePackageScripts(
 
   const pkgResult = await readJSON<any>('package.json');
   if (isFailure(pkgResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read package.json: ${pkgResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read package.json: ${pkgResult.error.message}`
+      )
+    );
   }
 
   const pkg = pkgResult.data;
@@ -150,7 +173,12 @@ export async function mergePackageScripts(
 
   const writeResult = await writeJSON('package.json', pkg);
   if (isFailure(writeResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to write package.json: ${writeResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to write package.json: ${writeResult.error.message}`
+      )
+    );
   }
 
   return success(undefined);
@@ -174,7 +202,12 @@ export async function removeJSONFields(
 
   const readResult = await readJSON<any>(filePath);
   if (isFailure(readResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to read file: ${readResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to read file: ${readResult.error.message}`
+      )
+    );
   }
 
   const data = readResult.data;
@@ -184,7 +217,12 @@ export async function removeJSONFields(
 
   const writeResult = await writeJSON(filePath, data);
   if (isFailure(writeResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to write file: ${writeResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to write file: ${writeResult.error.message}`
+      )
+    );
   }
 
   return success(undefined);

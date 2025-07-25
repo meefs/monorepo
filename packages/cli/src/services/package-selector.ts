@@ -1,6 +1,10 @@
 import type { FieldguideRecommendation } from '../config/fieldguide-mappings.js';
 import { getRecommendedFieldguideIds } from '../config/fieldguide-mappings.js';
-import { CONFIG_PACKAGES, PRESET_CONFIGURATIONS, UTILITY_PACKAGES } from '../constants/packages.js';
+import {
+  CONFIG_PACKAGES,
+  PRESET_CONFIGURATIONS,
+  UTILITY_PACKAGES,
+} from '../constants/packages.js';
 import type { PackageSelection, PresetType } from '../types/index.js';
 import * as prompts from '../ui/prompts.js';
 import type { TerrainFeatures } from '../utils/detect-terrain.js';
@@ -23,7 +27,9 @@ export function getPresetSelection(preset: PresetType): PackageSelection {
  * @param terrain - The terrain features used to determine recommended fieldguides.
  * @returns The default package selection for the specified terrain.
  */
-export function getDefaultSelection(terrain: TerrainFeatures): PackageSelection {
+export function getDefaultSelection(
+  terrain: TerrainFeatures
+): PackageSelection {
   return {
     configs: CONFIG_PACKAGES.filter((p) => p.selected).map((p) => p.value),
     utils: UTILITY_PACKAGES.filter((p) => p.selected).map((p) => p.value),
@@ -40,7 +46,7 @@ export function getDefaultSelection(terrain: TerrainFeatures): PackageSelection 
  */
 export async function getInteractiveSelection(
   _terrain: TerrainFeatures,
-  recommendedFieldguides: Array<FieldguideRecommendation>,
+  recommendedFieldguides: Array<FieldguideRecommendation>
 ): Promise<PackageSelection> {
   console.log(''); // Add spacing
 

@@ -18,22 +18,22 @@ export default defineConfig({
         '**/*.config.{js,ts}',
         '**/*.test.{js,ts}',
         '**/__tests__/**',
-        '**/test-utils/**'
+        '**/test-utils/**',
       ],
       thresholds: {
         global: {
           branches: 80,
           functions: 80,
           lines: 80,
-          statements: 80
-        }
-      }
+          statements: 80,
+        },
+      },
     },
     setupFiles: [],
     testTimeout: 10000,
-    hookTimeout: 10000
+    hookTimeout: 10000,
   },
   esbuild: {
-    target: 'node18'
-  }
+    target: 'node18',
+  },
 });

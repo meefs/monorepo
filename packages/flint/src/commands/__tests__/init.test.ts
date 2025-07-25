@@ -48,18 +48,20 @@ describe('init command', () => {
   it('should detect existing configurations', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['.prettierrc'] = createPrettierConfig();
-    
+
     // Mock console to capture output
     const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     // Mock prompts to cancel
     mockPrompts({ Continue: false });
 
     const result = await init({});
 
     expect(isSuccess(result)).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Found 2 existing configuration(s):'));
-    
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Found 2 existing configuration(s):')
+    );
+
     consoleSpy.mockRestore();
   });
 
@@ -93,7 +95,7 @@ describe('init command', () => {
 
   it('should detect monorepo structure', async () => {
     ctx.mockFs['pnpm-workspace.yaml'] = 'packages:\n  - "packages/*"';
-    
+
     ctx.mockExec.mockReturnValue({ stdout: '', stderr: '' });
 
     const result = await init({ yes: true });
@@ -149,7 +151,7 @@ describe('init command', () => {
   it('should create backup of existing configs', async () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['.prettierrc'] = createPrettierConfig();
-    
+
     mockPrompts({ Continue: true });
     ctx.mockExec.mockReturnValue({ stdout: '', stderr: '' });
 
@@ -157,7 +159,9 @@ describe('init command', () => {
 
     expect(isSuccess(result)).toBe(true);
     // Should have created a backup markdown file
-    const backupFiles = Object.keys(ctx.mockFs).filter(f => f.includes('flint-backup'));
+    const backupFiles = Object.keys(ctx.mockFs).filter((f) =>
+      f.includes('flint-backup')
+    );
     expect(backupFiles.length).toBeGreaterThan(0);
   });
 
@@ -167,7 +171,9 @@ describe('init command', () => {
     const result = await init({ yes: true });
 
     expect(isSuccess(result)).toBe(true);
-    expect(ctx.mockExec).toHaveBeenCalledWith(expect.stringContaining('install'));
+    expect(ctx.mockExec).toHaveBeenCalledWith(
+      expect.stringContaining('install')
+    );
   });
 
   it('should update package.json scripts', async () => {
@@ -198,7 +204,9 @@ describe('init command', () => {
     const result = await init({ yes: true });
 
     expect(isSuccess(result)).toBe(true);
-    const migrationReports = Object.keys(ctx.mockFs).filter(f => f.includes('flint-migration'));
+    const migrationReports = Object.keys(ctx.mockFs).filter((f) =>
+      f.includes('flint-migration')
+    );
     expect(migrationReports.length).toBeGreaterThan(0);
   });
 
@@ -224,7 +232,7 @@ describe('init command', () => {
         'react-dom': '^18.0.0',
       },
     });
-    
+
     ctx.mockExec.mockReturnValue({ stdout: '', stderr: '' });
 
     const result = await init({ yes: true });

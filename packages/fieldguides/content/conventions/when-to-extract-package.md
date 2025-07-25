@@ -76,7 +76,7 @@ Consider extraction when:
 
 **Structure**:
 
-```text
+```plaintext
 packages/ui/
   src/
     components/
@@ -173,7 +173,7 @@ export interface ApiResponse<T> {
 
 ❌ **Don't create catch-all utility packages**
 
-```text
+```plaintext
 packages/
   utils/          # Bad: becomes a junk drawer
     strings.ts    # Random string functions
@@ -183,7 +183,7 @@ packages/
 
 ✅ **Do create focused packages**
 
-```text
+```plaintext
 packages/
   date-fns/       # Good: clear purpose
   validation/     # Good: cohesive domain

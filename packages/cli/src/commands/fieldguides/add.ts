@@ -19,13 +19,16 @@ interface OutfitterConfig {
  *
  * @remark Exits the process with code 1 if the configuration file does not exist.
  */
-export async function addFieldguides(fieldguides: Array<string>): Promise<void> {
+export async function addFieldguides(
+  fieldguides: Array<string>
+): Promise<void> {
   const cwd = process.cwd();
   const configPath = join(cwd, '.outfitter', 'config.json');
 
   // Check if initialized
   if (!(await pathExists(configPath))) {
-    const message = 'No fieldguide configuration found. Run "outfitter fg create" first.';
+    const message =
+      'No fieldguide configuration found. Run "outfitter fg create" first.';
     // Let the top-level CLI handler decide what to do
     throw new Error(message);
   }
@@ -44,7 +47,9 @@ export async function addFieldguides(fieldguides: Array<string>): Promise<void> 
         : [];
 
     // Add new fieldguides (avoiding duplicates)
-    const newFieldguides = fieldguides.filter((f) => !existingFieldguides.includes(f));
+    const newFieldguides = fieldguides.filter(
+      (f) => !existingFieldguides.includes(f)
+    );
     config.fieldguides = [...existingFieldguides, ...newFieldguides];
 
     // drop legacy key without `delete`
@@ -66,7 +71,9 @@ export async function addFieldguides(fieldguides: Array<string>): Promise<void> 
 
     const skipped = fieldguides.length - newFieldguides.length;
     if (skipped > 0) {
-      console.log(`\n${chalk.yellow(`Skipped ${skipped} already installed fieldguides`)}`);
+      console.log(
+        `\n${chalk.yellow(`Skipped ${skipped} already installed fieldguides`)}`
+      );
     }
   } catch (error) {
     spinner.fail('Failed to add fieldguides');

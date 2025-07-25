@@ -11,10 +11,19 @@ import { detectTerrain } from '../utils/detect-terrain.js';
 export const equipCommand = new Command('equip')
   .alias('init')
   .description('Interactively install Outfitter configurations and utilities')
-  .option('--preset <type>', 'Use a preset configuration (minimal, standard, full)')
+  .option(
+    '--preset <type>',
+    'Use a preset configuration (minimal, standard, full)'
+  )
   .option('-y, --yes', 'Skip prompts and use defaults')
-  .option('--filter <target>', 'Install to specific workspace package (monorepos)')
-  .option('--workspace-root', 'Explicitly install to workspace root (monorepos)')
+  .option(
+    '--filter <target>',
+    'Install to specific workspace package (monorepos)'
+  )
+  .option(
+    '--workspace-root',
+    'Explicitly install to workspace root (monorepos)'
+  )
   .action(async (options: EquipOptions) => {
     ui.showWelcome();
 
@@ -37,7 +46,10 @@ export const equipCommand = new Command('equip')
     } else if (options.yes) {
       selection = packageSelector.getDefaultSelection(terrain);
     } else {
-      selection = await packageSelector.getInteractiveSelection(terrain, recommendedFieldguides);
+      selection = await packageSelector.getInteractiveSelection(
+        terrain,
+        recommendedFieldguides
+      );
     }
 
     // Detect and show package manager

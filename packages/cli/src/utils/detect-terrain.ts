@@ -62,11 +62,16 @@ export interface TerrainFeatures {
  * @param cwd - The directory to search in. Defaults to the current working directory.
  * @returns `true` if the package is found in any dependency section; otherwise, `false`.
  */
-async function hasPackage(packageName: string, cwd: string = process.cwd()): Promise<boolean> {
+async function hasPackage(
+  packageName: string,
+  cwd: string = process.cwd()
+): Promise<boolean> {
   try {
     const packageJsonPath = join(cwd, 'package.json');
     if (await pathExists(packageJsonPath)) {
-      const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8')) as PackageJson;
+      const packageJson = JSON.parse(
+        await readFile(packageJsonPath, 'utf-8')
+      ) as PackageJson;
       const deps = {
         ...(packageJson.dependencies ?? {}),
         ...(packageJson.devDependencies ?? {}),
@@ -93,7 +98,10 @@ async function hasPackage(packageName: string, cwd: string = process.cwd()): Pro
  * @param cwd - Directory to resolve {@link filePath} from. Defaults to the current working directory.
  * @returns `true` if the file exists, otherwise `false`.
  */
-async function fileExists(filePath: string, cwd: string = process.cwd()): Promise<boolean> {
+async function fileExists(
+  filePath: string,
+  cwd: string = process.cwd()
+): Promise<boolean> {
   return pathExists(join(cwd, filePath));
 }
 
@@ -105,7 +113,9 @@ async function fileExists(filePath: string, cwd: string = process.cwd()): Promis
  * @param cwd - The directory to analyze. Defaults to the current working directory.
  * @returns An object indicating detected frameworks, languages, testing tools, state management libraries, build tools, project features, and package managers.
  */
-export async function detectTerrain(cwd: string = process.cwd()): Promise<TerrainFeatures> {
+export async function detectTerrain(
+  cwd: string = process.cwd()
+): Promise<TerrainFeatures> {
   // Run all checks in parallel for better performance
   const [
     // Framework files

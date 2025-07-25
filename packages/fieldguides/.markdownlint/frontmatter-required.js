@@ -3,7 +3,11 @@
 import matter from 'gray-matter';
 
 const STANDARDS_FILES = ['CODING.md', 'SECURITY.md', 'TESTING.md'];
-const SKIP_FILES = ['README.md', 'FRONTMATTER-SCHEMA.md', 'MIGRATION_REPORT.md'];
+const SKIP_FILES = [
+  'README.md',
+  'FRONTMATTER-SCHEMA.md',
+  'MIGRATION_REPORT.md',
+];
 
 export default {
   names: ['frontmatter-required'],
@@ -37,7 +41,8 @@ export default {
       if (!parsed.data || Object.keys(parsed.data).length === 0) {
         onError({
           lineNumber: 1,
-          detail: 'File must have frontmatter with required fields: slug, title, description, type',
+          detail:
+            'File must have frontmatter with required fields: slug, title, description, type',
         });
         return;
       }

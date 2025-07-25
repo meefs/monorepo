@@ -32,7 +32,7 @@ describe('rightdown integration', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
@@ -42,7 +42,10 @@ describe('rightdown integration', () => {
       expect(result.data.generatedFiles).toContain('.rightdown.config.jsonc');
 
       // Check that the config file was actually created
-      const configContent = await readFile(join(tempDir, '.rightdown.config.jsonc'), 'utf-8');
+      const configContent = await readFile(
+        join(tempDir, '.rightdown.config.jsonc'),
+        'utf-8'
+      );
       expect(configContent).toContain('rightdown configuration');
       expect(configContent).toContain('strictness: strict');
       expect(configContent).toContain('terminology');
@@ -66,14 +69,16 @@ describe('rightdown integration', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.generatedFiles).not.toContain('.rightdown.config.jsonc');
+      expect(result.data.generatedFiles).not.toContain(
+        '.rightdown.config.jsonc'
+      );
     }
   });
 
@@ -92,14 +97,17 @@ describe('rightdown integration', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      const configContent = await readFile(join(tempDir, '.rightdown.config.jsonc'), 'utf-8');
+      const configContent = await readFile(
+        join(tempDir, '.rightdown.config.jsonc'),
+        'utf-8'
+      );
       expect(configContent).toContain('strictness: relaxed');
       expect(configContent).toContain('"preset": "relaxed"');
     }
@@ -120,14 +128,17 @@ describe('rightdown integration', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      const configContent = await readFile(join(tempDir, '.rightdown.config.jsonc'), 'utf-8');
+      const configContent = await readFile(
+        join(tempDir, '.rightdown.config.jsonc'),
+        'utf-8'
+      );
       expect(configContent).toContain('strictness: pedantic');
       expect(configContent).toContain('"preset": "strict"');
     }
@@ -154,14 +165,17 @@ describe('rightdown integration', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      const configContent = await readFile(join(tempDir, '.rightdown.config.jsonc'), 'utf-8');
+      const configContent = await readFile(
+        join(tempDir, '.rightdown.config.jsonc'),
+        'utf-8'
+      );
       expect(configContent).toContain('./custom-rule.js');
       expect(configContent).toContain('docs/special/**');
       expect(configContent).toContain('"incorrect": "Docker"');

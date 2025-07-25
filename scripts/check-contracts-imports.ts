@@ -6,7 +6,8 @@
 import { readFileSync } from 'node:fs';
 import { globSync } from 'glob';
 
-const IMPORT_PATTERN = /import\s+(?:{[^}]+}|[^}]+)\s+from\s+['"]@outfitter\/contracts['"];?/g;
+const IMPORT_PATTERN =
+  /import\s+(?:{[^}]+}|[^}]+)\s+from\s+['"]@outfitter\/contracts['"];?/g;
 const IGNORE_PATTERNS = [
   '**/node_modules/**',
   '**/dist/**',

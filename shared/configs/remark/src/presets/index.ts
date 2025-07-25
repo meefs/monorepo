@@ -15,7 +15,11 @@ import { relaxed } from './relaxed.js';
  * Generate a remark configuration based on preset and options
  */
 export function generate(options: RemarkConfigOptions = {}): RemarkConfig {
-  const { preset = 'standard', additionalPlugins = [], settings = {} } = options;
+  const {
+    preset = 'standard',
+    additionalPlugins = [],
+    settings = {},
+  } = options;
 
   let baseConfig: RemarkConfig;
 

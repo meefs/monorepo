@@ -8,7 +8,9 @@ import { readFileSync } from 'node:fs';
  */
 export const PackageJsonSchema = z.object({
   name: z.string().min(1, 'Package name is required'),
-  version: z.string().regex(/^\d+\.\d+\.\d+/, 'Version must be in semver format'),
+  version: z
+    .string()
+    .regex(/^\d+\.\d+\.\d+/, 'Version must be in semver format'),
   type: z.enum(['module', 'commonjs']).optional(),
   scripts: z.record(z.string()).optional(),
   dependencies: z.record(z.string()).optional(),
@@ -61,7 +63,9 @@ export function readPackageJson(path: string): Result<PackageJson, Error> {
         return failure(new Error(`Package.json not found at ${path}`));
       }
       if (error.message.includes('JSON')) {
-        return failure(new Error(`Invalid JSON in package.json: ${error.message}`));
+        return failure(
+          new Error(`Invalid JSON in package.json: ${error.message}`)
+        );
       }
       return failure(error);
     }

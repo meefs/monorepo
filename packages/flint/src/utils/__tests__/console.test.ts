@@ -56,37 +56,49 @@ describe('Console', () => {
     it('should log success message', () => {
       console.success('operation complete');
       expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('✅'));
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('operation complete'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('operation complete')
+      );
     });
 
     it('should log error message', () => {
       console.error('operation failed');
       expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('❌'));
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('operation failed'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('operation failed')
+      );
     });
 
     it('should log warning message', () => {
       console.warning('be careful');
       expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('⚠️'));
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('be careful'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('be careful')
+      );
     });
 
     it('should log info message', () => {
       console.info('for your information');
       expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('ℹ️'));
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('for your information'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('for your information')
+      );
     });
 
     it('should log skip message', () => {
       console.skip('skipping this');
       expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('⏭️'));
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('skipping this'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('skipping this')
+      );
     });
 
     it('should log step message', () => {
       console.step('doing something');
       expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('→'));
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('doing something'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('doing something')
+      );
     });
   });
 
@@ -95,7 +107,10 @@ describe('Console', () => {
       console.title('Section Title');
       expect(mockLog).toHaveBeenCalledTimes(3); // empty line, title, underline
       expect(mockLog).toHaveBeenNthCalledWith(1);
-      expect(mockLog).toHaveBeenNthCalledWith(2, expect.stringContaining('Section Title'));
+      expect(mockLog).toHaveBeenNthCalledWith(
+        2,
+        expect.stringContaining('Section Title')
+      );
       expect(mockLog).toHaveBeenNthCalledWith(3, expect.stringContaining('─'));
     });
   });
@@ -105,7 +120,10 @@ describe('Console', () => {
       console.section('New Section');
       expect(mockLog).toHaveBeenCalledTimes(2); // empty line, section
       expect(mockLog).toHaveBeenNthCalledWith(1);
-      expect(mockLog).toHaveBeenNthCalledWith(2, expect.stringContaining('New Section'));
+      expect(mockLog).toHaveBeenNthCalledWith(
+        2,
+        expect.stringContaining('New Section')
+      );
     });
   });
 
@@ -113,9 +131,15 @@ describe('Console', () => {
     it('should log code block', () => {
       console.code('const x = 1;', 'javascript');
       expect(mockLog).toHaveBeenCalledTimes(3);
-      expect(mockLog).toHaveBeenNthCalledWith(1, expect.stringContaining('```javascript'));
+      expect(mockLog).toHaveBeenNthCalledWith(
+        1,
+        expect.stringContaining('```javascript')
+      );
       expect(mockLog).toHaveBeenNthCalledWith(2, 'const x = 1;');
-      expect(mockLog).toHaveBeenNthCalledWith(3, expect.stringContaining('```'));
+      expect(mockLog).toHaveBeenNthCalledWith(
+        3,
+        expect.stringContaining('```')
+      );
     });
 
     it('should log multiline code', () => {
@@ -130,44 +154,66 @@ describe('Console', () => {
     it('should log unordered list', () => {
       console.list(['item 1', 'item 2']);
       expect(mockLog).toHaveBeenCalledTimes(2);
-      expect(mockLog).toHaveBeenNthCalledWith(1, expect.stringContaining('• item 1'));
-      expect(mockLog).toHaveBeenNthCalledWith(2, expect.stringContaining('• item 2'));
+      expect(mockLog).toHaveBeenNthCalledWith(
+        1,
+        expect.stringContaining('• item 1')
+      );
+      expect(mockLog).toHaveBeenNthCalledWith(
+        2,
+        expect.stringContaining('• item 2')
+      );
     });
 
     it('should log ordered list', () => {
       console.list(['first', 'second'], true);
       expect(mockLog).toHaveBeenCalledTimes(2);
-      expect(mockLog).toHaveBeenNthCalledWith(1, expect.stringContaining('1. first'));
-      expect(mockLog).toHaveBeenNthCalledWith(2, expect.stringContaining('2. second'));
+      expect(mockLog).toHaveBeenNthCalledWith(
+        1,
+        expect.stringContaining('1. first')
+      );
+      expect(mockLog).toHaveBeenNthCalledWith(
+        2,
+        expect.stringContaining('2. second')
+      );
     });
   });
 
   describe('progress', () => {
     it('should show progress bar at 0%', () => {
       console.progress(0, 100);
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('[░░░░░░░░░░░░░░░░░░░░] 0%'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('[░░░░░░░░░░░░░░░░░░░░] 0%')
+      );
     });
 
     it('should show progress bar at 50%', () => {
       console.progress(50, 100);
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('[██████████░░░░░░░░░░] 50%'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('[██████████░░░░░░░░░░] 50%')
+      );
     });
 
     it('should show progress bar at 100%', () => {
       console.progress(100, 100);
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('[████████████████████] 100%'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('[████████████████████] 100%')
+      );
     });
 
     it('should show progress with message', () => {
       console.progress(25, 100, 'Processing files');
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('25% Processing files'));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('25% Processing files')
+      );
     });
   });
 
   describe('divider', () => {
     it('should log divider line', () => {
       console.divider();
-      expect(mockLog).toHaveBeenCalledWith(expect.stringContaining('─'.repeat(50)));
+      expect(mockLog).toHaveBeenCalledWith(
+        expect.stringContaining('─'.repeat(50))
+      );
     });
   });
 });

@@ -50,7 +50,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const formatterIssue = report.issues.find(i => i.description.includes('Multiple formatters'));
+      const formatterIssue = report.issues.find((i) =>
+        i.description.includes('Multiple formatters')
+      );
       expect(formatterIssue).toBeDefined();
       expect(formatterIssue?.severity).toBe('warning');
     }
@@ -65,7 +67,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const linterIssue = report.issues.find(i => i.description.includes('Both ESLint and Oxlint'));
+      const linterIssue = report.issues.find((i) =>
+        i.description.includes('Both ESLint and Oxlint')
+      );
       expect(linterIssue).toBeDefined();
       expect(linterIssue?.severity).toBe('warning');
     }
@@ -80,7 +84,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const mixIssue = report.issues.find(i => i.description.includes('Mix of old and new tools'));
+      const mixIssue = report.issues.find((i) =>
+        i.description.includes('Mix of old and new tools')
+      );
       expect(mixIssue).toBeDefined();
       expect(mixIssue?.severity).toBe('warning');
     }
@@ -99,7 +105,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const nodeIssue = report.issues.find(i => i.description.includes('Node.js version'));
+      const nodeIssue = report.issues.find((i) =>
+        i.description.includes('Node.js version')
+      );
       expect(nodeIssue).toBeDefined();
       expect(nodeIssue?.severity).toBe('error');
     }
@@ -121,7 +129,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const pmIssue = report.issues.find(i => i.description.includes('No package manager'));
+      const pmIssue = report.issues.find((i) =>
+        i.description.includes('No package manager')
+      );
       expect(pmIssue).toBeUndefined();
     }
   });
@@ -139,7 +149,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const pmIssue = report.issues.find(i => i.description.includes('No package manager'));
+      const pmIssue = report.issues.find((i) =>
+        i.description.includes('No package manager')
+      );
       expect(pmIssue).toBeDefined();
       expect(pmIssue?.severity).toBe('error');
     }
@@ -158,7 +170,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const ultraciteIssue = report.issues.find(i => i.description.includes('Ultracite'));
+      const ultraciteIssue = report.issues.find((i) =>
+        i.description.includes('Ultracite')
+      );
       expect(ultraciteIssue).toBeDefined();
       expect(ultraciteIssue?.severity).toBe('info');
     }
@@ -170,7 +184,7 @@ describe('doctor command', () => {
       'editor.formatOnSave': true,
     });
     ctx.mockFs['biome.json'] = '{}';
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -183,8 +197,10 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const vscodeIssue = report.issues.find(i => 
-        i.description.includes('VS Code is configured to use Prettier but Biome')
+      const vscodeIssue = report.issues.find((i) =>
+        i.description.includes(
+          'VS Code is configured to use Prettier but Biome'
+        )
       );
       expect(vscodeIssue).toBeDefined();
       expect(vscodeIssue?.severity).toBe('warning');
@@ -195,7 +211,7 @@ describe('doctor command', () => {
     ctx.mockFs['.vscode/settings.json'] = JSON.stringify({
       'editor.formatOnSave': false,
     });
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -208,7 +224,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const formatIssue = report.issues.find(i => i.description.includes('Format on save is disabled'));
+      const formatIssue = report.issues.find((i) =>
+        i.description.includes('Format on save is disabled')
+      );
       expect(formatIssue).toBeDefined();
       expect(formatIssue?.severity).toBe('info');
     }
@@ -216,7 +234,7 @@ describe('doctor command', () => {
 
   it('should handle invalid VS Code settings', async () => {
     ctx.mockFs['.vscode/settings.json'] = '{ invalid json }';
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -229,7 +247,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const parseIssue = report.issues.find(i => i.description.includes('Could not parse VS Code settings'));
+      const parseIssue = report.issues.find((i) =>
+        i.description.includes('Could not parse VS Code settings')
+      );
       expect(parseIssue).toBeDefined();
       expect(parseIssue?.severity).toBe('warning');
     }
@@ -248,7 +268,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const scriptIssue = report.issues.find(i => i.description.includes('Missing recommended scripts'));
+      const scriptIssue = report.issues.find((i) =>
+        i.description.includes('Missing recommended scripts')
+      );
       expect(scriptIssue).toBeDefined();
       expect(scriptIssue?.severity).toBe('info');
     }
@@ -261,7 +283,7 @@ describe('doctor command', () => {
       },
     });
     ctx.mockFs['oxlint.json'] = '{}';
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -274,7 +296,7 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const scriptIssue = report.issues.find(i => 
+      const scriptIssue = report.issues.find((i) =>
         i.description.includes('Scripts still reference ESLint but Oxlint')
       );
       expect(scriptIssue).toBeDefined();
@@ -295,7 +317,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const gitignoreIssue = report.issues.find(i => i.description.includes('No .gitignore'));
+      const gitignoreIssue = report.issues.find((i) =>
+        i.description.includes('No .gitignore')
+      );
       expect(gitignoreIssue).toBeDefined();
       expect(gitignoreIssue?.severity).toBe('warning');
     }
@@ -307,7 +331,7 @@ describe('doctor command', () => {
         strict: false,
       },
     });
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -320,7 +344,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const tsIssue = report.issues.find(i => i.description.includes('TypeScript strict mode'));
+      const tsIssue = report.issues.find((i) =>
+        i.description.includes('TypeScript strict mode')
+      );
       expect(tsIssue).toBeDefined();
       expect(tsIssue?.severity).toBe('info');
     }
@@ -328,7 +354,7 @@ describe('doctor command', () => {
 
   it('should handle invalid tsconfig.json', async () => {
     ctx.mockFs['tsconfig.json'] = '{ invalid json }';
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -341,7 +367,9 @@ describe('doctor command', () => {
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      const parseIssue = report.issues.find(i => i.description.includes('Could not parse tsconfig'));
+      const parseIssue = report.issues.find((i) =>
+        i.description.includes('Could not parse tsconfig')
+      );
       expect(parseIssue).toBeDefined();
       expect(parseIssue?.severity).toBe('warning');
     }
@@ -352,19 +380,21 @@ describe('doctor command', () => {
     ctx.mockFs['.eslintrc.json'] = createEslintConfig();
     ctx.mockFs['.prettierrc'] = createPrettierConfig();
     delete ctx.mockFs['/package.json']; // This will create an error
-    
+
     const result = await doctor();
 
     expect(isSuccess(result)).toBe(true);
     if (isSuccess(result)) {
       const report = result.data;
-      
+
       // Check that errors come first, then warnings, then info
       let lastSeverity = 'error';
       const severityOrder = { error: 0, warning: 1, info: 2 };
-      
-      report.issues.forEach(issue => {
-        expect(severityOrder[issue.severity]).toBeGreaterThanOrEqual(severityOrder[lastSeverity]);
+
+      report.issues.forEach((issue) => {
+        expect(severityOrder[issue.severity]).toBeGreaterThanOrEqual(
+          severityOrder[lastSeverity]
+        );
         lastSeverity = issue.severity;
       });
     }
@@ -372,7 +402,7 @@ describe('doctor command', () => {
 
   it('should show diagnostic summary', async () => {
     const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };
@@ -383,11 +413,15 @@ describe('doctor command', () => {
     const result = await doctor();
 
     expect(isSuccess(result)).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Diagnostic Summary:'));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Diagnostic Summary:')
+    );
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Errors:'));
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Warnings:'));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Warnings:')
+    );
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Info:'));
-    
+
     consoleSpy.mockRestore();
   });
 
@@ -412,7 +446,7 @@ describe('doctor command', () => {
       'editor.defaultFormatter': 'biomejs.biome',
       'editor.formatOnSave': true,
     });
-    
+
     ctx.mockExec.mockImplementation((cmd) => {
       if (cmd === 'node --version') {
         return { stdout: 'v20.0.0', stderr: '' };

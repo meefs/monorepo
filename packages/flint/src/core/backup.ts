@@ -1,7 +1,15 @@
 /**
  * Create markdown backups of existing configurations
  */
-import { Result, success, failure, makeError, isSuccess, isFailure, ErrorCode } from '@outfitter/contracts';
+import {
+  Result,
+  success,
+  failure,
+  makeError,
+  isSuccess,
+  isFailure,
+  ErrorCode,
+} from '@outfitter/contracts';
 import { writeFile, ensureDir } from '../utils/file-system';
 import { DetectedConfig } from './detector';
 import * as path from 'node:path';
@@ -21,22 +29,27 @@ export interface BackupError {
  * Create a markdown backup of configurations
  */
 export async function createBackup(
-  configs: DetectedConfig[], 
+  configs: DetectedConfig[],
   options: BackupOptions = {}
 ): Promise<Result<string, BackupError>> {
-  const {
-    backupDir = '.flint-backup',
-    includeRestoreInstructions = true,
-  } = options;
+  const { backupDir = '.flint-backup', includeRestoreInstructions = true } =
+    options;
 
   if (configs.length === 0) {
-    return failure(makeError(ErrorCode.VALIDATION_ERROR, 'No configurations to backup'));
+    return failure(
+      makeError(ErrorCode.VALIDATION_ERROR, 'No configurations to backup')
+    );
   }
 
   // Ensure backup directory exists
   const ensureDirResult = await ensureDir(backupDir);
   if (isFailure(ensureDirResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to create backup directory: ${ensureDirResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to create backup directory: ${ensureDirResult.error.message}`
+      )
+    );
   }
 
   // Generate backup content
@@ -45,12 +58,21 @@ export async function createBackup(
   const filename = `flint-backup-${date}.md`;
   const backupPath = path.join(backupDir, filename);
 
-  let content = generateBackupContent(configs, timestamp, includeRestoreInstructions);
+  let content = generateBackupContent(
+    configs,
+    timestamp,
+    includeRestoreInstructions
+  );
 
   // Write backup file
   const writeResult = await writeFile(backupPath, content);
   if (isFailure(writeResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to write backup file: ${writeResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to write backup file: ${writeResult.error.message}`
+      )
+    );
   }
 
   return success(backupPath);
@@ -60,12 +82,12 @@ export async function createBackup(
  * Generate markdown content for backup
  */
 function generateBackupContent(
-  configs: DetectedConfig[], 
+  configs: DetectedConfig[],
   timestamp: string,
   includeRestoreInstructions: boolean
 ): string {
   const lines: string[] = [];
-  
+
   // Header
   lines.push('# Flint Configuration Backup');
   lines.push('');
@@ -79,7 +101,9 @@ function generateBackupContent(
   lines.push('');
   const groupedConfigs = groupConfigsByTool(configs);
   for (const tool of Object.keys(groupedConfigs)) {
-    lines.push(`- [${capitalizeFirst(tool)} Configuration](#${tool}-configuration)`);
+    lines.push(
+      `- [${capitalizeFirst(tool)} Configuration](#${tool}-configuration)`
+    );
   }
   if (includeRestoreInstructions) {
     lines.push('- [Restoration Instructions](#restoration-instructions)');
@@ -90,7 +114,7 @@ function generateBackupContent(
   for (const [tool, toolConfigs] of Object.entries(groupedConfigs)) {
     lines.push(`## ${capitalizeFirst(tool)} Configuration`);
     lines.push('');
-    
+
     for (const config of toolConfigs) {
       if (toolConfigs.length > 1) {
         lines.push(`### File: \`${config.path}\``);
@@ -98,10 +122,10 @@ function generateBackupContent(
         lines.push(`**File**: \`${config.path}\``);
       }
       lines.push('');
-      
+
       const ext = getFileExtension(config.path);
       const lang = getLanguageFromExtension(ext);
-      
+
       lines.push(`\`\`\`${lang}`);
       lines.push(config.content.trimEnd());
       lines.push('```');
@@ -129,7 +153,9 @@ function generateBackupContent(
     lines.push('   ```');
     lines.push('');
     lines.push('3. **Restore Package Dependencies**:');
-    lines.push('   - You may need to reinstall your previous linting/formatting tools');
+    lines.push(
+      '   - You may need to reinstall your previous linting/formatting tools'
+    );
     lines.push('   - Check your git history for the exact versions');
     lines.push('');
     lines.push('4. **Update VS Code Settings**:');
@@ -144,16 +170,18 @@ function generateBackupContent(
 /**
  * Group configurations by tool
  */
-function groupConfigsByTool(configs: DetectedConfig[]): Record<string, DetectedConfig[]> {
+function groupConfigsByTool(
+  configs: DetectedConfig[]
+): Record<string, DetectedConfig[]> {
   const grouped: Record<string, DetectedConfig[]> = {};
-  
+
   for (const config of configs) {
     if (!grouped[config.tool]) {
       grouped[config.tool] = [];
     }
     grouped[config.tool].push(config);
   }
-  
+
   return grouped;
 }
 
@@ -184,7 +212,7 @@ function getLanguageFromExtension(ext: string): string {
     toml: 'toml',
     '': 'text',
   };
-  
+
   return languageMap[ext] || ext;
 }
 
@@ -204,26 +232,31 @@ export async function createBackupSummary(
 ): Promise<Result<string, BackupError>> {
   const timestamp = new Date().toISOString();
   const summaryPath = backupPath.replace('.md', '-summary.txt');
-  
+
   const lines: string[] = [
     `Flint Backup Summary - ${timestamp}`,
-    '=' .repeat(50),
+    '='.repeat(50),
     '',
     'Backed up configurations:',
     '',
   ];
-  
+
   for (const config of configs) {
     lines.push(`- ${config.tool}: ${config.path}`);
   }
-  
+
   lines.push('');
   lines.push(`Full backup available at: ${backupPath}`);
-  
+
   const writeResult = await writeFile(summaryPath, lines.join('\n'));
   if (isFailure(writeResult)) {
-    return failure(makeError(ErrorCode.INTERNAL_ERROR, `Failed to write summary: ${writeResult.error.message}`));
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to write summary: ${writeResult.error.message}`
+      )
+    );
   }
-  
+
   return success(summaryPath);
 }

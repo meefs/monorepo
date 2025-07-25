@@ -7,7 +7,7 @@ import { $ } from 'bun';
 
 const entryPoints = [
   'src/index.ts',
-  'src/error.ts', 
+  'src/error.ts',
   'src/result.ts',
   'src/assert.ts',
   'src/types/index.ts',

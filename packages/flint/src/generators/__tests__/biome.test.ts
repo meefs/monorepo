@@ -11,16 +11,18 @@ describe('generateBiomeConfig', () => {
   });
 
   it('should run ultracite init with correct arguments', async () => {
-    const execSyncMock = vi.spyOn(childProcess, 'execSync').mockImplementation(() => '');
-    
+    const execSyncMock = vi
+      .spyOn(childProcess, 'execSync')
+      .mockImplementation(() => '');
+
     const result = await generateBiomeConfig();
-    
+
     expect(isSuccess(result)).toBe(true);
     expect(execSyncMock).toHaveBeenCalledWith('bunx ultracite init --yes', {
       stdio: 'inherit',
       env: expect.objectContaining({
-        FORCE_COLOR: '1'
-      })
+        FORCE_COLOR: '1',
+      }),
     });
   });
 
@@ -29,9 +31,9 @@ describe('generateBiomeConfig', () => {
     vi.spyOn(childProcess, 'execSync').mockImplementation(() => {
       throw error;
     });
-    
+
     const result = await generateBiomeConfig();
-    
+
     expect(isFailure(result)).toBe(true);
     if (isFailure(result)) {
       expect(result.error).toBeInstanceOf(Error);

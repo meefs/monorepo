@@ -66,8 +66,10 @@ export class Console {
 
   code(code: string, language?: string): void {
     const indent = this.getIndent();
-    console.log(`${indent}${pc.gray('```')}${language ? pc.gray(language) : ''}`);
-    code.split('\n').forEach(line => {
+    console.log(
+      `${indent}${pc.gray('```')}${language ? pc.gray(language) : ''}`
+    );
+    code.split('\n').forEach((line) => {
       console.log(`${indent}${line}`);
     });
     console.log(`${indent}${pc.gray('```')}`);

@@ -22,7 +22,11 @@ describe('package.json scripts generation', () => {
       name: 'test-package',
       version: '1.0.0',
     };
-    await writeFile(join(tempDir, 'package.json'), JSON.stringify(packageJson, null, 2), 'utf-8');
+    await writeFile(
+      join(tempDir, 'package.json'),
+      JSON.stringify(packageJson, null, 2),
+      'utf-8'
+    );
 
     // Create .outfitter directory and config
     await mkdir(join(tempDir, '.outfitter'), { recursive: true });
@@ -38,19 +42,25 @@ describe('package.json scripts generation', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.generatedFiles).toContain('package.json (scripts updated)');
+      expect(result.data.generatedFiles).toContain(
+        'package.json (scripts updated)'
+      );
 
       // Check that package.json was updated with rightdown scripts
-      const updatedPackageJson = JSON.parse(await readFile(join(tempDir, 'package.json'), 'utf-8'));
+      const updatedPackageJson = JSON.parse(
+        await readFile(join(tempDir, 'package.json'), 'utf-8')
+      );
       expect(updatedPackageJson.scripts.lint).toContain('rightdown');
-      expect(updatedPackageJson.scripts['lint:fix']).toContain('rightdown --fix');
+      expect(updatedPackageJson.scripts['lint:fix']).toContain(
+        'rightdown --fix'
+      );
     }
   });
 
@@ -60,7 +70,11 @@ describe('package.json scripts generation', () => {
       name: 'test-package',
       version: '1.0.0',
     };
-    await writeFile(join(tempDir, 'package.json'), JSON.stringify(packageJson, null, 2), 'utf-8');
+    await writeFile(
+      join(tempDir, 'package.json'),
+      JSON.stringify(packageJson, null, 2),
+      'utf-8'
+    );
 
     // Create .outfitter directory and config
     await mkdir(join(tempDir, '.outfitter'), { recursive: true });
@@ -76,7 +90,7 @@ describe('package.json scripts generation', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
@@ -84,7 +98,9 @@ describe('package.json scripts generation', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       // Check that package.json was updated but without rightdown
-      const updatedPackageJson = JSON.parse(await readFile(join(tempDir, 'package.json'), 'utf-8'));
+      const updatedPackageJson = JSON.parse(
+        await readFile(join(tempDir, 'package.json'), 'utf-8')
+      );
       expect(updatedPackageJson.scripts.lint).not.toContain('rightdown');
       expect(updatedPackageJson.scripts['lint:fix']).not.toContain('rightdown');
     }
@@ -96,7 +112,11 @@ describe('package.json scripts generation', () => {
       name: 'test-package',
       version: '1.0.0',
     };
-    await writeFile(join(tempDir, 'package.json'), JSON.stringify(packageJson, null, 2), 'utf-8');
+    await writeFile(
+      join(tempDir, 'package.json'),
+      JSON.stringify(packageJson, null, 2),
+      'utf-8'
+    );
 
     // Create .outfitter directory and config
     await mkdir(join(tempDir, '.outfitter'), { recursive: true });
@@ -112,7 +132,7 @@ describe('package.json scripts generation', () => {
     await writeFile(
       join(tempDir, '.outfitter', 'config.jsonc'),
       JSON.stringify(customConfig, null, 2),
-      'utf-8',
+      'utf-8'
     );
 
     const result = await setup({ cwd: tempDir });
@@ -120,11 +140,15 @@ describe('package.json scripts generation', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       // Check that package.json was updated with ESLint + rightdown scripts
-      const updatedPackageJson = JSON.parse(await readFile(join(tempDir, 'package.json'), 'utf-8'));
+      const updatedPackageJson = JSON.parse(
+        await readFile(join(tempDir, 'package.json'), 'utf-8')
+      );
       expect(updatedPackageJson.scripts.lint).toContain('eslint');
       expect(updatedPackageJson.scripts.lint).toContain('rightdown');
       expect(updatedPackageJson.scripts['lint:fix']).toContain('eslint');
-      expect(updatedPackageJson.scripts['lint:fix']).toContain('rightdown --fix');
+      expect(updatedPackageJson.scripts['lint:fix']).toContain(
+        'rightdown --fix'
+      );
     }
   });
 });

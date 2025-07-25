@@ -23,37 +23,61 @@ describe('@outfitter/remark-config', () => {
 
     it('should have different line length rules for different presets', () => {
       const standardLineLength = standard.plugins?.find(
-        (plugin) => Array.isArray(plugin) && plugin[0] === 'remark-lint-maximum-line-length',
+        (plugin) =>
+          Array.isArray(plugin) &&
+          plugin[0] === 'remark-lint-maximum-line-length'
       );
       const strictLineLength = strict.plugins?.find(
-        (plugin) => Array.isArray(plugin) && plugin[0] === 'remark-lint-maximum-line-length',
+        (plugin) =>
+          Array.isArray(plugin) &&
+          plugin[0] === 'remark-lint-maximum-line-length'
       );
       const relaxedLineLength = relaxed.plugins?.find(
-        (plugin) => Array.isArray(plugin) && plugin[0] === 'remark-lint-maximum-line-length',
+        (plugin) =>
+          Array.isArray(plugin) &&
+          plugin[0] === 'remark-lint-maximum-line-length'
       );
 
-      expect(standardLineLength).toEqual(['remark-lint-maximum-line-length', 80]);
+      expect(standardLineLength).toEqual([
+        'remark-lint-maximum-line-length',
+        80,
+      ]);
       expect(strictLineLength).toEqual(['remark-lint-maximum-line-length', 80]);
-      expect(relaxedLineLength).toEqual(['remark-lint-maximum-line-length', 120]);
+      expect(relaxedLineLength).toEqual([
+        'remark-lint-maximum-line-length',
+        120,
+      ]);
     });
 
     it('should use consistent list marker style across presets', () => {
       const standardListMarker = standard.plugins?.find(
         (plugin) =>
-          Array.isArray(plugin) && plugin[0] === 'remark-lint-unordered-list-marker-style',
+          Array.isArray(plugin) &&
+          plugin[0] === 'remark-lint-unordered-list-marker-style'
       );
       const strictListMarker = strict.plugins?.find(
         (plugin) =>
-          Array.isArray(plugin) && plugin[0] === 'remark-lint-unordered-list-marker-style',
+          Array.isArray(plugin) &&
+          plugin[0] === 'remark-lint-unordered-list-marker-style'
       );
       const relaxedListMarker = relaxed.plugins?.find(
         (plugin) =>
-          Array.isArray(plugin) && plugin[0] === 'remark-lint-unordered-list-marker-style',
+          Array.isArray(plugin) &&
+          plugin[0] === 'remark-lint-unordered-list-marker-style'
       );
 
-      expect(standardListMarker).toEqual(['remark-lint-unordered-list-marker-style', '-']);
-      expect(strictListMarker).toEqual(['remark-lint-unordered-list-marker-style', '-']);
-      expect(relaxedListMarker).toEqual(['remark-lint-unordered-list-marker-style', '-']);
+      expect(standardListMarker).toEqual([
+        'remark-lint-unordered-list-marker-style',
+        '-',
+      ]);
+      expect(strictListMarker).toEqual([
+        'remark-lint-unordered-list-marker-style',
+        '-',
+      ]);
+      expect(relaxedListMarker).toEqual([
+        'remark-lint-unordered-list-marker-style',
+        '-',
+      ]);
     });
 
     it('should use consistent settings across presets', () => {
@@ -89,10 +113,16 @@ describe('@outfitter/remark-config', () => {
     });
 
     it('should add additional plugins', () => {
-      const additionalPlugins = ['remark-lint-no-html', ['remark-lint-emphasis-marker', '*']];
+      const additionalPlugins = [
+        'remark-lint-no-html',
+        ['remark-lint-emphasis-marker', '*'],
+      ];
       const config = generate({ additionalPlugins });
 
-      expect(config.plugins).toEqual([...(standard.plugins || []), ...additionalPlugins]);
+      expect(config.plugins).toEqual([
+        ...(standard.plugins || []),
+        ...additionalPlugins,
+      ]);
     });
 
     it('should override settings', () => {
@@ -112,7 +142,10 @@ describe('@outfitter/remark-config', () => {
         settings: { bullet: '*' },
       });
 
-      expect(config.plugins).toEqual([...(strict.plugins || []), 'remark-lint-no-html']);
+      expect(config.plugins).toEqual([
+        ...(strict.plugins || []),
+        'remark-lint-no-html',
+      ]);
       expect(config.settings).toEqual({
         ...strict.settings,
         bullet: '*',
