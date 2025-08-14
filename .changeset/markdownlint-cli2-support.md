@@ -1,5 +1,5 @@
 ---
-"@outfitter/formatting": minor
+'@outfitter/formatting': minor
 ---
 
 Add markdownlint-cli2 as an alternative markdown formatter

@@ -20,13 +20,10 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/typescript-config"
+      "path": "./packages/contracts/ts"
     },
     {
-      "path": "./packages/contracts/typescript"
-    },
-    {
-      "path": "./packages/packlist"
+      "path": "./packages/types"
     },
     {
       "path": "./packages/cli"
@@ -35,13 +32,7 @@
       "path": "./packages/fieldguides"
     },
     {
-      "path": "./packages/contracts-zod"
-    },
-    {
       "path": "./packages/baselayer"
-    },
-    {
-      "path": "./packages/flint"
     }
   ],
   "exclude": [

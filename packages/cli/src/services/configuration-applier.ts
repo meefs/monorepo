@@ -14,6 +14,7 @@ export async function applyConfigurations(
   const handlers: Record<string, (cwd: string) => Promise<void>> = {
     '@outfitter/eslint-config': createEslintConfig,
     '@outfitter/typescript-config': createTsconfigJson,
+    '@outfitter/baselayer': createTsconfigJson,
     '@outfitter/prettier-config': createPrettierConfig,
     '@outfitter/husky-config': initializeHusky,
     '@outfitter/changeset-config': initializeChangesets,
@@ -61,7 +62,7 @@ async function createTsconfigJson(cwd: string): Promise<void> {
   }
 
   const config = {
-    extends: '@outfitter/typescript-config/base',
+    extends: '@outfitter/baselayer/typescript/base',
     compilerOptions: {
       outDir: './dist',
       rootDir: './src',

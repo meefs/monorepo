@@ -1,66 +1,88 @@
 {
   "name": "@outfitter/baselayer",
-  "version": "2.0.0",
-  "description": "Declarative development toolchain configuration orchestrator - everything you need, nothing you don't",
+  "version": "0.0.0",
+  "description": "Foundation layer for development tooling - code quality, configs, and build orchestration",
+  "keywords": [
+    "formatter",
+    "linter",
+    "code-quality",
+    "biome",
+    "ultracite",
+    "prettier",
+    "stylelint",
+    "markdownlint",
+    "lefthook",
+    "orchestration",
+    "developer-tools"
+  ],
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
+      "default": "./dist/index.js"
     },
-    "./biome-config": {
-      "types": "./dist/configs/biome.d.ts",
-      "import": "./dist/configs/biome.js"
-    },
-    "./prettier-config": {
-      "types": "./dist/configs/prettier.d.ts",
-      "import": "./dist/configs/prettier.js"
-    },
-    "./changeset-config": {
-      "types": "./dist/configs/changeset.d.ts",
-      "import": "./dist/configs/changeset.js"
-    }
+    "./typescript/base": "./configs/typescript/base.json",
+    "./typescript/base.json": "./configs/typescript/base.json",
+    "./typescript/next": "./configs/typescript/next.json",
+    "./typescript/next.json": "./configs/typescript/next.json",
+    "./typescript/vite": "./configs/typescript/vite.json",
+    "./typescript/vite.json": "./configs/typescript/vite.json"
+  },
+  "bin": {
+    "baselayer": "./dist/cli.js"
   },
   "files": [
-    "dist/**",
-    "README.md"
+    "dist",
+    "configs",
+    "templates"
   ],
   "scripts": {
-    "build": "bun build src/index.ts src/configs/biome.ts src/configs/prettier.ts src/configs/changeset.ts --outdir=dist --format=esm --sourcemap=external && tsc --emitDeclarationOnly",
-    "dev": "bun build src/index.ts src/configs/biome.ts src/configs/prettier.ts src/configs/changeset.ts --outdir=dist --format=esm --sourcemap=external --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "test": "vitest",
-    "test:run": "vitest --run",
-    "type-check": "tsc --noEmit"
+    "test:run": "vitest run",
+    "type-check": "tsc --noEmit",
+    "lint": "bun x ultracite lint",
+    "format": "bun x ultracite format",
+    "ci": "bun run type-check && bun run test:run",
+    "prepublishOnly": "bun run build",
+    "changeset": "changeset",
+    "version": "changeset version && bun install --lockfile-only",
+    "release": "bun run build && changeset publish"
   },
   "dependencies": {
+    "@inquirer/prompts": "^3.3.0",
     "@outfitter/contracts": "workspace:*",
-    "@outfitter/contracts-zod": "workspace:*",
-    "comment-json": "^4.2.3"
-  },
-  "devDependencies": {
-    "@outfitter/typescript-config": "workspace:*",
-    "@types/node": "^20.10.4",
-    "typescript": "^5.8.3",
-    "vitest": "^1.6.1"
-  },
-  "peerDependencies": {
-    "@biomejs/biome": ">=2.1.2",
-    "prettier": ">=3.0.0",
-    "@changesets/cli": ">=2.26.0",
-    "ultracite": ">=5.0.0",
+    "commander": "^12.0.0",
+    "glob": "^10.3.10",
+    "picocolors": "^1.1.0",
+    "yaml": "^2.8.0",
     "zod": "^3.23.8"
   },
-  "keywords": [
-    "toolchain",
-    "configuration",
-    "biome",
-    "prettier",
-    "outfitter"
-  ],
-  "author": "Outfitter",
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@types/node": "^20.14.0",
+    "lefthook": "^1.12.2",
+    "markdownlint-cli2": "^0.18.1",
+    "prettier": "^3.6.2",
+    "publint": "^0.3.12",
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^39.0.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.4.5",
+    "ultracite": "5.1.2",
+    "vitest": "^2.0.0"
+  },
+  "peerDependencies": {
+    "bun": ">=1.0.0"
+  },
+  "author": "Matt Galligan",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -70,7 +92,7 @@
   "bugs": {
     "url": "https://github.com/outfitter-dev/monorepo/issues"
   },
-  "homepage": "https://github.com/outfitter-dev/monorepo/tree/main/packages/baselayer#readme",
+  "homepage": "https://github.com/outfitter-dev/monorepo/tree/main/packages/baselayer",
   "publishConfig": {
     "access": "public"
   },

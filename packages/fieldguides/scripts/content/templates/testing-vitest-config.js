@@ -37,7 +37,7 @@ export default defineConfig({
       },
     },
     // Test timeout
-    testTimeout: 10000,
+    testTimeout: 10_000,
     // Retry failed tests
     retry: process.env.CI ? 2 : 0,
     // Reporter configuration

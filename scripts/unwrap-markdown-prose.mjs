@@ -199,10 +199,9 @@ async function processFile(filePath) {
       await writeFile(filePath, unwrapped, 'utf-8');
       console.log(`✅ Unwrapped: ${filePath}`);
       return true;
-    } else {
+    }
       console.log(`⏭️  No changes: ${filePath}`);
       return false;
-    }
   } catch (error) {
     console.error(`❌ Error processing ${filePath}:`, error.message);
     return false;
@@ -292,14 +291,14 @@ Examples:
     }
   }
 
-  console.log(`\n📊 Summary:`);
+  console.log('\n📊 Summary:');
   console.log(`   Processed: ${processedCount} files`);
   console.log(
     `   ${isDryRun ? 'Would change' : 'Changed'}: ${changedCount} files`
   );
 
   if (isDryRun && changedCount > 0) {
-    console.log(`\n💡 Run without --dry-run to apply changes`);
+    console.log('\n💡 Run without --dry-run to apply changes');
   }
 }
 

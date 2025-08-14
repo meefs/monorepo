@@ -1,9 +1,6 @@
 # @outfitter/monorepo
 
-[![Built with Bun](https://img.shields.io/badge/Built%20with-Bun-pink?logo=bun)](https://bun.sh)
-[![Powered by Turborepo](https://img.shields.io/badge/Powered%20by-Turborepo-blue?logo=turborepo)](https://turbo.build/repo)
-[![Cached by Cloudflare](https://img.shields.io/badge/Cached%20by-Cloudflare-orange?logo=cloudflare)](https://workers.cloudflare.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Built with Bun](https://img.shields.io/badge/Built%20with-Bun-pink?logo=bun)](https://bun.sh) [![Powered by Turborepo](https://img.shields.io/badge/Powered%20by-Turborepo-blue?logo=turborepo)](https://turbo.build/repo) [![Cached by Cloudflare](https://img.shields.io/badge/Cached%20by-Cloudflare-orange?logo=cloudflare)](https://workers.cloudflare.com) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Core shared configurations and utilities for Outfitter projects.
 
@@ -14,8 +11,7 @@ This monorepo contains the following packages:
 ### Core Libraries
 
 - **[@outfitter/contracts](./packages/contracts/typescript)** - Result pattern utilities with zero dependencies (Bun build, 18ms)
-- **[@outfitter/baselayer](./packages/baselayer)** - Consolidated configurations with sub-path exports
-- **[@outfitter/typescript-config](./packages/typescript-config)** - Base TypeScript configurations
+- **[@outfitter/baselayer](./packages/baselayer)** - Consolidated configurations with sub-path exports (includes TypeScript configs: `@outfitter/baselayer/typescript/*`)
 
 ### Tools & CLI
 
