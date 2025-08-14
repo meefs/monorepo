@@ -35,6 +35,7 @@ We will pivot mdmedic to be a curated distribution of `markdownlint-cli2` and a 
 Our presets (`strict`, `standard`, `relaxed`) will be updated to not only configure built-in rules but also to enable and configure rules from third-party packages.
 
 Key rules to implement (with TypeScript):
+
 - **Typography rule** - Smart quotes, em-dashes, ellipses (inspired by `markdownlint-rule-foliant/typograph`)
 - **Code block language** - Adds configurable default language to bare ``` blocks
 - **Consistent terminology** - Already implemented, will port to TypeScript
@@ -102,16 +103,19 @@ Key rules to implement (with TypeScript):
 We'll support three tiers of rules, allowing users to leverage the ecosystem while we progressively improve type safety:
 
 **Tier 1: Community Rules (JavaScript)**
+
 - Users can install any markdownlint rule package
 - rightdown loads them dynamically with defensive error handling
 - Configuration validated at runtime
 
 **Tier 2: Verified Rules (Bundled)**
+
 - Popular, well-tested community rules bundled as optionalDependencies
 - We provide TypeScript type definitions for their configurations
 - Graceful fallback if not available
 
 **Tier 3: Native Rules (TypeScript)**
+
 - Our own implementations with full type safety
 - Start with high-value rules (terminology, code blocks, typography)
 - Progressively replace Tier 2 rules as resources allow
@@ -163,12 +167,14 @@ Users can easily add community rules to their setup using well-documented JSONC:
 ```
 
 Installation is familiar to markdownlint users:
+
 ```bash
 npm install -D markdownlint-rule-github
 mdmedic check  # Works with all rules
 ```
 
 The `init` command generates a fully-documented config:
+
 ```bash
 mdmedic init standard  # Creates .mdmedic.config.jsonc with all options documented
 ```
@@ -191,6 +197,7 @@ repos:
 ```
 
 We'll provide a `.pre-commit-hooks.yaml` in the package:
+
 ```yaml
 - id: mdmedic
   name: mdmedic formatter
@@ -211,6 +218,7 @@ We'll provide a `.pre-commit-hooks.yaml` in the package:
 Instead of just ignoring files, rightdown could support different strictness levels for different contexts:
 
 **Inline Mode Control:**
+
 ```markdown
 <!-- mdmedic:strict -->
 This section enforces all rules strictly.
@@ -229,6 +237,7 @@ Use a different preset for this section.
 ```
 
 **File/Directory-Level Control via `.mdmedicmode`:**
+
 ```
 # Strict mode for docs
 docs/**/*.md strict
@@ -247,6 +256,7 @@ generated/**/*.md line-length=false,list-marker-space=false
 ```
 
 **Implementation Approach:**
+
 ```typescript
 interface StrictnessContext {
   preset: 'strict' | 'standard' | 'relaxed';
@@ -267,6 +277,7 @@ export = {
 ```
 
 **Use Cases:**
+
 - API docs need strict formatting, but code examples can be longer
 - README files are strict, but CHANGELOG can be relaxed
 - Legacy content gets looser rules during migration
@@ -308,22 +319,26 @@ mdmedic --fix --no-inline-config "**/*.md"
 ```
 
 **Enhanced Commands (additions to markdownlint-cli2):**
+
 - `mdmedic init [preset]`: Creates `.mdmedic.config.jsonc` with selected preset and inline docs
 - `mdmedic check`: Alias for default behavior (no --fix)
 - `mdmedic format`: Alias for `--fix`
 
 **Config File Support (all markdownlint formats work):**
+
 - `.markdownlint.json` / `.markdownlint.jsonc` / `.markdownlint.yaml`
 - `.markdownlintrc` (JSON format)
 - `.mdmedic.config.jsonc` (our enhanced format with inline documentation)
 - Rule names work as both kebab-case (`line-length`) and IDs (`MD013`)
 
 **Additional Flags (on top of markdownlint-cli2):**
+
 - `--dry-run`: Preview changes (our addition, uses `diff` package)
 - `--watch, -w`: Watch mode (our addition)
 - `--preset <name>`: Quick preset selection without config file
 
 **Implementation Strategy:**
+
 ```typescript
 // cli.ts - Transparent wrapper approach
 import { markdownlintCli2 } from 'markdownlint-cli2';
@@ -462,7 +477,9 @@ const configTemplate = `{
 Since markdownlint custom rules must be CommonJS modules, we need a strategy for maintaining type safety:
 
 ### All Rules in TypeScript
+
 1. **Example: Typography Rule Implementation**:
+
    ```typescript
    // src/rules/typography.ts
    import { z } from 'zod';
@@ -515,6 +532,7 @@ Since markdownlint custom rules must be CommonJS modules, we need a strategy for
    ```
 
 2. **Build process**: Use `tsup` with CommonJS output specifically for rules:
+
    ```typescript
    // tsup.config.ts
    {
@@ -528,6 +546,7 @@ Since markdownlint custom rules must be CommonJS modules, we need a strategy for
 4. **Testing**: Each rule gets comprehensive unit tests with type checking
 
 ### Benefits of Full TypeScript Implementation
+
 1. **No third-party dependencies**: All rules are our own code
 2. **Consistent patterns**: All rules use Result pattern for errors
 3. **Full test coverage**: Every rule is testable with mocked params
@@ -535,7 +554,9 @@ Since markdownlint custom rules must be CommonJS modules, we need a strategy for
 5. **Easier debugging**: Full source maps and type information
 
 ### ESM/CommonJS Interop
+
 Since rightdown is ESM but markdownlint rules must be CommonJS:
+
 1. Use `createRequire` from `node:module` to load CommonJS rules from ESM code
 2. Build our custom rules as CommonJS but keep the rest of the package as ESM
 3. Handle dynamic imports carefully to maintain compatibility

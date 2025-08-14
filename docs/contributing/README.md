@@ -34,6 +34,7 @@ Welcome to the Outfitter monorepo contributing guide!
    ```
 
 4. **Run tests**:
+
    ```bash
    pnpm test
    ```
