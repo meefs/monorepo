@@ -14,7 +14,7 @@ pre-commit:
       glob: "*.{md,mdx,mdc}"
       run: |
         bunx prettier --write {staged_files} &&
-        printf '%s\n' {staged_files} | bunx markdownlint-cli2 --fix
+        bunx markdownlint-cli2 --fix {staged_files}
       stage_fixed: true
 
 commit-msg:
