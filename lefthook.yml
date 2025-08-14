@@ -7,13 +7,13 @@ pre-commit:
       run: bunx ultracite lint {staged_files}
     ultracite-format:
       glob: "*.{js,ts,jsx,tsx}"
-      run: bunx ultracite format --write {staged_files}
+      run: bunx ultracite format {staged_files}
       stage_fixed: true
     markdown:
       glob: "*.md"
       run: |
         bunx prettier --write {staged_files} &&
-        bunx markdownlint-cli2 {staged_files}
+        printf '%s\n' {staged_files} | bunx markdownlint-cli2 --fix
       stage_fixed: true
 
 commit-msg:
