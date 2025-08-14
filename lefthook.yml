@@ -10,7 +10,7 @@ pre-commit:
       run: bunx ultracite format {staged_files}
       stage_fixed: true
     markdown:
-      glob: "*.md"
+      glob: "*.{md,mdx,mdc}"
       run: |
         bunx prettier --write {staged_files} &&
         printf '%s\n' {staged_files} | bunx markdownlint-cli2 --fix
