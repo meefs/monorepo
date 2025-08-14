@@ -1,10 +1,13 @@
 # Lefthook configuration
 pre-commit:
-  parallel: true
+  parallel: false
   commands:
-    biome:
-      glob: "*.{js,ts,jsx,tsx,json}"
-      run: bunx biome check --write {staged_files}
+    ultracite-lint:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: bunx ultracite lint {staged_files}
+    ultracite-format:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: bunx ultracite format --write {staged_files}
       stage_fixed: true
     markdown:
       glob: "*.md"

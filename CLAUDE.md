@@ -68,7 +68,7 @@ bun run changeset:publish
 bun run test --filter @outfitter/contracts
 
 # Run a single test file
-bun run test packages/contracts/typescript/src/__tests__/result.test.ts
+bun run test packages/contracts/ts/src/__tests__/result.test.ts
 ```
 
 ## Architecture
@@ -134,7 +134,7 @@ The root `tsconfig.json` uses project references for incremental builds:
 {
   "references": [
     { "path": "./packages/typescript-config" },
-    { "path": "./packages/contracts/typescript" }
+    { "path": "./packages/contracts/ts" }
     // ... other packages
   ]
 }

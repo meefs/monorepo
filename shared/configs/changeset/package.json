@@ -27,7 +27,7 @@
     "@changesets/cli": "^2.27.11"
   },
   "devDependencies": {
-    "@outfitter/typescript-config": "workspace:*",
+    "@outfitter/baselayer": "workspace:*",
     "tsup": "^8.3.5",
     "typescript": "^5.7.3"
   },

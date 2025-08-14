@@ -1,5 +1,5 @@
 ---
-"@outfitter/formatting": minor
+'@outfitter/formatting': minor
 ---
 
 Initial release of @outfitter/formatting package

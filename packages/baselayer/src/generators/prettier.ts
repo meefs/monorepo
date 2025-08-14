@@ -1,49 +1,163 @@
-import type { OutfitterConfig, PrettierConfig } from '../types/index.js';
+import { failure, isFailure, type Result, success } from '@outfitter/contracts';
+import type { BaselayerConfig } from '../schemas/baselayer-config.js';
+import { writeFile, writeJSON } from '../utils/file-system.js';
 
 /**
- * Generates Prettier configuration from OutfitterConfig
+ * Generate .prettierrc.json configuration with smart file handling
  */
-export function generatePrettierConfig(
-  config: OutfitterConfig
-): PrettierConfig {
-  const { codeStyle, overrides } = config;
-
-  // Base configuration from declarative preferences
-  const baseConfig: PrettierConfig = {
-    printWidth: codeStyle.lineWidth,
-    tabWidth: codeStyle.indentWidth,
-    useTabs: false,
-    semi: codeStyle.semicolons === 'always',
-    singleQuote: codeStyle.quoteStyle === 'single',
-    trailingComma: codeStyle.trailingCommas,
-    bracketSpacing: true,
-    arrowParens: 'always',
-    endOfLine: 'lf',
+export function generatePrettierConfigObject(config?: BaselayerConfig): Record<string, unknown> {
+  const base = {
+    semi: true,
+    singleQuote: true,
+    tabWidth: 2,
+    trailingComma: 'es5' as const,
+    printWidth: 80,
+    endOfLine: 'lf' as const,
+    arrowParens: 'always' as const,
+    proseWrap: 'preserve' as const,
   };
 
-  // The 'overrides' array in Prettier needs special handling. We can't just spread it.
-  // We'll merge the base overrides with any user-provided overrides.
-  const baseOverrides = [
-    {
-      files: '*.md',
-      options: {
-        printWidth: 80,
-        proseWrap: 'always',
-      },
+  const overrides: Array<{ files: string | string[]; options: Record<string, unknown> }> = [];
+
+  // Always handle JSON (even if not explicitly enabled, it's common)
+  overrides.push({
+    files: ['*.json', '*.jsonc'],
+    options: {
+      singleQuote: false,
+      trailingComma: 'none',
     },
-    {
-      files: '*.{yml,yaml}',
+  });
+
+  // Handle markdown if enabled or no stylelint (default responsibility)
+  if (config?.features?.markdown !== false || config?.features?.styles === false) {
+    overrides.push({
+      files: ['*.md', '*.mdx'],
       options: {
-        printWidth: 120,
+        proseWrap: 'preserve',
+        printWidth: 100, // Wider for markdown
       },
+    });
+  }
+
+  // Handle CSS files if stylelint is disabled (Prettier takes over)
+  if (config?.features?.styles === false) {
+    overrides.push({
+      files: ['*.css', '*.scss', '*.less'],
+      options: {
+        singleQuote: false,
+      },
+    });
+  }
+
+  // Handle YAML files
+  overrides.push({
+    files: ['*.yml', '*.yaml'],
+    options: {
+      singleQuote: false,
     },
+  });
+
+  const result = {
+    ...base,
+    overrides,
+  };
+
+  // Apply user overrides
+  if (config?.overrides?.prettier) {
+    Object.assign(result, config.overrides.prettier);
+  }
+
+  return result;
+}
+
+/**
+ * Generate .prettierignore content with smart exclusions
+ */
+export function generatePrettierIgnore(config?: BaselayerConfig): string {
+  const ignore = [
+    '# Dependencies',
+    'node_modules/',
+    'bun.lockb',
+    'package-lock.json',
+    'yarn.lock',
+    'pnpm-lock.yaml',
+    '',
+    '# Build outputs',
+    'dist/',
+    'build/',
+    '.next/',
+    'out/',
   ];
 
-  const userOverrides = overrides?.prettier?.overrides ?? [];
+  // Add monorepo-specific ignores
+  if (config?.project?.type === 'monorepo') {
+    ignore.push('packages/**/dist/', 'packages/**/build/');
+  }
 
-  return {
-    ...baseConfig,
-    ...(overrides?.prettier ?? {}),
-    overrides: [...baseOverrides, ...userOverrides],
-  };
+  ignore.push(
+    '',
+    '# Test coverage',
+    'coverage/',
+    '',
+    '# Biome handles these (TypeScript enabled by default)',
+    '*.js',
+    '*.jsx',
+    '*.ts',
+    '*.tsx',
+    '*.mjs',
+    '*.cjs'
+  );
+
+  // If TypeScript is disabled, don't ignore JS files
+  if (config?.features?.typescript === false) {
+    const jsIndex = ignore.findIndex(line => line === '*.js');
+    if (jsIndex > 0) {
+      // Remove JS-related ignores
+      ignore.splice(jsIndex - 1, 6); // Remove comment and JS extensions
+    }
+  }
+
+  ignore.push(
+    '',
+    '# Generated files',
+    '*.min.js',
+    '*.min.css',
+    '',
+    '# IDE',
+    '.vscode/',
+    '.idea/'
+  );
+
+  // Add custom ignore patterns
+  if (config?.ignore) {
+    ignore.push('', '# Custom ignores', ...config.ignore);
+  }
+
+  return ignore.join('\n');
+}
+
+/**
+ * Write Prettier configuration files
+ */
+export async function generatePrettierConfig(config?: BaselayerConfig): Promise<Result<void, Error>> {
+  try {
+    const configObject = generatePrettierConfigObject(config);
+    const ignoreContent = generatePrettierIgnore(config);
+
+    // Write .prettierrc.json
+    const configResult = await writeJSON('.prettierrc.json', configObject);
+    if (isFailure(configResult)) {
+      return failure(configResult.error);
+    }
+
+    // Write .prettierignore
+    const ignoreResult = await writeFile('.prettierignore', ignoreContent);
+    if (isFailure(ignoreResult)) {
+      return failure(ignoreResult.error);
+    }
+    
+    return success(undefined);
+  } catch (error) {
+    return failure(error as Error);
+  }
 }

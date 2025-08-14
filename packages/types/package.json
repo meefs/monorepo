@@ -1,0 +1,106 @@
+{
+  "name": "@outfitter/types",
+  "version": "0.1.0",
+  "description": "Comprehensive TypeScript utilities combining type-fest with domain-specific types",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "bun@1.2.19",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./utilities": {
+      "types": "./dist/utilities/index.d.ts",
+      "default": "./dist/utilities/index.js"
+    },
+    "./utilities/deep": {
+      "types": "./dist/utilities/deep.d.ts",
+      "default": "./dist/utilities/deep.js"
+    },
+    "./utilities/object": {
+      "types": "./dist/utilities/object.d.ts",
+      "default": "./dist/utilities/object.js"
+    },
+    "./utilities/array": {
+      "types": "./dist/utilities/array.d.ts",
+      "default": "./dist/utilities/array.js"
+    },
+    "./utilities/string": {
+      "types": "./dist/utilities/string.d.ts",
+      "default": "./dist/utilities/string.js"
+    },
+    "./utilities/conditional": {
+      "types": "./dist/utilities/conditional.d.ts",
+      "default": "./dist/utilities/conditional.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./core/branded": {
+      "types": "./dist/core/branded.d.ts",
+      "default": "./dist/core/branded.js"
+    },
+    "./core/result": {
+      "types": "./dist/core/result.d.ts",
+      "default": "./dist/core/result.js"
+    },
+    "./core/error": {
+      "types": "./dist/core/error.d.ts",
+      "default": "./dist/core/error.js"
+    },
+    "./domains": {
+      "types": "./dist/domains/index.d.ts",
+      "default": "./dist/domains/index.js"
+    },
+    "./domains/web": {
+      "types": "./dist/domains/web.d.ts",
+      "default": "./dist/domains/web.js"
+    },
+    "./domains/api": {
+      "types": "./dist/domains/api.d.ts",
+      "default": "./dist/domains/api.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "bun run build:tsc",
+    "build:tsc": "tsc --project tsconfig.build.json",
+    "dev": "tsc --project tsconfig.build.json --watch",
+    "clean": "rm -rf dist",
+    "test": "vitest",
+    "test:run": "vitest --run",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "type-fest": "^4.41.0",
+    "@outfitter/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@outfitter/baselayer": "workspace:*",
+    "typescript": "^5.9.2",
+    "vitest": "^1.6.1"
+  },
+  "keywords": [
+    "typescript",
+    "types",
+    "utilities",
+    "type-fest",
+    "branded-types",
+    "result-pattern"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/outfitter-dev/monorepo.git",
+    "directory": "packages/types"
+  }
+}

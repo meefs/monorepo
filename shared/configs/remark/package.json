@@ -43,7 +43,7 @@
     "remark-lint-no-duplicate-headings": "^4.0.1"
   },
   "devDependencies": {
-    "@outfitter/typescript-config": "workspace:*",
+    "@outfitter/baselayer": "workspace:*",
     "@types/node": "^22.7.4",
     "tsup": "^8.3.0",
     "typescript": "^5.6.3",
