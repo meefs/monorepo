@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { updatePackageScripts } from '../package-scripts.js';
 import { isSuccess } from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as fileSystem from '../../utils/file-system.js';
+import { updatePackageScripts } from '../package-scripts.js';
 
 vi.mock('../../utils/file-system.js');
 

@@ -1,17 +1,18 @@
 /**
  * Package manager detection and operations
  */
+
+import * as path from 'node:path';
 import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
 } from '@outfitter/contracts';
 import { fileExists, readFile } from './file-system';
-import * as path from 'node:path';
 
 export type PackageManager = 'npm' | 'yarn' | 'pnpm' | 'bun';
 
@@ -122,7 +123,7 @@ export function getInstallCommand(pm: PackageManager): string {
  */
 export function getAddCommand(
   pm: PackageManager,
-  dev: boolean = false,
+  dev = false,
   packages: string[]
 ): string {
   const command = dev ? COMMANDS.addDev[pm] : COMMANDS.add[pm];

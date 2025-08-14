@@ -1,6 +1,6 @@
-import { Result, success, failure, isFailure } from '@outfitter/contracts';
+import { failure, isFailure, type Result, success } from '@outfitter/contracts';
 import * as pc from 'picocolors';
-import { writeJSON, writeFile } from '../utils/file-system.js';
+import { writeFile, writeJSON } from '../utils/file-system.js';
 
 /**
  * Generates Stylelint configuration

@@ -64,7 +64,7 @@ function createTestQueryClient() {
     defaultOptions: {
       queries: {
         retry: false,
-        gcTime: Infinity, // Never garbage collect during tests
+        gcTime: Number.POSITIVE_INFINITY, // Never garbage collect during tests
         staleTime: 0,
       },
       mutations: {

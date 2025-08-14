@@ -130,7 +130,7 @@ const config = {
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   // Timeout configuration
-  testTimeout: 10000, // 10 seconds
+  testTimeout: 10_000, // 10 seconds
   // Verbose output
   verbose: process.env.CI === 'true',
 };

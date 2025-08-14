@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { standard, strict, relaxed, generate } from '../presets/index.js';
+import { describe, expect, it } from 'vitest';
+import { generate, relaxed, standard, strict } from '../presets/index.js';
 
 describe('@outfitter/remark-config', () => {
   describe('presets', () => {

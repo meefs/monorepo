@@ -59,7 +59,7 @@ export async function createFieldguideConfig(
 
   // Interactive setup if no preset
   let selectedPreset = options.preset;
-  if (!selectedPreset || !presets[selectedPreset as keyof typeof presets]) {
+  if (!(selectedPreset && presets[selectedPreset as keyof typeof presets])) {
     const answers = (await inquirer.prompt([
       {
         type: 'list',

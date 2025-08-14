@@ -1,4 +1,4 @@
-import type { OutfitterConfig, ESLintConfig } from '../types/index.js';
+import type { ESLintConfig, OutfitterConfig } from '../types/index.js';
 
 /**
  * Generates an ESLint configuration array based on the provided OutfitterConfig, including ignore patterns and placeholders for rules unsupported by Biome.

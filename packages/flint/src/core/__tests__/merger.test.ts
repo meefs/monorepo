@@ -1,21 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as fs from '../../utils/file-system';
 import {
   deepMerge,
   mergeJSONFile,
-  mergeVSCodeSettings,
-  mergeVSCodeExtensions,
   mergePackageScripts,
-  removeJSONFields,
+  mergeVSCodeExtensions,
+  mergeVSCodeSettings,
   removeEmbeddedConfigs,
+  removeJSONFields,
 } from '../merger';
-import * as fs from '../../utils/file-system';
 
 vi.mock('../../utils/file-system');
 

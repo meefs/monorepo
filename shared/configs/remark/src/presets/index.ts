@@ -2,14 +2,14 @@
  * Remark preset exports
  */
 
+export { relaxed } from './relaxed.js';
 export { standard } from './standard.js';
 export { strict } from './strict.js';
-export { relaxed } from './relaxed.js';
 
-import type { RemarkConfigOptions, RemarkConfig } from '../types.js';
+import type { RemarkConfig, RemarkConfigOptions } from '../types.js';
+import { relaxed } from './relaxed.js';
 import { standard } from './standard.js';
 import { strict } from './strict.js';
-import { relaxed } from './relaxed.js';
 
 /**
  * Generate a remark configuration based on preset and options

@@ -68,7 +68,7 @@ export function showNextSteps(
 
   console.log(chalk.cyan('Next steps:'));
   console.log(`  • Run '${packageManager} run lint' to check your code`);
-  console.log(`  • Check CLAUDE.md for AI assistant instructions`);
+  console.log('  • Check CLAUDE.md for AI assistant instructions');
 
   if (selection.fieldguides.length > 0) {
     console.log(`  • Explore fieldguides with 'outfitter fieldguides list'`);

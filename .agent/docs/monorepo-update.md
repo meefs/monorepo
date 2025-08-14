@@ -9,8 +9,8 @@
 
 ## 2. Package-Level Actions
 
-| Keep                                                                   | Merge into **baselayer**                                                               | Remove                                                     |
-| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Keep | Merge into **baselayer** | Remove |
+| --- | --- | --- |
 | `contracts`, `contracts-zod`, `cli`, `packlist`, `flint`, `formatting` | `biome-config`, `changeset-config`, `husky-config`, `remark-config`, `prettier-config` | `rightdown`, all `remark-*` deps, `eslint-config`, `husky` |
 
 _Why_
@@ -21,14 +21,14 @@ _Why_
 
 ## 3. Updated Toolchain Matrix
 
-| Purpose   | Tool                                                                                  | Notes                                                                        |
-| --------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Build     | **`bun build`**                                                                       | Replace `tsup`. One step per package: `bun build src/index.ts --outdir dist` |
-| Types     | `tsc --emitDeclarationOnly`                                                           | Turbo task `types` before `build`                                            |
-| Format    | **Biome** (`js/ts/json/jsx`), **Prettier v3** (md/yaml), **stylelint** (CSS/Tailwind) |                                                                              |
-| Lint      | **Biome lint**, `markdownlint-cli2`, `stylelint`                                      |                                                                              |
-| Git hooks | **Lefthook** (Go binary) + **Commitlint**                                             |                                                                              |
-| Tests     | **Vitest** (unit/integration) + **Playwright** (E2E) ([Strapi][2])                    |                                                                              |
+| Purpose | Tool | Notes |
+| --- | --- | --- |
+| Build | **`bun build`** | Replace `tsup`. One step per package: `bun build src/index.ts --outdir dist` |
+| Types | `tsc --emitDeclarationOnly` | Turbo task `types` before `build` |
+| Format | **Biome** (`js/ts/json/jsx`), **Prettier v3** (md/yaml), **stylelint** (CSS/Tailwind) |  |
+| Lint | **Biome lint**, `markdownlint-cli2`, `stylelint` |  |
+| Git hooks | **Lefthook** (Go binary) + **Commitlint** |  |
+| Tests | **Vitest** (unit/integration) + **Playwright** (E2E) ([Strapi][2]) |  |
 
 ## 4. Configuration Files (root)
 

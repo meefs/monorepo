@@ -1,25 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as path from 'node:path';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as fs from '../../utils/file-system';
 import {
-  detectExistingTools,
   detectEslintConfig,
+  detectExistingTools,
+  detectGitHooks,
+  detectMarkdown,
   detectPrettierConfig,
-  detectTypeScript,
   detectReact,
   detectStyles,
-  detectMarkdown,
+  detectTypeScript,
   detectVSCode,
-  detectGitHooks,
   getConfigsToCleanup,
 } from '../detector';
-import * as fs from '../../utils/file-system';
 
 vi.mock('../../utils/file-system');
 

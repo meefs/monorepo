@@ -62,7 +62,7 @@ This fragmentation created maintenance overhead, version conflicts, and inconsis
 
 **Structure:**
 
-```
+```text
 packages/fieldguides/
 ├── content/          # Coding guidelines (professional tone)
 ├── docs/            # Internal documentation (expedition-themed)
@@ -176,8 +176,7 @@ packages/fieldguides/
 
 ## References
 
-- Repository: https://github.com/outfitter-dev/camp
+- Repository: <https://github.com/outfitter-dev/camp>
 - Original packlist: /Users/mg/Developer/outfitter/packlist
 - Original CLI: /Users/mg/Developer/outfitter/cli
 - Original supplies: /Users/mg/Developer/outfitter/supplies
-- Max principles: @.ai/prompts/MAX.md

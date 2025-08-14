@@ -1,14 +1,14 @@
-import {
-  Result,
-  success,
-  failure,
-  isSuccess,
-  isFailure,
-} from '@outfitter/contracts';
 import { execSync } from 'node:child_process';
-import * as pc from 'picocolors';
-import { readJSON, writeJSON, fileExists } from '../utils/file-system.js';
 import path from 'node:path';
+import {
+  failure,
+  isFailure,
+  isSuccess,
+  type Result,
+  success,
+} from '@outfitter/contracts';
+import * as pc from 'picocolors';
+import { fileExists, readJSON, writeJSON } from '../utils/file-system.js';
 
 /**
  * Detects if ESLint configuration exists in the project

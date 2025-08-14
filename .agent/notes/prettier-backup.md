@@ -31,7 +31,7 @@ export default config;
 
 ### /Users/mg/Developer/outfitter/monorepo/.prettierignore
 
-```
+```gitignore
 # Ignore files handled by Biome
 *.js
 *.jsx
@@ -47,7 +47,7 @@ export default config;
 /coverage
 /node_modules
 .pnp.cjs
-.pnp.loader.mjs 
+.pnp.loader.mjs
 ```
 
 ### /Users/mg/Developer/outfitter/monorepo/package.json (prettier-related sections)
@@ -78,18 +78,11 @@ export default config;
   "exports": {
     ".": "./index.js"
   },
-  "files": [
-    "index.js"
-  ],
+  "files": ["index.js"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "prettier",
-    "config",
-    "outfitter",
-    "format"
-  ],
+  "keywords": ["prettier", "config", "outfitter", "format"],
   "author": "Outfitter",
   "license": "ISC"
 }
@@ -131,7 +124,8 @@ function generate(presetConfig = {}) {
   }
 
   if (presetConfig.semicolons !== undefined) {
-    base.semi = presetConfig.semicolons === 'always' || presetConfig.semicolons === true;
+    base.semi =
+      presetConfig.semicolons === 'always' || presetConfig.semicolons === true;
   }
 
   if (presetConfig.trailingComma) {
@@ -143,7 +137,10 @@ function generate(presetConfig = {}) {
   }
 
   if (presetConfig.arrowParens) {
-    base.arrowParens = presetConfig.arrowParens === 'asNeeded' ? 'avoid' : presetConfig.arrowParens;
+    base.arrowParens =
+      presetConfig.arrowParens === 'asNeeded'
+        ? 'avoid'
+        : presetConfig.arrowParens;
   }
 
   if (presetConfig.endOfLine) {
@@ -165,9 +162,7 @@ module.exports.generate = generate;
 ```json
 {
   "name": "@outfitter/flint",
-  "keywords": [
-    "prettier"
-  ],
+  "keywords": ["prettier"],
   "devDependencies": {
     "prettier": "^3.3.3"
   }
@@ -222,78 +217,78 @@ import { writeJSON, writeFile } from '../utils/file-system.js';
 export async function generatePrettierConfig(): Promise<Result<void, Error>> {
   try {
     console.log(pc.blue('→ Setting up Prettier for non-JS/TS files...'));
-    
+
     const config = {
-      "semi": true,
-      "singleQuote": true,
-      "tabWidth": 2,
-      "trailingComma": "es5",
-      "printWidth": 80,
-      "endOfLine": "lf",
-      "arrowParens": "always",
-      "proseWrap": "preserve", // Important for markdown
-      "overrides": [
+      semi: true,
+      singleQuote: true,
+      tabWidth: 2,
+      trailingComma: 'es5',
+      printWidth: 80,
+      endOfLine: 'lf',
+      arrowParens: 'always',
+      proseWrap: 'preserve', // Important for markdown
+      overrides: [
         {
-          "files": "*.md",
-          "options": {
-            "proseWrap": "preserve"
-          }
+          files: '*.md',
+          options: {
+            proseWrap: 'preserve',
+          },
         },
         {
-          "files": "*.json",
-          "options": {
-            "singleQuote": false
-          }
-        }
-      ]
+          files: '*.json',
+          options: {
+            singleQuote: false,
+          },
+        },
+      ],
     };
-    
+
     const ignore = [
-      "# Dependencies",
-      "node_modules/",
-      "bun.lockb",
-      "package-lock.json",
-      "yarn.lock",
-      "pnpm-lock.yaml",
-      "",
-      "# Build outputs", 
-      "dist/",
-      "build/",
-      ".next/",
-      "out/",
-      "",
-      "# Test coverage",
-      "coverage/",
-      "",
-      "# Biome handles these",
-      "*.js",
-      "*.jsx",
-      "*.ts",
-      "*.tsx",
-      "*.mjs",
-      "*.cjs",
-      "",
-      "# Generated files",
-      "*.min.js",
-      "*.min.css",
-      "",
-      "# IDE",
-      ".vscode/",
-      ".idea/"
+      '# Dependencies',
+      'node_modules/',
+      'bun.lockb',
+      'package-lock.json',
+      'yarn.lock',
+      'pnpm-lock.yaml',
+      '',
+      '# Build outputs',
+      'dist/',
+      'build/',
+      '.next/',
+      'out/',
+      '',
+      '# Test coverage',
+      'coverage/',
+      '',
+      '# Biome handles these',
+      '*.js',
+      '*.jsx',
+      '*.ts',
+      '*.tsx',
+      '*.mjs',
+      '*.cjs',
+      '',
+      '# Generated files',
+      '*.min.js',
+      '*.min.css',
+      '',
+      '# IDE',
+      '.vscode/',
+      '.idea/',
     ];
-    
+
     // Write .prettierrc.json
     const configResult = await writeJSON('.prettierrc.json', config);
     if (isFailure(configResult)) {
       return failure(configResult.error);
     }
-    
+
     // Write .prettierignore
     const ignoreResult = await writeFile('.prettierignore', ignore.join('\n'));
     if (isFailure(ignoreResult)) {
       return failure(ignoreResult.error);
     }
-    
+
     console.log(pc.green('✓ Prettier configured successfully'));
     return success(undefined);
   } catch (error) {
@@ -302,7 +297,7 @@ export async function generatePrettierConfig(): Promise<Result<void, Error>> {
 }
 ```
 
-### /Users/mg/Developer/outfitter/monorepo/packages/flint/src/generators/__tests__/prettier.test.ts
+### /Users/mg/Developer/outfitter/monorepo/packages/flint/src/generators/**tests**/prettier.test.ts
 
 ```typescript
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -319,21 +314,23 @@ describe('generatePrettierConfig', () => {
 
   it('should generate prettier config with correct settings', async () => {
     let writtenConfig: any;
-    vi.mocked(fileSystem.writeJSON).mockImplementation(async (_path, config) => {
-      writtenConfig = config;
-      return {
-        success: true,
-        data: undefined,
-      } as any;
-    });
-    
+    vi.mocked(fileSystem.writeJSON).mockImplementation(
+      async (_path, config) => {
+        writtenConfig = config;
+        return {
+          success: true,
+          data: undefined,
+        } as any;
+      },
+    );
+
     vi.mocked(fileSystem.writeFile).mockResolvedValue({
       success: true,
       data: undefined,
     } as any);
-    
+
     const result = await generatePrettierConfig();
-    
+
     expect(isSuccess(result)).toBe(true);
     expect(writtenConfig).toEqual({
       semi: true,
@@ -348,16 +345,16 @@ describe('generatePrettierConfig', () => {
         {
           files: '*.md',
           options: {
-            proseWrap: 'preserve'
-          }
+            proseWrap: 'preserve',
+          },
         },
         {
           files: '*.json',
           options: {
-            singleQuote: false
-          }
-        }
-      ]
+            singleQuote: false,
+          },
+        },
+      ],
     });
   });
 
@@ -366,18 +363,20 @@ describe('generatePrettierConfig', () => {
       success: true,
       data: undefined,
     } as any);
-    
+
     let writtenIgnore: string;
-    vi.mocked(fileSystem.writeFile).mockImplementation(async (_path, content) => {
-      writtenIgnore = content;
-      return {
-        success: true,
-        data: undefined,
-      } as any;
-    });
-    
+    vi.mocked(fileSystem.writeFile).mockImplementation(
+      async (_path, content) => {
+        writtenIgnore = content;
+        return {
+          success: true,
+          data: undefined,
+        } as any;
+      },
+    );
+
     const result = await generatePrettierConfig();
-    
+
     expect(isSuccess(result)).toBe(true);
     expect(writtenIgnore!).toContain('*.js');
     expect(writtenIgnore!).toContain('*.jsx');
@@ -393,9 +392,9 @@ describe('generatePrettierConfig', () => {
       success: false,
       error,
     } as any);
-    
+
     const result = await generatePrettierConfig();
-    
+
     expect(isFailure(result)).toBe(true);
     if (isFailure(result)) {
       expect(result.error).toBe(error);

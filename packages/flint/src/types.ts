@@ -12,9 +12,7 @@ export interface CleanOptions {
   force?: boolean;
 }
 
-export interface DoctorOptions {
-  // Currently no options, but keeping for future extensibility
-}
+export type DoctorOptions = {};
 
 export interface DetectedConfig {
   tool: string;

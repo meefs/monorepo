@@ -1,4 +1,4 @@
-import { Result, success, failure, isFailure } from '@outfitter/contracts';
+import { failure, isFailure, type Result, success } from '@outfitter/contracts';
 import * as pc from 'picocolors';
 import { readPackageJson, writePackageJson } from '../utils/file-system.js';
 

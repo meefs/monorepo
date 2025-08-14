@@ -180,7 +180,7 @@ async function installDependencies(
     });
   } catch (error: unknown) {
     if (error instanceof Error && 'timedOut' in error && error.timedOut) {
-      throw new Error(`Package installation timed out after 2 minutes`);
+      throw new Error('Package installation timed out after 2 minutes');
     }
     throw error;
   }

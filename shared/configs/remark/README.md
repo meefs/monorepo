@@ -18,9 +18,7 @@ import remarkConfig from '@outfitter/remark-config';
 // Use with remark
 import { remark } from 'remark';
 
-const processor = remark()
-  .use(remarkConfig.plugins)
-  .use(remarkConfig.settings);
+const processor = remark().use(remarkConfig.plugins).use(remarkConfig.settings);
 ```
 
 ### Preset Selection
@@ -52,18 +50,21 @@ const config = generate({
 ## Presets
 
 ### Standard (Default)
+
 - Balanced rules for most projects
 - 80 character line length
 - ATX headings (# ## ###)
 - Dash list markers (-)
 
 ### Strict
+
 - Rigorous linting for documentation-heavy projects
 - 80 character line length
 - All standard rules plus additional checks
 - Strict formatting consistency
 
 ### Relaxed
+
 - Minimal rules for flexible projects
 - 120 character line length
 - Essential formatting only
@@ -77,7 +78,7 @@ All presets include these base settings:
 {
   bullet: '-',          // Use - for list markers
   emphasis: '*',        // Use * for emphasis
-  strong: '*',         // Use * for strong emphasis  
+  strong: '*',         // Use * for strong emphasis
   listItemIndent: 'one', // Single space indent for lists
   fence: '`',          // Use ` for code fences
   rule: '-',           // Use - for horizontal rules

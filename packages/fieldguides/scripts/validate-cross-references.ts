@@ -59,7 +59,7 @@ function extractLinks(content: string, filePath: string): Array<LinkInfo> {
         link.startsWith('http') ||
         link.startsWith('#') ||
         link.startsWith('mailto:') ||
-        (!link.endsWith('.md') && !link.includes('.md#'))
+        !(link.endsWith('.md') || link.includes('.md#'))
       ) {
         continue;
       }
@@ -124,7 +124,7 @@ async function validateCrossReferences() {
       }
     }
 
-    console.log(`\n\n📊 Summary:`);
+    console.log('\n\n📊 Summary:');
     console.log(`  Total links checked: ${allLinks.length}`);
     console.log(`  ✅ Valid links: ${validLinks.length}`);
     console.log(`  ❌ Broken links: ${brokenLinks.length}`);
@@ -132,9 +132,9 @@ async function validateCrossReferences() {
     process.exit(1);
   } else {
     console.log('✅ All cross-references are valid!\n');
-    console.log(`📊 Summary:`);
+    console.log('📊 Summary:');
     console.log(`  Total links checked: ${allLinks.length}`);
-    console.log(`  All links point to existing files`);
+    console.log('  All links point to existing files');
   }
 
   // Optional: Check for bidirectional references
@@ -159,7 +159,7 @@ async function validateCrossReferences() {
   for (const [source, targets] of fileReferences.entries()) {
     for (const target of targets) {
       const targetRefs = fileReferences.get(target);
-      if (!targetRefs || !targetRefs.has(source)) {
+      if (!(targetRefs && targetRefs.has(source))) {
         // Only suggest bidirectional refs for files in same directory level
         const sourceDir = dirname(source).split('/')[0];
         const targetDir = dirname(target).split('/')[0];

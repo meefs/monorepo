@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateBiomeConfig } from '../biome.js';
-import { isSuccess, isFailure } from '@outfitter/contracts';
 import * as childProcess from 'node:child_process';
+import { isFailure, isSuccess } from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { generateBiomeConfig } from '../biome.js';
 
 vi.mock('node:child_process');
 

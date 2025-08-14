@@ -14,7 +14,7 @@
 - Follow the monorepo structure below
 - Not all projects will need all directories, use your best judgement
 - **Rules of Thumb:**
-  - End-user deliverable? → `apps/`  
+  - End-user deliverable? → `apps/`
   - Business logic or data models? → `packages/`
   - Infrastructure or ops? → `infra/`
   - Documentation? → `docs/`
@@ -101,13 +101,13 @@ Use scoped packages with consistent naming:
 
 ```typescript
 // In package.json names:
-"@company/ui"           // UI components
-"@company/api-client"   // API client  
-"@company/auth"         // Authentication
-"@company/database"     // Database utilities
-"@company/utils"        // General utilities
-"@company/config"       // Configuration schemas
-"@company/logger"       // Logging utilities
+'@company/ui'; // UI components
+'@company/api-client'; // API client
+'@company/auth'; // Authentication
+'@company/database'; // Database utilities
+'@company/utils'; // General utilities
+'@company/config'; // Configuration schemas
+'@company/logger'; // Logging utilities
 ```
 
 ### Structure Guidelines

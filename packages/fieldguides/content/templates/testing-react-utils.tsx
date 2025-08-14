@@ -20,11 +20,14 @@ import type { ReactElement, ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 // Detect test runner
-const isVitest = typeof (globalThis as any).vi !== 'undefined';
+const isVitest =
+  typeof (globalThis as Record<string, unknown>).vi !== 'undefined';
 const isJest = typeof jest !== 'undefined';
 
 // Export appropriate mocking utilities
-export const vi = isVitest ? (globalThis as any).vi : undefined;
+export const vi = isVitest
+  ? (globalThis as Record<string, unknown>).vi
+  : undefined;
 export const mockFn = isVitest
   ? vi.fn
   : isJest
@@ -83,7 +86,7 @@ function createTestQueryClient() {
     defaultOptions: {
       queries: {
         retry: false,
-        gcTime: Infinity, // Never garbage collect during tests
+        gcTime: Number.POSITIVE_INFINITY, // Never garbage collect during tests
         staleTime: 0,
       },
       mutations: {

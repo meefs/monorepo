@@ -1,7 +1,7 @@
-import { type Result, success, failure } from '@outfitter/contracts';
+import { platform } from 'node:os';
+import { failure, type Result, success } from '@outfitter/contracts';
 import { execa } from 'execa';
 import semver from 'semver';
-import { platform } from 'node:os';
 
 export interface EnvironmentInfo {
   node: {

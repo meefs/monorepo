@@ -8,7 +8,7 @@ This report provides a comprehensive analysis of the `@outfitter/monorepo` struc
 
 ```text
 .
-├── ai/                     # AI agent prompts, memory, and rules
+├── .agent/                     # AI agent prompts, memory, and rules
 │   ├── memory/            # Migration and update analysis docs
 │   ├── prompts/           # AI persona definitions (Max)
 │   └── rules/             # Tech stack preferences
@@ -1216,7 +1216,7 @@ This report provides a comprehensive analysis of the `@outfitter/monorepo` struc
 
 ### Core Dependencies Flow
 
-```
+```text
 @outfitter/contracts (zero dependencies)
     ↓
 @outfitter/contracts-zod (depends on contracts + zod as peer)
@@ -1232,7 +1232,7 @@ Multiple packages depend on contracts:
 
 ### Configuration Dependencies
 
-```
+```text
 @outfitter/typescript-config
     ↓
 Used as devDependency by almost all packages

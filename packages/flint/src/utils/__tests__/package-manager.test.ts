@@ -1,25 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
-  ErrorCode,
-} from '@outfitter/contracts';
 import * as path from 'node:path';
 import {
+  ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
+} from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as fs from '../file-system';
+import {
   detectPackageManager,
-  getInstallCommand,
   getAddCommand,
+  getCIFlags,
+  getExecCommand,
+  getInstallCommand,
+  getPackageManager,
+  getPreferredPackageManager,
   getRemoveCommand,
   getRunCommand,
-  getExecCommand,
-  getPreferredPackageManager,
-  getPackageManager,
   isCI,
-  getCIFlags,
 } from '../package-manager';
-import * as fs from '../file-system';
 
 vi.mock('../file-system');
 

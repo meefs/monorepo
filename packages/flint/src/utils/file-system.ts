@@ -1,17 +1,18 @@
 /**
  * File system operations with Result pattern
  */
-import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
-  ErrorCode,
-} from '@outfitter/contracts';
+
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
+import {
+  ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
+} from '@outfitter/contracts';
 import { glob } from 'glob';
 
 export interface FileSystemError {
@@ -271,7 +272,7 @@ export async function writePackageJson(
  */
 export async function backupFile(
   filePath: string,
-  backupDir: string = '.flint-backup'
+  backupDir = '.flint-backup'
 ): Promise<Result<string, FileSystemError>> {
   const existsResult = await fileExists(filePath);
   if (!isSuccess(existsResult)) {

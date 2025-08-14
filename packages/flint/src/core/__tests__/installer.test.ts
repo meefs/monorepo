@@ -1,24 +1,24 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { execSync } from 'node:child_process';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
-import {
-  getMissingDependencies,
-  installDependencies,
-  runInstall,
-  isPackageInstalled,
-  getPackageVersion,
-  installPackage,
-  installMissingDependencies,
-} from '../installer';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as console from '../../utils/console';
 import * as fs from '../../utils/file-system';
 import * as pm from '../../utils/package-manager';
-import * as console from '../../utils/console';
+import {
+  getMissingDependencies,
+  getPackageVersion,
+  installDependencies,
+  installMissingDependencies,
+  installPackage,
+  isPackageInstalled,
+  runInstall,
+} from '../installer';
 
 vi.mock('node:child_process');
 vi.mock('../../utils/file-system');

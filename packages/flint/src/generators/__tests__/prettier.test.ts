@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generatePrettierConfig } from '../prettier.js';
-import { isSuccess, isFailure } from '@outfitter/contracts';
+import { isFailure, isSuccess } from '@outfitter/contracts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as fileSystem from '../../utils/file-system.js';
+import { generatePrettierConfig } from '../prettier.js';
 
 vi.mock('../../utils/file-system.js');
 

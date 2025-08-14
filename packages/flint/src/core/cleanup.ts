@@ -2,17 +2,17 @@
  * Remove old configs and dependencies
  */
 import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
 } from '@outfitter/contracts';
-import { remove, fileExists } from '../utils/file-system';
-import { getConfigsToCleanup } from './detector';
 import { console } from '../utils/console';
+import { fileExists, remove } from '../utils/file-system';
+import { getConfigsToCleanup } from './detector';
 
 export interface CleanupOptions {
   dryRun?: boolean;
@@ -44,7 +44,9 @@ export async function removeOldConfigs(
       console.step(`Removing ${config}...`);
     }
 
-    if (!dryRun) {
+    if (dryRun) {
+      removed.push(config);
+    } else {
       const removeResult = await remove(config);
       if (isFailure(removeResult)) {
         if (!force) {
@@ -59,8 +61,6 @@ export async function removeOldConfigs(
       } else {
         removed.push(config);
       }
-    } else {
-      removed.push(config);
     }
   }
 

@@ -54,3 +54,7 @@ yarn.lock
 
 # Bun
 .bun/
+
+# Agent files
+!.agent/
+.agent/research/

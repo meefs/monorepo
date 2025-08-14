@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { doctor } from '../doctor.js';
-import { isSuccess, isFailure } from '@outfitter/contracts';
+import { isFailure, isSuccess } from '@outfitter/contracts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createTestContext,
-  createPackageJson,
   createEslintConfig,
+  createPackageJson,
   createPrettierConfig,
+  createTestContext,
   resetMocks,
 } from '../../test-utils/index.js';
+import { doctor } from '../doctor.js';
 
 describe('doctor command', () => {
   let ctx: ReturnType<typeof createTestContext>;
