@@ -1,23 +1,23 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { isSuccess, isFailure } from '@outfitter/contracts';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
+import { isFailure, isSuccess } from '@outfitter/contracts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  fileExists,
-  readFile,
-  writeFile,
-  readJSON,
-  writeJSON,
-  ensureDir,
-  remove,
-  copyFile,
-  moveFile,
-  listFiles,
-  getStats,
-  findFiles,
-  readPackageJson,
-  writePackageJson,
   backupFile,
+  copyFile,
+  ensureDir,
+  fileExists,
+  findFiles,
+  getStats,
+  listFiles,
+  moveFile,
+  readFile,
+  readJSON,
+  readPackageJson,
+  remove,
+  writeFile,
+  writeJSON,
+  writePackageJson,
 } from '../file-system';
 
 vi.mock('node:fs/promises');

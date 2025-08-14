@@ -242,7 +242,7 @@ export async function detectTerrain(
     monorepo: pnpmWorkspace || lernaJson || nxJson || rushJson,
     docker: dockerfile || dockerCompose,
     githubActions: githubWorkflows,
-    gitlabCi: gitlabCi,
+    gitlabCi,
 
     // Package Manager
     pnpm: pnpmLock,

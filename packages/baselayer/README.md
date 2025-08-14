@@ -21,6 +21,7 @@ pnpm add -D @outfitter/baselayer
 ```
 
 Peer dependencies (install the tools you want to use):
+
 ```bash
 pnpm add -D @biomejs/biome eslint prettier
 ```
@@ -37,31 +38,31 @@ pnpm add -D @biomejs/biome eslint prettier
     "lineWidth": 100,
     "quoteStyle": "single",
     "trailingCommas": "all",
-    "semicolons": "always"
+    "semicolons": "always",
   },
   "strictness": "strict",
   "environment": "typescript-react",
-  
+
   // Tool selection
   "baselayer": {
     "tools": {
       "typescript": "biome",
-      "javascript": "biome", 
+      "javascript": "biome",
       "json": "biome",
       "markdown": "rightdown",
       "css": "prettier",
-      "yaml": "prettier"
+      "yaml": "prettier",
     },
     "features": {
       "gitHooks": true,
       "vscode": true,
-      "ignore": "unified"
-    }
-  }
+      "ignore": "unified",
+    },
+  },
 }
 ```
 
-2. **Run setup**:
+1. **Run setup**:
 
 ```typescript
 import { setup } from '@outfitter/baselayer';
@@ -83,12 +84,12 @@ Define your preferences once, applied to all tools:
 ```jsonc
 {
   "codeStyle": {
-    "indentWidth": 2,        // Spaces for indentation
-    "lineWidth": 100,        // Maximum line length
-    "quoteStyle": "single",  // 'single' | 'double'
+    "indentWidth": 2, // Spaces for indentation
+    "lineWidth": 100, // Maximum line length
+    "quoteStyle": "single", // 'single' | 'double'
     "trailingCommas": "all", // 'none' | 'es5' | 'all'
-    "semicolons": "always"   // 'always' | 'never'
-  }
+    "semicolons": "always", // 'always' | 'never'
+  },
 }
 ```
 
@@ -100,14 +101,14 @@ Choose which tool handles which file types:
 {
   "baselayer": {
     "tools": {
-      "typescript": "biome",   // or "eslint"
-      "javascript": "biome",   // or "eslint" 
-      "json": "biome",         // or "prettier"
-      "markdown": "rightdown",  // or "prettier"
-      "css": "prettier",       // only prettier supported
-      "yaml": "prettier"       // only prettier supported
-    }
-  }
+      "typescript": "biome", // or "eslint"
+      "javascript": "biome", // or "eslint"
+      "json": "biome", // or "prettier"
+      "markdown": "rightdown", // or "prettier"
+      "css": "prettier", // only prettier supported
+      "yaml": "prettier", // only prettier supported
+    },
+  },
 }
 ```
 
@@ -131,10 +132,10 @@ Use exact tool syntax for specific needs:
       "linter": {
         "rules": {
           "suspicious": {
-            "noConsole": "off" // CLI tools need console.log
-          }
-        }
-      }
+            "noConsole": "off", // CLI tools need console.log
+          },
+        },
+      },
     },
     "prettier": {
       // Exact .prettierrc syntax
@@ -143,12 +144,12 @@ Use exact tool syntax for specific needs:
           "files": "*.md",
           "options": {
             "printWidth": 80,
-            "proseWrap": "always"
-          }
-        }
-      ]
-    }
-  }
+            "proseWrap": "always",
+          },
+        },
+      ],
+    },
+  },
 }
 ```
 
@@ -171,14 +172,14 @@ Main setup function that reads config and generates all tool configurations.
 
 ```typescript
 interface SetupOptions {
-  cwd?: string;           // Working directory
-  configPath?: string;    // Custom config file path
-  dryRun?: boolean;       // Don't write files, just validate
+  cwd?: string; // Working directory
+  configPath?: string; // Custom config file path
+  dryRun?: boolean; // Don't write files, just validate
 }
 
 interface SetupResult {
-  config: OutfitterConfig;     // Final resolved configuration
-  generatedFiles: string[];    // List of files that were generated
+  config: OutfitterConfig; // Final resolved configuration
+  generatedFiles: string[]; // List of files that were generated
 }
 ```
 
@@ -193,8 +194,8 @@ const myConfig = {
   ...DEFAULT_CONFIG,
   codeStyle: {
     ...DEFAULT_CONFIG.codeStyle,
-    lineWidth: 120
-  }
+    lineWidth: 120,
+  },
 };
 ```
 
@@ -223,7 +224,7 @@ pnpm lint:fix  # Auto-fix all issues (including markdown)
 Baselayer follows the principle "everything you need, nothing you don't":
 
 - **Declarative over imperative**: Describe what you want, not how to configure each tool
-- **Tool coordination**: Ensures tools work together without conflicts  
+- **Tool coordination**: Ensures tools work together without conflicts
 - **Escape hatches**: Use exact tool syntax when you need specific behavior
 - **Type safety**: Comprehensive TypeScript types prevent configuration errors
 

@@ -1,6 +1,6 @@
 ---
-"@outfitter/rightdown": major
-"@outfitter/baselayer": patch
+'@outfitter/rightdown': major
+'@outfitter/baselayer': patch
 ---
 
 Rename package from markdown-medic to @outfitter/rightdown

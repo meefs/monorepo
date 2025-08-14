@@ -1,25 +1,26 @@
 /**
  * Install dependencies with package manager
  */
+
+import { execSync } from 'node:child_process';
 import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
 } from '@outfitter/contracts';
+import { console } from '../utils/console';
 import { readPackageJson } from '../utils/file-system';
 import {
-  getPackageManager,
   getAddCommand,
-  getInstallCommand,
-  isCI,
   getCIFlags,
+  getInstallCommand,
+  getPackageManager,
+  isCI,
 } from '../utils/package-manager';
-import { execSync } from 'node:child_process';
-import { console } from '../utils/console';
 
 export interface InstallerError {
   type: 'INSTALLER_ERROR';

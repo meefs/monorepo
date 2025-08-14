@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This proposal outlines a comprehensive restructuring of the Outfitter monorepo to align with the preferred tech stack guidelines defined in `@ai/rules/preferred-tech-stack.md`. The current organic growth has resulted in a structure that doesn't fully leverage the recommended monorepo patterns, particularly around the separation of development tools, reusable libraries, and configuration management.
+This proposal outlines a comprehensive restructuring of the Outfitter monorepo to align with the preferred tech stack guidelines defined in `@./.agent/rules/preferred-tech-stack.md`. The current organic growth has resulted in a structure that doesn't fully leverage the recommended monorepo patterns, particularly around the separation of development tools, reusable libraries, and configuration management.
 
 ## Motivation
 
@@ -16,6 +16,7 @@ The current monorepo structure has several organizational challenges:
 ## Current Structure Analysis
 
 ### Existing Layout
+
 ```text
 outfitter-monorepo/
 ├── packages/                       # Mixed tools and libraries
@@ -54,6 +55,7 @@ outfitter-monorepo/
 ## Proposed Structure
 
 ### Target Layout
+
 ```text
 outfitter-monorepo/
 ├── tools/                          # Development utilities & CLIs
@@ -95,6 +97,7 @@ outfitter-monorepo/
 ### Phase 1: Directory Structure Setup
 
 **Create new directories:**
+
 ```bash
 mkdir -p tools config packages/config
 mkdir -p packages/config/{biome,eslint,typescript,prettier,remark,husky,changeset}
@@ -176,6 +179,7 @@ git mv lint-staged.config.mjs config/lint-staged.config.mjs
 **Files requiring updates:**
 
 1. **`pnpm-workspace.yaml`**:
+
    ```yaml
    packages:
      - 'packages/*'
@@ -184,6 +188,7 @@ git mv lint-staged.config.mjs config/lint-staged.config.mjs
    ```
 
 2. **Root `tsconfig.json`** - Update project references:
+
    ```json
    {
      "references": [

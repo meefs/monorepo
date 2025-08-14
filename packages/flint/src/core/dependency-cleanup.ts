@@ -1,19 +1,20 @@
 /**
  * Clean up unwanted dependencies
  */
+
+import { execSync } from 'node:child_process';
 import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
 } from '@outfitter/contracts';
+import { console } from '../utils/console';
 import { readPackageJson } from '../utils/file-system';
 import { getPackageManager, getRemoveCommand } from '../utils/package-manager';
-import { execSync } from 'node:child_process';
-import { console } from '../utils/console';
 
 export interface DependencyCleanupOptions {
   keepPrettier?: boolean;

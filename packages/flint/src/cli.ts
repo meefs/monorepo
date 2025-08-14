@@ -1,13 +1,13 @@
 #!/usr/bin/env node
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { isFailure, isSuccess } from '@outfitter/contracts';
 import { Command } from 'commander';
 import * as pc from 'picocolors';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-import { isFailure, isSuccess } from '@outfitter/contracts';
-import { init } from './commands/init.js';
 import { clean } from './commands/clean.js';
 import { doctor } from './commands/doctor.js';
+import { init } from './commands/init.js';
 
 // Read version from package.json
 const __filename = fileURLToPath(import.meta.url);

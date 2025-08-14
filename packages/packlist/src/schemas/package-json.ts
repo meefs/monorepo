@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import type { Result } from '@outfitter/contracts';
-import { success, failure } from '@outfitter/contracts';
 import { readFileSync } from 'node:fs';
+import type { Result } from '@outfitter/contracts';
+import { failure, success } from '@outfitter/contracts';
+import { z } from 'zod';
 
 /**
  * Schema for package.json files with the fields we care about

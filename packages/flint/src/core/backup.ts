@@ -1,18 +1,19 @@
 /**
  * Create markdown backups of existing configurations
  */
-import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
-  ErrorCode,
-} from '@outfitter/contracts';
-import { writeFile, ensureDir } from '../utils/file-system';
-import { DetectedConfig } from './detector';
+
 import * as path from 'node:path';
+import {
+  ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
+} from '@outfitter/contracts';
+import { ensureDir, writeFile } from '../utils/file-system';
+import type { DetectedConfig } from './detector';
 
 export interface BackupOptions {
   backupDir?: string;
@@ -58,7 +59,7 @@ export async function createBackup(
   const filename = `flint-backup-${date}.md`;
   const backupPath = path.join(backupDir, filename);
 
-  let content = generateBackupContent(
+  const content = generateBackupContent(
     configs,
     timestamp,
     includeRestoreInstructions

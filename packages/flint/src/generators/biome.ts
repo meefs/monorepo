@@ -1,5 +1,5 @@
-import { Result, success, failure } from '@outfitter/contracts';
 import { execSync } from 'node:child_process';
+import { failure, type Result, success } from '@outfitter/contracts';
 import * as pc from 'picocolors';
 
 /**

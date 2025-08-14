@@ -30,8 +30,8 @@ export default defineConfig({
       },
     },
     setupFiles: [],
-    testTimeout: 10000,
-    hookTimeout: 10000,
+    testTimeout: 10_000,
+    hookTimeout: 10_000,
   },
   esbuild: {
     target: 'node18',

@@ -55,7 +55,6 @@
     "no-unsafe-negation": "error",
     "no-unsafe-optional-chaining": "error",
     "no-unused-private-class-members": "error",
-    // Delegated to the TS-aware rule below
     "no-unused-vars": "off",
     "no-use-before-define": "error",
     "no-useless-assignment": "error",
@@ -64,10 +63,13 @@
     "use-isnan": "error",
     "valid-typeof": "error",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", {
-      "varsIgnorePattern": "^_",
-      "argsIgnorePattern": "^_"
-    }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "react/jsx-no-duplicate-props": "error",
     "react/jsx-no-undef": "error",
     "react/jsx-uses-react": "error",

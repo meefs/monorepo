@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
 import type { Mock } from 'vitest';
+import { vi } from 'vitest';
 
 export interface MockFileSystem {
   '/package.json': string;

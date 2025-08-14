@@ -1,18 +1,18 @@
+import path from 'node:path';
 import {
-  Result,
-  success,
   failure,
-  isSuccess,
   isFailure,
+  isSuccess,
+  type Result,
+  success,
 } from '@outfitter/contracts';
 import * as pc from 'picocolors';
 import {
+  ensureDir,
+  fileExists,
   readJSON,
   writeJSON,
-  fileExists,
-  ensureDir,
 } from '../utils/file-system.js';
-import path from 'node:path';
 
 /**
  * Checks if VS Code directory exists

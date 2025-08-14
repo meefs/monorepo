@@ -77,8 +77,10 @@ export async function manageFieldguideConfig(
     const importConfig = (await readJSON(importPath)) as OutfitterConfig;
 
     if (
-      !(importConfig.fieldguides || importConfig.supplies) ||
-      !Array.isArray(importConfig.fieldguides || importConfig.supplies)
+      !(
+        (importConfig.fieldguides || importConfig.supplies) &&
+        Array.isArray(importConfig.fieldguides || importConfig.supplies)
+      )
     ) {
       console.error(chalk.red('Invalid configuration format'));
       process.exit(1);

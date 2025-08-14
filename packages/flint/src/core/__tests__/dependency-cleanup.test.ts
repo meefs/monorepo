@@ -1,21 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { execSync } from 'node:child_process';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
-import {
-  findDependenciesToRemove,
-  cleanupDependencies,
-  removeDependency,
-  getEslintDependencies,
-} from '../dependency-cleanup';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as console from '../../utils/console';
 import * as fs from '../../utils/file-system';
 import * as pm from '../../utils/package-manager';
-import * as console from '../../utils/console';
+import {
+  cleanupDependencies,
+  findDependenciesToRemove,
+  getEslintDependencies,
+  removeDependency,
+} from '../dependency-cleanup';
 
 vi.mock('node:child_process');
 vi.mock('../../utils/file-system');

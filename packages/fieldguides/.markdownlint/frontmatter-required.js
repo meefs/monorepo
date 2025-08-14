@@ -13,7 +13,7 @@ export default {
   names: ['frontmatter-required'],
   description: 'Fieldguide files must have valid frontmatter',
   tags: ['frontmatter'],
-  function: function rule(params, onError) {
+  function(params, onError) {
     const fileName = params.name.split('/').pop();
 
     // Skip standards files and other special files

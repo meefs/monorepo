@@ -13,8 +13,8 @@ import { parse } from 'comment-json';
 import {
   generateBiomeConfig,
   generateESLintConfig,
-  generateRightdownConfigContent,
   generatePrettierConfig,
+  generateRightdownConfigContent,
   generateVSCodeSettings,
 } from './generators/index.js';
 import type { OutfitterConfig } from './types/index.js';
@@ -251,7 +251,7 @@ async function generatePackageScripts(
     const { tools } = config.baselayer;
 
     if (tools.typescript === 'biome' || tools.javascript === 'biome') {
-      if (!scripts.lint || !scripts.lint.includes('biome')) {
+      if (!(scripts.lint && scripts.lint.includes('biome'))) {
         const markdownLint =
           tools.markdown === 'rightdown' ? ' && rightdown "**/*.md"' : '';
         scripts.lint = `biome lint . && eslint . --config=./eslint.config.js --max-warnings 0${markdownLint}`;
@@ -260,7 +260,7 @@ async function generatePackageScripts(
         updated = true;
       }
 
-      if (!scripts.format || !scripts.format.includes('biome')) {
+      if (!(scripts.format && scripts.format.includes('biome'))) {
         scripts.format =
           tools.css === 'prettier' || tools.yaml === 'prettier'
             ? 'biome format . && prettier --check .'
@@ -272,7 +272,7 @@ async function generatePackageScripts(
         updated = true;
       }
     } else if (tools.typescript === 'eslint' || tools.javascript === 'eslint') {
-      if (!scripts.lint || !scripts.lint.includes('eslint')) {
+      if (!(scripts.lint && scripts.lint.includes('eslint'))) {
         const markdownLint =
           tools.markdown === 'rightdown' ? ' && rightdown "**/*.md"' : '';
         scripts.lint = `eslint . --max-warnings 0${markdownLint}`;
@@ -280,7 +280,7 @@ async function generatePackageScripts(
           `eslint . --fix${tools.markdown === 'rightdown' ? ' && rightdown --fix "**/*.md"' : ''}`;
         updated = true;
       }
-      if (!scripts.format || !scripts.format.includes('prettier')) {
+      if (!(scripts.format && scripts.format.includes('prettier'))) {
         scripts.format = 'prettier --check .';
         scripts['format:fix'] = 'prettier --write .';
         updated = true;

@@ -1,5 +1,5 @@
+import { failure, type Result, success } from '@outfitter/contracts';
 import { execa } from 'execa';
-import { type Result, success, failure } from '@outfitter/contracts';
 
 interface ToolVersion {
   name: string;

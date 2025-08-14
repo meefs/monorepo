@@ -11,11 +11,11 @@ export interface LogOptions {
 export class Console {
   private indentLevel = 0;
 
-  indent(level: number = 2): void {
+  indent(level = 2): void {
     this.indentLevel += level;
   }
 
-  dedent(level: number = 2): void {
+  dedent(level = 2): void {
     this.indentLevel = Math.max(0, this.indentLevel - level);
   }
 
@@ -75,7 +75,7 @@ export class Console {
     console.log(`${indent}${pc.gray('```')}`);
   }
 
-  list(items: string[], ordered: boolean = false): void {
+  list(items: string[], ordered = false): void {
     items.forEach((item, index) => {
       const bullet = ordered ? `${index + 1}.` : '•';
       this.log(`${pc.gray(bullet)} ${item}`);

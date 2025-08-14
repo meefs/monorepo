@@ -2,15 +2,15 @@
  * Smart config merging utilities
  */
 import {
-  Result,
-  success,
-  failure,
-  makeError,
-  isSuccess,
-  isFailure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  makeError,
+  type Result,
+  success,
 } from '@outfitter/contracts';
-import { readJSON, writeJSON, fileExists } from '../utils/file-system';
+import { fileExists, readJSON, writeJSON } from '../utils/file-system';
 
 export interface MergeOptions {
   strategy?: 'merge' | 'replace' | 'preserve';

@@ -78,10 +78,14 @@ markdownlint-cli2:
 export function generateBiomeConfig(): GeneratedConfig {
   return {
     path: 'biome.json',
-    content: JSON.stringify({
-      "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-      "extends": ["ultracite"]
-    }, null, 2)
+    content: JSON.stringify(
+      {
+        $schema: 'https://biomejs.dev/schemas/1.9.4/schema.json',
+        extends: ['ultracite'],
+      },
+      null,
+      2,
+    ),
   };
 }
 ```
@@ -92,17 +96,21 @@ export function generateBiomeConfig(): GeneratedConfig {
 export function generatePrettierConfig(): GeneratedConfig {
   return {
     path: '.prettierrc.json',
-    content: JSON.stringify({
-      // Prettier should ignore JS/TS files - Biome handles those
-      overrides: [
-        {
-          files: ["*.js", "*.jsx", "*.ts", "*.tsx", "*.mjs", "*.cjs"],
-          options: {
-            requirePragma: true  // Effectively disables Prettier for these
-          }
-        }
-      ]
-    }, null, 2)
+    content: JSON.stringify(
+      {
+        // Prettier should ignore JS/TS files - Biome handles those
+        overrides: [
+          {
+            files: ['*.js', '*.jsx', '*.ts', '*.tsx', '*.mjs', '*.cjs'],
+            options: {
+              requirePragma: true, // Effectively disables Prettier for these
+            },
+          },
+        ],
+      },
+      null,
+      2,
+    ),
   };
 }
 ```
@@ -113,39 +121,43 @@ export function generatePrettierConfig(): GeneratedConfig {
 export function generateVSCodeSettings(): GeneratedConfig {
   return {
     path: '.vscode/settings.json',
-    content: JSON.stringify({
-      "editor.defaultFormatter": "biomejs.biome",
-      "editor.formatOnSave": true,
-      "editor.codeActionsOnSave": {
-        "quickfix.biome": "explicit",
-        "source.organizeImports.biome": "explicit"
+    content: JSON.stringify(
+      {
+        'editor.defaultFormatter': 'biomejs.biome',
+        'editor.formatOnSave': true,
+        'editor.codeActionsOnSave': {
+          'quickfix.biome': 'explicit',
+          'source.organizeImports.biome': 'explicit',
+        },
+        '[javascript]': {
+          'editor.defaultFormatter': 'biomejs.biome',
+        },
+        '[typescript]': {
+          'editor.defaultFormatter': 'biomejs.biome',
+        },
+        '[javascriptreact]': {
+          'editor.defaultFormatter': 'biomejs.biome',
+        },
+        '[typescriptreact]': {
+          'editor.defaultFormatter': 'biomejs.biome',
+        },
+        '[json]': {
+          'editor.defaultFormatter': 'esbenp.prettier-vscode',
+        },
+        '[jsonc]': {
+          'editor.defaultFormatter': 'esbenp.prettier-vscode',
+        },
+        '[yaml]': {
+          'editor.defaultFormatter': 'esbenp.prettier-vscode',
+        },
+        '[markdown]': {
+          'editor.defaultFormatter': 'esbenp.prettier-vscode',
+        },
       },
-      "[javascript]": {
-        "editor.defaultFormatter": "biomejs.biome"
-      },
-      "[typescript]": {
-        "editor.defaultFormatter": "biomejs.biome"
-      },
-      "[javascriptreact]": {
-        "editor.defaultFormatter": "biomejs.biome"
-      },
-      "[typescriptreact]": {
-        "editor.defaultFormatter": "biomejs.biome"
-      },
-      "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[jsonc]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[yaml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      }
-    }, null, 2),
-    merge: true  // Merge with existing settings
+      null,
+      2,
+    ),
+    merge: true, // Merge with existing settings
   };
 }
 ```
@@ -175,7 +187,7 @@ indent_size = 2
 
 [Makefile]
 indent_style = tab
-`
+`,
   };
 }
 ```
@@ -197,7 +209,7 @@ indent_style = tab
 
 **Git Attributes:**
 
-```
+```gitattributes
 * text=auto eol=lf
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
@@ -207,13 +219,15 @@ indent_style = tab
 
 ```typescript
 export interface SetupOptions {
-  includeMarkdownLint?: boolean;  // Default: true
-  includeEditorConfig?: boolean;   // Default: true
-  setupVSCode?: boolean;          // Default: true
-  dryRun?: boolean;               // Default: false
+  includeMarkdownLint?: boolean; // Default: true
+  includeEditorConfig?: boolean; // Default: true
+  setupVSCode?: boolean; // Default: true
+  dryRun?: boolean; // Default: false
 }
 
-export async function setup(options: SetupOptions = {}): Promise<Result<SetupResult, Error>> {
+export async function setup(
+  options: SetupOptions = {},
+): Promise<Result<SetupResult, Error>> {
   // 1. Detect available tools
   // 2. Generate configs (no customization)
   // 3. Smart merge for existing JSON files
@@ -262,7 +276,7 @@ For users upgrading from the current version:
 
 ```bash
 # 1. Remove old configuration files
-rm .eslintrc* .prettierrc* remark.config.* 
+rm .eslintrc* .prettierrc* remark.config.*
 
 # 2. Update dependencies
 pnpm remove eslint remark remark-cli
@@ -305,10 +319,12 @@ Instead of reimplementing what Ultracite already does well, we could pivot the @
 ### Option 1: Wrapper Around Ultracite Init
 
 ```typescript
-export async function setup(options: SetupOptions = {}): Promise<Result<SetupResult, Error>> {
+export async function setup(
+  options: SetupOptions = {},
+): Promise<Result<SetupResult, Error>> {
   // 1. Run ultracite init first
   await execAsync('npx ultracite init');
-  
+
   // 2. Then add our additional configurations:
   //    - Prettier config for non-JS/TS files
   //    - markdownlint-cli2 setup
@@ -339,23 +355,24 @@ Make @outfitter/formatting extremely minimal:
 // Just a thin orchestrator
 export async function setup() {
   console.log('Setting up Outfitter formatting...');
-  
+
   // 1. Run ultracite init
   console.log('Initializing Ultracite (Biome) for JS/TS...');
   await execAsync('npx ultracite init');
-  
+
   // 2. Add Prettier for other files
   console.log('Configuring Prettier for non-JS/TS files...');
   await writeFile('.prettierrc.json', prettierConfig);
-  
+
   // 3. Add markdownlint if requested
   console.log('Setting up markdown linting...');
   await writeFile('.markdownlint-cli2.yaml', markdownlintConfig);
-  
+
   // 4. Update package.json scripts to combine tools
   await updatePackageJsonScripts({
-    "format": "biome check --write . && prettier --write '**/*.{yml,yaml,json,md,css,html}'",
-    "lint": "biome lint . && markdownlint-cli2"
+    format:
+      "biome check --write . && prettier --write '**/*.{yml,yaml,json,md,css,html}'",
+    lint: 'biome lint . && markdownlint-cli2',
   });
 }
 ```
@@ -369,11 +386,13 @@ Implement **Option 2** with our own init command that orchestrates everything:
 import { execAsync } from 'node:child_process';
 import { detectPackageManager } from './utils/detect-pm.js';
 
-export async function init(options: InitOptions = {}): Promise<Result<void, Error>> {
+export async function init(
+  options: InitOptions = {},
+): Promise<Result<void, Error>> {
   const pm = detectPackageManager(); // pnpm, npm, yarn, bun
-  
+
   console.log('🚀 Initializing Outfitter formatting setup...\n');
-  
+
   // Step 1: Run ultracite init
   console.log('📦 Setting up Ultracite (Biome) for TypeScript/JavaScript...');
   try {
@@ -383,42 +402,44 @@ export async function init(options: InitOptions = {}): Promise<Result<void, Erro
     console.log('❌ Failed to initialize Ultracite');
     return failure(error);
   }
-  
+
   // Step 2: Install additional dependencies
   console.log('📦 Installing additional formatters...');
   await execAsync(`${pm.install} -D prettier markdownlint-cli2`);
-  
+
   // Step 3: Configure Prettier for non-JS/TS files
   console.log('🎨 Configuring Prettier for non-JS/TS files...');
   await writeFile('.prettierrc.json', generatePrettierConfig());
   await writeFile('.prettierignore', generatePrettierIgnore());
-  
+
   // Step 4: Configure markdownlint
   console.log('📝 Setting up markdown linting...');
   await writeFile('.markdownlint-cli2.yaml', generateMarkdownlintConfig());
-  
+
   // Step 5: Add EditorConfig
   console.log('📝 Creating EditorConfig...');
   await writeFile('.editorconfig', generateEditorConfig());
-  
+
   // Step 6: Update VS Code settings for other file types
   console.log('🔧 Updating VS Code settings...');
   await mergeVSCodeSettings(generateAdditionalVSCodeSettings());
-  
+
   // Step 7: Add git attributes
   console.log('📄 Creating git attributes...');
   await writeFile('.gitattributes', generateGitAttributes());
-  
+
   // Step 8: Update package.json scripts
   console.log('📜 Updating package.json scripts...');
   await updatePackageJsonScripts({
-    "format": "biome check --write . && prettier --write '**/*.{yml,yaml,json,md,css,html}'",
-    "format:check": "biome check . && prettier --check '**/*.{yml,yaml,json,md,css,html}'",
-    "lint": "biome lint . && markdownlint-cli2",
-    "lint:fix": "biome lint --write . && markdownlint-cli2 --fix",
-    "ci": "biome ci . && prettier --check '**/*.{yml,yaml,json,md,css,html}' && markdownlint-cli2"
+    format:
+      "biome check --write . && prettier --write '**/*.{yml,yaml,json,md,css,html}'",
+    'format:check':
+      "biome check . && prettier --check '**/*.{yml,yaml,json,md,css,html}'",
+    lint: 'biome lint . && markdownlint-cli2',
+    'lint:fix': 'biome lint --write . && markdownlint-cli2 --fix',
+    ci: "biome ci . && prettier --check '**/*.{yml,yaml,json,md,css,html}' && markdownlint-cli2",
   });
-  
+
   console.log('\n✨ Outfitter formatting setup complete!');
   console.log('\nRun "pnpm format" to format your code');
   console.log('Run "pnpm lint" to check for issues\n');

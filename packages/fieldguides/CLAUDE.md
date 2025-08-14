@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## About You
 
-@.ai/prompts/MAX.md
+@./.agent/prompts/mode-max-eng.md
 
 ## Project Overview
 

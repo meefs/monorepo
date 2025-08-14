@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { init } from '../init.js';
-import type { InitOptions } from '../../types.js';
-import { isSuccess, isFailure } from '@outfitter/contracts';
+import { isFailure, isSuccess } from '@outfitter/contracts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createTestContext,
-  createPackageJson,
   createEslintConfig,
+  createPackageJson,
   createPrettierConfig,
+  createTestContext,
   mockPrompts,
   resetMocks,
 } from '../../test-utils/index.js';
+import type { InitOptions } from '../../types.js';
+import { init } from '../init.js';
 
 describe('init command', () => {
   let ctx: ReturnType<typeof createTestContext>;

@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   generateBiomeConfig,
-  generatePrettierConfig,
   generateESLintConfig,
+  generatePrettierConfig,
 } from '../generators/index.js';
-import { DEFAULT_CONFIG } from '../types/index.js';
 import type { OutfitterConfig } from '../types/index.js';
+import { DEFAULT_CONFIG } from '../types/index.js';
 
 describe('configuration generators', () => {
   describe('generateBiomeConfig', () => {

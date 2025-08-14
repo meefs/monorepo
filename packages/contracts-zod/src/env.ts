@@ -57,7 +57,7 @@ export const CommonEnvSchemas = {
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
-  PORT: z.coerce.number().min(1).max(65535).default(3000),
+  PORT: z.coerce.number().min(1).max(65_535).default(3000),
   DATABASE_URL: z.string().url(),
   API_KEY: z.string().min(1),
   JWT_SECRET: z.string().min(32),
@@ -134,7 +134,7 @@ export function parseEnvVar<T>(
           `Invalid environment variable: ${name}`,
           {
             variable: name,
-            value: value,
+            value,
             issues: error.issues.map((issue) => ({
               message: issue.message,
               code: issue.code,
@@ -169,10 +169,10 @@ export function validateRequiredEnvVars(
 
   for (const variable of variables) {
     const value = process.env[variable];
-    if (!value) {
-      missing.push(variable);
-    } else {
+    if (value) {
       values[variable] = value;
+    } else {
+      missing.push(variable);
     }
   }
 

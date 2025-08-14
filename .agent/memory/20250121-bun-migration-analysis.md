@@ -27,7 +27,7 @@ packages:
 1. **Workspaces**: Managing multiple packages in monorepo
 2. **Filtering**: `--filter` flag for selective operations
 3. **Parallel execution**: `--parallel` flag
-4. **workspace:* protocol**: Internal package references
+4. **workspace:\* protocol**: Internal package references
 5. **Scripts with filters**: Complex build ordering
 
 ## Bun Capabilities (from documentation)
@@ -35,7 +35,7 @@ packages:
 ### ✅ Supported Features
 
 1. **Workspaces**: Full support via `workspaces` in package.json
-2. **workspace:* protocol**: Fully compatible
+2. **workspace:\* protocol**: Fully compatible
 3. **Filtering**: `--filter` flag works similarly
 4. **Fast package installation**: 10-100x faster than npm/yarn
 5. **Built-in TypeScript**: No need for tsx/ts-node
@@ -87,11 +87,7 @@ globalBinDir = "~/.bun/bin"
 ```json
 {
   "packageManager": "bun@1.1.x",
-  "workspaces": [
-    "packages/*",
-    "packages/contracts/*",
-    "docs/fieldguides"
-  ],
+  "workspaces": ["packages/*", "packages/contracts/*", "docs/fieldguides"],
   "engines": {
     "node": ">=20",
     "bun": ">=1.1.0"
@@ -159,7 +155,7 @@ Consider migrating from Vitest to Bun's built-in test runner:
 
 ## Benefits
 
-1. **Performance**: 
+1. **Performance**:
    - Package installation: 10-100x faster
    - Script execution: Native speed
    - Built-in TypeScript: No transpilation overhead
@@ -214,7 +210,7 @@ The migration is **feasible** with these considerations:
 ## Commands Comparison
 
 | Operation | pnpm | bun |
-|-----------|------|-----|
+| --- | --- | --- |
 | Install all | `pnpm install` | `bun install` |
 | Add dependency | `pnpm add <pkg>` | `bun add <pkg>` |
 | Add to workspace | `cd packages/x && pnpm add` | `cd packages/x && bun add` |

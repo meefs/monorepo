@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
-import { createBackup, createBackupSummary } from '../backup';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as fs from '../../utils/file-system';
-import { DetectedConfig } from '../detector';
+import { createBackup, createBackupSummary } from '../backup';
+import type { DetectedConfig } from '../detector';
 
 vi.mock('../../utils/file-system');
 

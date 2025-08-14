@@ -1,21 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
-  isSuccess,
-  isFailure,
-  success,
-  failure,
   ErrorCode,
+  failure,
+  isFailure,
+  isSuccess,
+  success,
 } from '@outfitter/contracts';
-import {
-  removeOldConfigs,
-  cleanupOldTools,
-  removeToolConfigs,
-  cleanupVSCodeSettings,
-  removeOldGitHooks,
-} from '../cleanup';
-import * as fs from '../../utils/file-system';
-import * as detector from '../detector';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as console from '../../utils/console';
+import * as fs from '../../utils/file-system';
+import {
+  cleanupOldTools,
+  cleanupVSCodeSettings,
+  removeOldConfigs,
+  removeOldGitHooks,
+  removeToolConfigs,
+} from '../cleanup';
+import * as detector from '../detector';
 
 vi.mock('../../utils/file-system');
 vi.mock('../detector');

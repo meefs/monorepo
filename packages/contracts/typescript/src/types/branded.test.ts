@@ -146,7 +146,7 @@ describe('Branded Types', () => {
 
   describe('PositiveInteger', () => {
     it('should create valid positive integers', () => {
-      const validNumbers = [1, 100, 999999];
+      const validNumbers = [1, 100, 999_999];
 
       for (const num of validNumbers) {
         const result = createPositiveInteger(num);
@@ -159,7 +159,14 @@ describe('Branded Types', () => {
     });
 
     it('should reject invalid positive integers', () => {
-      const invalidNumbers = [0, -1, -100, 1.5, NaN, Infinity];
+      const invalidNumbers = [
+        0,
+        -1,
+        -100,
+        1.5,
+        Number.NaN,
+        Number.POSITIVE_INFINITY,
+      ];
 
       for (const num of invalidNumbers) {
         const result = createPositiveInteger(num);
@@ -177,7 +184,7 @@ describe('Branded Types', () => {
 
   describe('NonNegativeInteger', () => {
     it('should create valid non-negative integers', () => {
-      const validNumbers = [0, 1, 100, 999999];
+      const validNumbers = [0, 1, 100, 999_999];
 
       for (const num of validNumbers) {
         const result = createNonNegativeInteger(num);
@@ -190,7 +197,13 @@ describe('Branded Types', () => {
     });
 
     it('should reject invalid non-negative integers', () => {
-      const invalidNumbers = [-1, -100, 1.5, NaN, Infinity];
+      const invalidNumbers = [
+        -1,
+        -100,
+        1.5,
+        Number.NaN,
+        Number.POSITIVE_INFINITY,
+      ];
 
       for (const num of invalidNumbers) {
         const result = createNonNegativeInteger(num);
@@ -323,7 +336,7 @@ describe('Branded Types', () => {
 
   describe('Timestamp', () => {
     it('should create valid timestamps', () => {
-      const validTimestamps = [1, Date.now(), 1234567890000];
+      const validTimestamps = [1, Date.now(), 1_234_567_890_000];
 
       for (const ts of validTimestamps) {
         const result = createTimestamp(ts);
@@ -336,7 +349,13 @@ describe('Branded Types', () => {
     });
 
     it('should reject invalid timestamps', () => {
-      const invalidTimestamps = [0, -1, 1.5, NaN, Infinity];
+      const invalidTimestamps = [
+        0,
+        -1,
+        1.5,
+        Number.NaN,
+        Number.POSITIVE_INFINITY,
+      ];
 
       for (const ts of invalidTimestamps) {
         const result = createTimestamp(ts);
@@ -346,7 +365,7 @@ describe('Branded Types', () => {
 
     it('should have working type guard', () => {
       expect(isTimestamp(Date.now())).toBe(true);
-      expect(isTimestamp(1234567890000)).toBe(true);
+      expect(isTimestamp(1_234_567_890_000)).toBe(true);
       expect(isTimestamp(0)).toBe(false);
       expect(isTimestamp(1.5)).toBe(false);
     });
