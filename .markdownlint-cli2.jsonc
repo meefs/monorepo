@@ -27,7 +27,7 @@
       "style": "fenced"
     }
   },
-  "globs": ["**/*.md", "**/*.mdx", "**/*.mdc"],
+  "globs": [],
   "ignores": [
     "**/node_modules",
     "**/.git",
