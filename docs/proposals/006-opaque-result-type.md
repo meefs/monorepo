@@ -182,6 +182,7 @@ This is a significant and breaking change that must be managed carefully.
 
 2. **Phase 2: Automated Refactoring with Codemods**
     - Develop a `jscodeshift` codemod to perform the bulk of the migration. The codemod will be designed to transform the most common pattern:
+
         ```diff
         - if (isSuccess(result)) {
         -   // success logic using result.data
@@ -193,6 +194,7 @@ This is a significant and breaking change that must be managed carefully.
         +   failure: (error) => { /* failure logic using error */ },
         + });
         ```
+
     - Run this codemod across the entire monorepo. This will handle an estimated 80-90% of use cases.
 
 3. **Phase 3: Manual Refactoring and Cleanup**

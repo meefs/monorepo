@@ -364,6 +364,7 @@ reviews:
 tools:
   gitleaks: { enabled: true }
   semgrep: { enabled: true }
+
 ````
 
 ### Project-Specific Templates

@@ -168,6 +168,7 @@ pnpm update <package> --latest
    ```
 
 5. Update root tsconfig.json references:
+
    ```json
    {
      "references": [{ "path": "./packages/new-package" }]
@@ -245,6 +246,7 @@ pnpm changeset:publish
    ```
 
 2. Check for circular dependencies:
+
    ```bash
    pnpm ls --depth=0
    ```
@@ -256,6 +258,7 @@ pnpm changeset:publish
    - Cmd+Shift+P → "TypeScript: Restart TS Server"
 
 2. Clean TypeScript cache:
+
    ```bash
    pnpm tsc --build --clean
    ```
@@ -269,6 +272,7 @@ pnpm changeset:publish
    ```
 
 2. Run tests in isolation:
+
    ```bash
    pnpm test --filter @outfitter/package-name -- --no-coverage
    ```

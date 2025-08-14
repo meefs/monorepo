@@ -89,11 +89,11 @@ export type AppLayer<R> = Layer.Layer<never, never, R>;
 
 ## Success Criteria
 
-* Package adds **< 20 kB** gzipped to consumers that import it.
-* At least one production service migrates a workflow to Effect with no
+- Package adds **< 20 kB** gzipped to consumers that import it.
+- At least one production service migrates a workflow to Effect with no
   regressions.
-* Developers report simpler parallel / retry logic compared to Promises.
-* No build-time or bundle-size impact for packages that do **not** import it.
+- Developers report simpler parallel / retry logic compared to Promises.
+- No build-time or bundle-size impact for packages that do **not** import it.
 
 ## Risks & Mitigations
 
@@ -116,4 +116,3 @@ export type AppLayer<R> = Layer.Layer<never, never, R>;
 
 Approve creation of `packages/contracts-effect` under the scope and timeline
 outlined above.
-

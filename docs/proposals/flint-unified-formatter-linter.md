@@ -1269,6 +1269,7 @@ When setting up TypeScript for your project, you need to decide between using Bu
    ```
 
 3. **For mixed environments**: Use both with `skipLibCheck`
+
    ```json
    {
      "compilerOptions": {
@@ -1277,6 +1278,7 @@ When setting up TypeScript for your project, you need to decide between using Bu
      }
    }
    ```
+
    **Note**: This approach may lead to type conflicts and is not recommended unless absolutely necessary.
 
 ### Example tsconfig.json
