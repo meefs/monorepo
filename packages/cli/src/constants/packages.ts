@@ -8,7 +8,7 @@ export const CONFIG_PACKAGES: Array<Package> = [
   },
   {
     name: 'TypeScript configuration',
-    value: '@outfitter/typescript-config',
+    value: '@outfitter/baselayer',
     selected: true,
   },
   {
@@ -55,7 +55,7 @@ export const PRESET_CONFIGURATIONS: Record<PresetType, PackageSelection> = {
   standard: {
     configs: [
       '@outfitter/eslint-config',
-      '@outfitter/typescript-config',
+      '@outfitter/baselayer',
       '@outfitter/prettier-config',
       '@outfitter/husky-config',
     ],

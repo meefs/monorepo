@@ -1,9 +1,37 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['cjs', 'esm'],
-  dts: false, // Use tsc for declarations instead
-  clean: true,
-  sourcemap: true,
-});
+export default defineConfig([
+  // Main library build
+  {
+    entry: ['src/index.ts'],
+    format: ['esm', 'cjs'],
+    dts: false, // TypeScript handles this via tsc --emitDeclarationOnly
+    clean: true,
+    sourcemap: true,
+    tsconfig: './tsconfig.json',
+    shims: true,
+    outExtension({ format }) {
+      return {
+        js: format === 'esm' ? '.js' : '.cjs',
+      };
+    },
+  },
+  // CLI build (with shebang)
+  {
+    entry: ['src/cli.ts'],
+    format: ['esm'],
+    dts: false,
+    clean: false, // Don't clean since we're building multiple configs
+    sourcemap: true,
+    tsconfig: './tsconfig.json',
+    shims: true,
+    banner: {
+      js: '#!/usr/bin/env node',
+    },
+    outExtension() {
+      return {
+        js: '.js',
+      };
+    },
+  },
+]);

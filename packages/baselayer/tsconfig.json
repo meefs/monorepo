@@ -1,43 +1,16 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@outfitter/baselayer/typescript/base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "lib": ["ES2022"],
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "allowJs": true,
-
-    // Strict type checking options
-    "strict": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-
-    // Module resolution and interop
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-
-    // Declaration and output options
-    "declaration": true,
-    "declarationMap": true,
-    "composite": true,
-    "incremental": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "tsBuildInfoFile": "./dist/.tsbuildinfo"
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/tsconfig.buildinfo",
+    "noEmit": false,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "types": ["vitest/globals", "@types/node"]
   },
   "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules", "src/**/*.test.ts", "src/**/*.test.tsx"],
-  "references": [
-    {
-      "path": "../contracts/typescript"
-    }
-  ]
+  "exclude": ["dist", "node_modules", "**/*.test.ts"]
 }

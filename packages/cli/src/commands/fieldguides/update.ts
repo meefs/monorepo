@@ -16,12 +16,15 @@ import { join } from 'node:path';
  * @remark
  * Exits the process with code 1 if the fieldguide configuration file is missing.
  */
-export async function updateFieldguides(options: { check?: boolean }): Promise<void> {
+export async function updateFieldguides(options: {
+  check?: boolean;
+}): Promise<void> {
   const cwd = process.cwd();
   const configPath = join(cwd, '.outfitter', 'config.json');
 
   if (!(await pathExists(configPath))) {
-    const message = 'No fieldguide configuration found. Run "outfitter fg create" first.';
+    const message =
+      'No fieldguide configuration found. Run "outfitter fg create" first.';
     // Let the top-level CLI handler decide what to do
     throw new Error(message);
   }
@@ -37,12 +40,14 @@ export async function updateFieldguides(options: { check?: boolean }): Promise<v
         '  typescript-standards: ' +
         chalk.green('v1.2.0') +
         ' → ' +
-        chalk.cyan('v1.3.0'),
+        chalk.cyan('v1.3.0')
     );
     console.log(`${chalk.green('✓')}  react-patterns: up to date`);
     console.log(`${chalk.green('✓')}  testing-standards: up to date`);
 
-    console.log(`\n${chalk.gray('Run "outfitter fg update" to install updates')}`);
+    console.log(
+      `\n${chalk.gray('Run "outfitter fg update" to install updates')}`
+    );
   } else {
     const spinner = ora('Updating fieldguides...').start();
 

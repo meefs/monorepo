@@ -1,64 +1,8 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "root": true,
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "defaultBranch": "main",
-    "useIgnoreFile": true
-  },
-  "formatter": {
-    "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 100
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "warn",
-        "noConsole": "off",
-        "noArrayIndexKey": "warn",
-        "noAssignInExpressions": "warn"
-      },
-      "style": {
-        "noParameterAssign": "error",
-        "useConst": "error"
-      },
-      "complexity": {
-        "noBannedTypes": "error",
-        "noUselessConstructor": "error"
-      },
-      "correctness": {
-        "noUnusedVariables": "warn",
-        "noUnusedFunctionParameters": "warn"
-      },
-      "performance": {
-        "noAccumulatingSpread": "error",
-        "noDelete": "error"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "error"
-      },
-      "nursery": {}
-    }
-  },
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "extends": ["ultracite"],
   "javascript": {
-    "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "quoteStyle": "single",
-      "semicolons": "always",
-      "trailingCommas": "all",
-      "arrowParentheses": "always"
-    },
-    "parser": {
-      "unsafeParameterDecoratorsEnabled": true
-    }
+    "globals": ["Bun"]
   },
   "json": {
     "parser": {
@@ -67,7 +11,10 @@
     }
   },
   "files": {
-    "maxSize": 1048576,
-    "ignoreUnknown": false
+    "ignoreUnknown": true,
+    "includes": ["!**/*.{md,mdx,mdc,css,scss,less,yaml,yml}"]
+  },
+  "vcs": {
+    "useIgnoreFile": true
   }
 }

@@ -5,13 +5,16 @@ import fsExtra from 'fs-extra';
 
 const { writeFile, pathExists, writeJSON } = fsExtra;
 
-export async function applyConfigurations(configs: Array<string>): Promise<void> {
+export async function applyConfigurations(
+  configs: Array<string>
+): Promise<void> {
   console.log(chalk.gray('Applying configurations...'));
   const cwd = process.cwd();
 
   const handlers: Record<string, (cwd: string) => Promise<void>> = {
     '@outfitter/eslint-config': createEslintConfig,
     '@outfitter/typescript-config': createTsconfigJson,
+    '@outfitter/baselayer': createTsconfigJson,
     '@outfitter/prettier-config': createPrettierConfig,
     '@outfitter/husky-config': initializeHusky,
     '@outfitter/changeset-config': initializeChangesets,
@@ -27,7 +30,10 @@ export async function applyConfigurations(configs: Array<string>): Promise<void>
     try {
       await handler(cwd);
     } catch (error) {
-      console.error(chalk.red(`  ✗ Failed to apply ${config}:`), (error as Error).message);
+      console.error(
+        chalk.red(`  ✗ Failed to apply ${config}:`),
+        (error as Error).message
+      );
     }
   }
 }
@@ -56,7 +62,7 @@ async function createTsconfigJson(cwd: string): Promise<void> {
   }
 
   const config = {
-    extends: '@outfitter/typescript-config/base',
+    extends: '@outfitter/baselayer/typescript/base',
     compilerOptions: {
       outDir: './dist',
       rootDir: './src',
@@ -99,7 +105,9 @@ async function initializeChangesets(cwd: string): Promise<void> {
     });
     console.log(chalk.green('  ✓ Initialized changesets'));
   } catch (error) {
-    throw new Error(`Failed to initialize changesets: ${(error as Error).message}`);
+    throw new Error(
+      `Failed to initialize changesets: ${(error as Error).message}`
+    );
   }
 }
 

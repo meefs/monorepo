@@ -1,145 +1,72 @@
-import type { BiomeConfig, OutfitterConfig } from '../types/index.js';
+import { execSync } from 'node:child_process';
+import { failure, type Result, success } from '@outfitter/contracts';
+import type { BaselayerConfig } from '../schemas/baselayer-config.js';
 
 /**
- * Creates a Biome configuration object based on the provided OutfitterConfig.
- *
- * The generated configuration incorporates code style and strictness preferences, and applies any Biome-specific overrides from the input. Nested configuration objects such as formatter, linter, and JavaScript settings are merged to ensure that overrides are applied safely and correctly.
- *
- * @param config - The OutfitterConfig containing code style, strictness, and optional overrides
- * @returns A BiomeConfig object reflecting the merged preferences and overrides
+ * Generate biome.json configuration with Ultracite base and smart overrides
  */
-export function generateBiomeConfig(config: OutfitterConfig): BiomeConfig {
-  const { codeStyle, strictness, overrides } = config;
-
-  // Base configuration from declarative preferences
-  const baseConfig: BiomeConfig = {
-    $schema: './node_modules/@biomejs/biome/configuration_schema.json',
-    root: true,
-    vcs: {
-      enabled: true,
-      clientKind: 'git',
-      defaultBranch: 'main',
-      useIgnoreFile: true,
-    },
-    formatter: {
-      enabled: true,
-      formatWithErrors: false,
-      indentStyle: 'space',
-      indentWidth: codeStyle.indentWidth,
-      lineEnding: 'lf',
-      lineWidth: codeStyle.lineWidth,
-    },
-    linter: {
-      enabled: true,
-      rules: generateLinterRules(strictness),
-    },
-    javascript: {
-      formatter: {
-        jsxQuoteStyle: codeStyle.quoteStyle === 'single' ? 'single' : 'double',
-        quoteProperties: 'asNeeded',
-        quoteStyle: codeStyle.quoteStyle,
-        semicolons: codeStyle.semicolons,
-        trailingCommas: codeStyle.trailingCommas,
-        arrowParentheses: 'always',
-      },
-      parser: {
-        unsafeParameterDecoratorsEnabled: true,
-      },
-    },
-    json: {
-      parser: {
-        allowComments: true,
-        allowTrailingCommas: true,
-      },
-    },
-    files: {
-      maxSize: 1048576,
-      ignoreUnknown: false,
-    },
+export function generateBiomeConfig(config?: BaselayerConfig): string {
+  const base = {
+    $schema: 'https://biomejs.dev/schemas/1.9.4/schema.json',
+    extends: ['ultracite'],
   };
 
-  // The config object is already merged with overrides.
-  // We apply the overrides to the base config here.
-  // A proper deep merge is required.
-  const biomeOverrides = overrides?.biome ?? {};
-  return {
-    ...baseConfig,
-    ...biomeOverrides,
-    formatter: {
-      ...baseConfig.formatter,
-      ...biomeOverrides.formatter,
-    },
-    linter: {
-      ...baseConfig.linter,
-      ...biomeOverrides.linter,
-      rules: {
-        ...(baseConfig.linter?.rules ?? {}),
-        ...(biomeOverrides.linter?.rules ?? {}),
-      },
-    },
-    javascript: {
-      ...(baseConfig.javascript ?? {}),
-      ...(biomeOverrides.javascript ?? {}),
-      formatter: {
-        ...(typeof baseConfig.javascript === 'object' &&
-        baseConfig.javascript !== null &&
-        'formatter' in baseConfig.javascript &&
-        typeof baseConfig.javascript.formatter === 'object'
-          ? baseConfig.javascript.formatter
-          : {}),
-        ...(typeof biomeOverrides.javascript === 'object' &&
-        biomeOverrides.javascript !== null &&
-        'formatter' in biomeOverrides.javascript &&
-        typeof biomeOverrides.javascript.formatter === 'object'
-          ? biomeOverrides.javascript.formatter
-          : {}),
-      },
-    },
-  };
-}
+  // Smart exclusions based on enabled tools
+  const excludes: string[] = [];
+  
+  // Always exclude common build/dependency files
+  excludes.push(
+    'node_modules/**',
+    'dist/**',
+    'build/**',
+    '.next/**',
+    'out/**',
+    'coverage/**',
+    '*.min.js',
+    '*.min.css'
+  );
 
-/**
- * Generate linter rules based on strictness level
- */
-function generateLinterRules(strictness: OutfitterConfig['strictness']) {
-  const baseRules = {
-    recommended: true,
-    suspicious: {
-      noExplicitAny: strictness === 'pedantic' ? 'error' : 'warn',
-      noConsole: 'off', // Allow console in development
-      noArrayIndexKey: 'warn',
-      noAssignInExpressions: 'warn',
-    },
-    style: {
-      noParameterAssign: 'error',
-      useConst: 'error',
-    },
-    complexity: {
-      noBannedTypes: 'error',
-      noUselessConstructor: 'error',
-    },
-    correctness: {
-      noUnusedVariables: strictness === 'relaxed' ? 'warn' : 'error',
-      noUnusedFunctionParameters: 'warn',
-    },
-    performance: {
-      noAccumulatingSpread: 'error',
-      noDelete: 'error',
-    },
-    security: {
-      noDangerouslySetInnerHtml: 'error',
-    },
-    nursery: {},
-  };
-
-  // Adjust rules based on strictness
-  if (strictness === 'pedantic') {
-    baseRules.suspicious.noConsole = 'error';
-    baseRules.correctness.noUnusedFunctionParameters = 'error';
-  } else if (strictness === 'relaxed') {
-    baseRules.suspicious.noExplicitAny = 'off';
-    baseRules.correctness.noUnusedVariables = 'warn';
+  // Add project-specific exclusions
+  if (config?.project?.type === 'monorepo') {
+    excludes.push('packages/**/node_modules/**');
   }
 
-  return baseRules;
+  // Add custom ignore patterns
+  if (config?.ignore) {
+    excludes.push(...config.ignore);
+  }
+
+  const result = {
+    ...base,
+    files: {
+      ignore: excludes,
+    },
+  };
+
+  // Apply user overrides
+  if (config?.overrides?.biome) {
+    Object.assign(result, config.overrides.biome);
+  }
+
+  return JSON.stringify(result, null, 2);
 }
+
+/**
+ * Install Biome via Ultracite and create configuration
+ */
+export async function installBiomeConfig(config?: BaselayerConfig): Promise<Result<void, Error>> {
+  try {
+    // Ultracite init handles installation and basic setup
+    execSync('bunx ultracite init --yes', {
+      stdio: 'inherit',
+      env: { ...process.env, FORCE_COLOR: '1' },
+    });
+    return success(undefined);
+  } catch (error) {
+    const err = error as Error;
+    return failure(err);
+  }
+}
+
+// Maintain backward compatibility
+export const generateBiomeConfigLegacy = installBiomeConfig;

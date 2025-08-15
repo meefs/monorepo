@@ -10,10 +10,10 @@
 
 We currently rely on `console.log` (or ad-hoc wrappers) across packages. This lacks:
 
-* consistent JSON structure — hurting log aggregation in Loki / Elastic.
-* correlation-id propagation — makes tracing multi-service flows hard.
-* typed log-level enumeration — typos silently fail.
-* standard serialisation of `AppError`, `Result`, `RemoteData`.
+- consistent JSON structure — hurting log aggregation in Loki / Elastic.
+- correlation-id propagation — makes tracing multi-service flows hard.
+- typed log-level enumeration — typos silently fail.
+- standard serialisation of `AppError`, `Result`, `RemoteData`.
 
 ## Decision Drivers
 
@@ -53,15 +53,15 @@ export function getLogger(): Logger; // root logger
 
 ### Key features
 
-* **JSON-only** output, no colour codes (better for cloud).
-* Automatically serialises `AppError`, `Result`, `RemoteData` into flat JSON.
-* `withContext(requestId)` returns a child logger with `requestId` on every line.
-* Compile-time removal of `trace`/`debug` in production via ts-transform or dead-code elimination (`process.env.NODE_ENV==='production'`).
+- **JSON-only** output, no colour codes (better for cloud).
+- Automatically serialises `AppError`, `Result`, `RemoteData` into flat JSON.
+- `withContext(requestId)` returns a child logger with `requestId` on every line.
+- Compile-time removal of `trace`/`debug` in production via ts-transform or dead-code elimination (`process.env.NODE_ENV==='production'`).
 
 ## Impact
 
-* Uniform log shape across CLI, backend, React SSR layer.
-* Simplifies dashboards, alerts.
+- Uniform log shape across CLI, backend, React SSR layer.
+- Simplifies dashboards, alerts.
 
 ## Migration
 

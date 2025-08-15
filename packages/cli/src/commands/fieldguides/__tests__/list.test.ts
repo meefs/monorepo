@@ -45,7 +45,9 @@ describe('listFieldguides', () => {
     await listFieldguides({});
 
     // Assert
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('typescript-standards'));
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining('typescript-standards')
+    );
   });
 
   it('should list only installed fieldguides when installed flag is true', async () => {
@@ -59,8 +61,12 @@ describe('listFieldguides', () => {
     await listFieldguides({ installed: true });
 
     // Assert
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('typescript-standards'));
-    expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining('react-patterns'));
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining('typescript-standards')
+    );
+    expect(logSpy).not.toHaveBeenCalledWith(
+      expect.stringContaining('react-patterns')
+    );
   });
 
   it('should log message when no config file present', async () => {
@@ -71,7 +77,9 @@ describe('listFieldguides', () => {
     await listFieldguides({});
 
     // Assert
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('No fieldguides installed yet'));
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining('No fieldguides installed yet')
+    );
   });
 
   it('should warn when installed list is empty and installed flag is true', async () => {
@@ -83,7 +91,9 @@ describe('listFieldguides', () => {
     await listFieldguides({ installed: true });
 
     // Assert
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('No fieldguides installed yet'));
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining('No fieldguides installed yet')
+    );
   });
 
   it('should support legacy supplies key', async () => {
@@ -95,7 +105,9 @@ describe('listFieldguides', () => {
     await listFieldguides({ installed: true });
 
     // Assert
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('react-patterns'));
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining('react-patterns')
+    );
   });
 
   it('should filter out duplicate fieldguides', async () => {
@@ -112,10 +124,12 @@ describe('listFieldguides', () => {
     const loggedMessages = logSpy.mock.calls
       .flat()
       .filter((arg) => typeof arg === 'string') as string[];
-    const dupOccurrences = loggedMessages.filter((msg) => msg.includes('dup-guide')).length;
+    const dupOccurrences = loggedMessages.filter((msg) =>
+      msg.includes('dup-guide')
+    ).length;
     expect(dupOccurrences).toBe(1);
     expect(loggedMessages).toEqual(
-      expect.arrayContaining([expect.stringContaining('unique-guide')]),
+      expect.arrayContaining([expect.stringContaining('unique-guide')])
     );
   });
 });

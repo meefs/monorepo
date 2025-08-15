@@ -12,23 +12,23 @@
 
 **Core API surface:** The package will expose config presets and utilities:
 
-* **Vitest config** – e.g. a `defineConfig` export or a pre-made `vitest.config.ts` that our apps can import and extend. It would set up TypeScript path mapping, jsdom or Node environment, and include useful plugins (like happy-dom or test coverage).
-* **Playwright setup** – perhaps a base `playwright.config.ts` with sane defaults (headless, baseURL, etc.) and maybe some custom matchers for Playwright.
-* **Testing utilities** – e.g. custom vitest matchers or helpers (could be zero-runtime types or tiny functions) for common patterns in our code (like a helper to initialize test data or wrap a React component in providers).
+- **Vitest config** – e.g. a `defineConfig` export or a pre-made `vitest.config.ts` that our apps can import and extend. It would set up TypeScript path mapping, jsdom or Node environment, and include useful plugins (like happy-dom or test coverage).
+- **Playwright setup** – perhaps a base `playwright.config.ts` with sane defaults (headless, baseURL, etc.) and maybe some custom matchers for Playwright.
+- **Testing utilities** – e.g. custom vitest matchers or helpers (could be zero-runtime types or tiny functions) for common patterns in our code (like a helper to initialize test data or wrap a React component in providers).
 
 Example **Core API code sketch** – a consumer's vitest config might look like:
 
 ```ts
-import { defineConfig } from "vitest";
-import { baseVitestConfig } from "@outfitter/testing";
+import { defineConfig } from 'vitest';
+import { baseVitestConfig } from '@outfitter/testing';
 
 export default defineConfig({
   ...baseVitestConfig,
   test: {
     ...baseVitestConfig.test,
-    environment: "jsdom",
-    setupFiles: ["./test/setup.ts"]
-  }
+    environment: 'jsdom',
+    setupFiles: ['./test/setup.ts'],
+  },
 });
 ```
 
@@ -38,10 +38,10 @@ Where `baseVitestConfig` comes from our package. Similarly, a `basePlaywrightCon
 
 **Example integration snippet:** A project would install `@outfitter/testing` as a dev dependency, along with Vitest/Playwright if not transitively installed. Then:
 
-* For unit tests, add to `package.json` scripts: `"test": "vitest"` (Vitest will auto-read our provided config).
-* In `vitest.config.ts`: as shown above, spread in `baseVitestConfig`.
-* For E2E, similarly use `basePlaywrightConfig` if provided, and run via Playwright test runner.
-* We could also supply a CLI, e.g. `outfitter-test`, that invokes Vitest with our config, to avoid any config file at all.
+- For unit tests, add to `package.json` scripts: `"test": "vitest"` (Vitest will auto-read our provided config).
+- In `vitest.config.ts`: as shown above, spread in `baseVitestConfig`.
+- For E2E, similarly use `basePlaywrightConfig` if provided, and run via Playwright test runner.
+- We could also supply a CLI, e.g. `outfitter-test`, that invokes Vitest with our config, to avoid any config file at all.
 
 **Community Evidence:** In mid-2024, many Next.js developers advocated migrating from Jest to Vitest for better DX and ESM support, often pairing it with Playwright for end-to-end testing. Projects reported that Jest was "barely maintained" and struggled with ESM, whereas Vitest "runs like a metric billion times faster" in practice. This validates our choice to modernize the testing setup.
 
@@ -49,11 +49,11 @@ Where `baseVitestConfig` comes from our package. Similarly, a `basePlaywrightCon
 
 **Quick Win v0.1 Tasks:**
 
-* Create a `vitest.config.ts` preset exporting our recommended settings (coverage thresholds, transformers for TS/JSX, etc.).
-* Do the same for `playwright.config.ts` (e.g. use Chromium by default, workers = number of CPUs).
-* Provide a couple of utility functions or global setup (like a test initializer that loads environment variables, or extends Chai matchers).
-* Test the package by converting one existing app's tests to use it (ensure tests run and coverage is collected).
-* Configure CI to run `pnpm test` at the root, using Vitest's workspace support to run all tests with one command (Vitest supports monorepos with a root config).
+- Create a `vitest.config.ts` preset exporting our recommended settings (coverage thresholds, transformers for TS/JSX, etc.).
+- Do the same for `playwright.config.ts` (e.g. use Chromium by default, workers = number of CPUs).
+- Provide a couple of utility functions or global setup (like a test initializer that loads environment variables, or extends Chai matchers).
+- Test the package by converting one existing app's tests to use it (ensure tests run and coverage is collected).
+- Configure CI to run `pnpm test` at the root, using Vitest's workspace support to run all tests with one command (Vitest supports monorepos with a root config).
 
 ## @outfitter/logger
 
@@ -64,20 +64,20 @@ Where `baseVitestConfig` comes from our package. Similarly, a `basePlaywrightCon
 **Core API surface:** The logger package will likely export a logger instance or factory. For example:
 
 ```ts
-import { Logger } from "@outfitter/logger";
+import { Logger } from '@outfitter/logger';
 
-export const log = new Logger({ level: "info" });
-log.info("Server started", { port });
+export const log = new Logger({ level: 'info' });
+log.info('Server started', { port });
 log.debug(() => `Detailed info: ${expensiveCalculation()}`);
 ```
 
 Key aspects of the API:
 
-* **Log levels** (debug, info, warn, error) with methods for each.
-* Supports interpolation or lazy evaluation (e.g. passing a function to `log.debug` so that expensive messages don't evaluate if debug is off).
-* In Node, the logger could be configured to output JSON (for integration with log aggregators) or colorized text during development.
-* In browser, it might just proxy to `console.log` and friends (with perhaps a prefix or styling).
-* **No global state by default** – allow creating separate logger instances (e.g. one per subsystem) but also export a default singleton (`logger`) for convenience.
+- **Log levels** (debug, info, warn, error) with methods for each.
+- Supports interpolation or lazy evaluation (e.g. passing a function to `log.debug` so that expensive messages don't evaluate if debug is off).
+- In Node, the logger could be configured to output JSON (for integration with log aggregators) or colorized text during development.
+- In browser, it might just proxy to `console.log` and friends (with perhaps a prefix or styling).
+- **No global state by default** – allow creating separate logger instances (e.g. one per subsystem) but also export a default singleton (`logger`) for convenience.
 
 **Dependencies & size trade-offs:** The core will aim for zero runtime dependencies (no heavy libs like Winston). It might include TypeScript types for log methods, but implementation can use `console` (which is built-in). This means the package itself is tiny. If advanced features are needed (e.g. pretty-printing, log file rotation, remote transport), we'd implement a plugin system: for instance, `@outfitter/logger-pino` could wrap Pino under the same interface. But the base package should remain minimal to avoid ballooning client bundle size. A nice side effect: tree-shaking or dead-code elimination can drop logging calls in production if we design it such that, say, `log.debug` is no-op depending on environment. We could provide a compile-time flag (like `process.env.LOG_LEVEL`) that tools can use to strip out lower-level calls.
 
@@ -85,75 +85,78 @@ Key aspects of the API:
 
 ```ts
 // util/log.ts
-import { Logger } from "@outfitter/logger";
-export const log = new Logger({ level: process.env.NODE_ENV === "production" ? "warn" : "debug" });
+import { Logger } from '@outfitter/logger';
+export const log = new Logger({
+  level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
+});
 ```
 
 Then use `log` throughout. In a Cloudflare Worker, using the same API:
 
 ```ts
-import { Logger } from "@outfitter/logger";
-const log = new Logger({ level: "info", formatter: "json" });
-log.info("Function triggered", { requestId });
+import { Logger } from '@outfitter/logger';
+const log = new Logger({ level: 'info', formatter: 'json' });
+log.info('Function triggered', { requestId });
 ```
 
 On the client-side, if imported, it would default to sending logs to `console` (or no-op for certain levels if configured). Because the design is ESM-first, bundlers can tree-shake any branch that isn't used (for instance, if we separate Node-specific formatting code behind an import that won't be pulled into browser builds).
 
-**Community Evidence:** Logging libraries in 2025 range from heavy-duty (Winston, Pino) to lightweight (loglevel). A 2025 guide notes that *"loglevel provides consistent logging across environments… Its API works the same on both server and client, adapting automatically"*, making it ideal for universal apps. This validates our approach to use a minimal core logger that can run anywhere.
+**Community Evidence:** Logging libraries in 2025 range from heavy-duty (Winston, Pino) to lightweight (loglevel). A 2025 guide notes that _"loglevel provides consistent logging across environments… Its API works the same on both server and client, adapting automatically"_, making it ideal for universal apps. This validates our approach to use a minimal core logger that can run anywhere.
 
 **Second-Order Effects & Risks:** A unified logger simplifies life (one API to learn) but can introduce **performance costs** if not careful. For example, building a JSON log object for every request in a high-traffic service might be slow – we should allow skipping JSON stringification unless needed. There's also a risk of **vendor lock-in** if we abstract too much: if a team wants to swap in a different logger, our Logger should either wrap that or allow easy export of logs to it. We mitigate this by designing extensibility (e.g. allowing a custom "transport" function to be injected). Another consideration is future breakage: if console APIs or environment globals change (like workers might not have `console` exactly, though they do), we need to adapt. We should test in Node 20+, modern browsers, and Cloudflare Worker runtime to ensure compatibility.
 
 **Quick Win v0.1 Tasks:**
 
-* Implement `Logger` class with basic level filtering and console binding.
-* Support a simple JSON formatter option (maybe using `JSON.stringify` unless a custom replacer is provided).
-* Set default log level based on environment (e.g. debug in development, info in production).
-* Write unit tests to simulate usage in Node vs browser (e.g. monkey-patch a global `window.console` in a test to verify it prints).
-* Document how to disable logging in production builds (e.g. using a Babel plugin or terser to drop `log.debug` calls if needed).
+- Implement `Logger` class with basic level filtering and console binding.
+- Support a simple JSON formatter option (maybe using `JSON.stringify` unless a custom replacer is provided).
+- Set default log level based on environment (e.g. debug in development, info in production).
+- Write unit tests to simulate usage in Node vs browser (e.g. monkey-patch a global `window.console` in a test to verify it prints).
+- Document how to disable logging in production builds (e.g. using a Babel plugin or terser to drop `log.debug` calls if needed).
 
 ## @outfitter/trpc-core
 
 **Mission statement:** Centralize the heart of our type-safe API layer, defining server/client contracts (procedures, routers, context) in one reusable package so that multiple services and apps can share and extend a common RPC schema.
 
-**Why now?** tRPC has matured into a stable foundation for typesafe APIs. By 2025, it's reached v11 with improved Next.js integration (e.g. seamless React Server Component support) and gained adoption in large projects (700k+ weekly downloads). The community is also navigating how tRPC coexists with Next.js's new Server Actions. Notably, developers have observed that using tRPC decouples your business logic from Next-specific APIs, offering future flexibility: *"Your app most likely won't live forever in Next.js. You can just move your tRPC logic to Express or whatever... If you stick with server actions, you'd have to depend on Next's abstractions"*. This sentiment underlines why a standalone tRPC core is valuable now – it future-proofs our backend logic and avoids framework lock-in.
+**Why now?** tRPC has matured into a stable foundation for typesafe APIs. By 2025, it's reached v11 with improved Next.js integration (e.g. seamless React Server Component support) and gained adoption in large projects (700k+ weekly downloads). The community is also navigating how tRPC coexists with Next.js's new Server Actions. Notably, developers have observed that using tRPC decouples your business logic from Next-specific APIs, offering future flexibility: _"Your app most likely won't live forever in Next.js. You can just move your tRPC logic to Express or whatever... If you stick with server actions, you'd have to depend on Next's abstractions"_. This sentiment underlines why a standalone tRPC core is valuable now – it future-proofs our backend logic and avoids framework lock-in.
 
 **Core API surface:** This package will wrap **tRPC server** functionality:
 
-* Export our `AppRouter` (or a function to create it) that aggregates all procedures. For instance, it might provide `initTRPC` configured with our common middlewares (like auth, rate-limiter stubs).
-* Define and export reusable **procedures** and **middleware**. e.g. `publicProcedure`, `protectedProcedure` (if we have auth context), so that downstream apps can use these to build their routers.
-* Possibly export **client types** or helpers (though tRPC usually generates a client from the router type, we might export a pre-configured client factory for convenience).
+- Export our `AppRouter` (or a function to create it) that aggregates all procedures. For instance, it might provide `initTRPC` configured with our common middlewares (like auth, rate-limiter stubs).
+- Define and export reusable **procedures** and **middleware**. e.g. `publicProcedure`, `protectedProcedure` (if we have auth context), so that downstream apps can use these to build their routers.
+- Possibly export **client types** or helpers (though tRPC usually generates a client from the router type, we might export a pre-configured client factory for convenience).
 
 Example code sketch:
 
 ```ts
 // In @outfitter/trpc-core
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
+import { initTRPC } from '@trpc/server';
+import superjson from 'superjson';
 
-const t = initTRPC.context<OutfitterContext>().create({ transformer: superjson });
+const t = initTRPC
+  .context<OutfitterContext>()
+  .create({ transformer: superjson });
 export const router = t.router;
 export const publicProcedure = t.procedure;
-export type AppRouter = typeof appRouter;  // appRouter defined in implementing app
+export type AppRouter = typeof appRouter; // appRouter defined in implementing app
 ```
 
 This core package might not itself define all endpoints (since those could live in each app), but it provides the building blocks (common transformers, error formatting, etc.). In some cases, we could include some **shared procedures** if multiple apps need them (for example, a health check or a user profile procedure that is common).
 
 **Dependencies & size trade-offs:** It will depend on `@trpc/server` (ESM-ready) and likely on `zod` (or a similar schema library) if we use it for input validation in procedures. These add some runtime weight on the server side, but since this package is primarily used on the server (and tRPC client code is generated separately or via `@trpc/client`), it doesn't affect client bundle much except for whatever minimal types or stubs leak to client. We might also include `superjson` as a dependency if we want richer data transfer (for dates, etc.). Overall, tRPC is fairly lightweight – most overhead is in validation (Zod) which is optional. By splitting core (types & server wrappers) from any integration (like Next.js API route handlers), we ensure no unnecessary code is bundled into clients.
 
-**Example integration snippet:**
-In a Next.js API route file (or Next 13 route handler):
+**Example integration snippet:** In a Next.js API route file (or Next 13 route handler):
 
 ```ts
-import { appRouter, createContext } from "@outfitter/trpc-core/adapter-next"; 
+import { appRouter, createContext } from '@outfitter/trpc-core/adapter-next';
 // (the adapter-next export could provide a Next.js compatible handler)
- 
+
 export const POST = appRouter.createNextRouteHandler({ createContext });
 ```
 
 This shows how an app would plug its router into Next's routing. Another example: in a Cloudflare Worker, we might use a different adapter:
 
 ```ts
-import { fetchHandler } from "@outfitter/trpc-core/adapter-fetch";
+import { fetchHandler } from '@outfitter/trpc-core/adapter-fetch';
 export default { fetch: (req) => fetchHandler(req, createContext) };
 ```
 
@@ -165,12 +168,12 @@ The core package can provide these adapters or we might put them in `@outfitter/
 
 **Quick Win v0.1 Tasks:**
 
-* Set up `initTRPC` in this package with our default transformers and middlewares.
-* Define a dummy `exampleRouter` with a couple of procedures (for documentation/testing).
-* Export Next.js adapter: possibly using `@trpc/server/adapters/next` to create a Next API handler quickly.
-* Write docs on how to extend the `router` in an application (showing an app-specific router that merges in core procedures if any).
-* Ensure ESM-only: no `require()` – use import/export everywhere, and test in a pure ESM environment.
-* If feasible, add a script to generate OpenAPI schema or type documentation from the router (could be a nice bonus for devs, using something like `trpc-openapi` later).
+- Set up `initTRPC` in this package with our default transformers and middlewares.
+- Define a dummy `exampleRouter` with a couple of procedures (for documentation/testing).
+- Export Next.js adapter: possibly using `@trpc/server/adapters/next` to create a Next API handler quickly.
+- Write docs on how to extend the `router` in an application (showing an app-specific router that merges in core procedures if any).
+- Ensure ESM-only: no `require()` – use import/export everywhere, and test in a pure ESM environment.
+- If feasible, add a script to generate OpenAPI schema or type documentation from the router (could be a nice bonus for devs, using something like `trpc-openapi` later).
 
 ## @outfitter/next
 
@@ -180,21 +183,22 @@ The core package can provide these adapters or we might put them in `@outfitter/
 
 **Core API surface:** This package will likely export:
 
-* **Next.js config** helpers: e.g. a `withOutfitterNext` function that wraps Next's config. For example:
+- **Next.js config** helpers: e.g. a `withOutfitterNext` function that wraps Next's config. For example:
 
   ```js
   // next.config.js
-  const { withOutfitterNext } = require("@outfitter/next");
+  const { withOutfitterNext } = require('@outfitter/next');
   module.exports = withOutfitterNext({
     reactStrictMode: true,
-    transpilePackages: ["@outfitter/*"]
+    transpilePackages: ['@outfitter/*'],
   });
   ```
 
   This could apply custom webpack or experimental settings (like enabling `turbo` bundler, or configuring SVGR, etc.) that we want consistent.
-* **App Router utilities**: Perhaps a set of conventions for layouts or page initialization. For instance, a custom `Document` or `_app` (in pages router) if any common behavior is needed, or a `<OutfitterAppShell>` component wrapping the App Router layout to inject providers (theme, state).
-* **tRPC integration**: If our tRPC core defines the router, `@outfitter/next` can supply the Next.js API route handler. For example, `withTRPCNext()` could create a Next.js API route from our `appRouter`. This avoids each app writing boilerplate to hook tRPC into Next.
-* **Env integration**: It might tie in with `@outfitter/env-client` to preload certain environment variables at build time (for example, injecting public env variables via Next's `publicRuntimeConfig` or using Next 13's `env` options when they exist).
+
+- **App Router utilities**: Perhaps a set of conventions for layouts or page initialization. For instance, a custom `Document` or `_app` (in pages router) if any common behavior is needed, or a `<OutfitterAppShell>` component wrapping the App Router layout to inject providers (theme, state).
+- **tRPC integration**: If our tRPC core defines the router, `@outfitter/next` can supply the Next.js API route handler. For example, `withTRPCNext()` could create a Next.js API route from our `appRouter`. This avoids each app writing boilerplate to hook tRPC into Next.
+- **Env integration**: It might tie in with `@outfitter/env-client` to preload certain environment variables at build time (for example, injecting public env variables via Next's `publicRuntimeConfig` or using Next 13's `env` options when they exist).
 
 Additionally, we might include **Next-specific polyfills or shims** – e.g. if we want to ensure Biome formatting runs on build or certain ESLint rules are auto-included (though Biome is separate, not ESLint).
 
@@ -204,7 +208,7 @@ Additionally, we might include **Next-specific polyfills or shims** – e.g. if 
 
 ```tsx
 // app/layout.tsx
-import { OutfitterProviders } from "@outfitter/next";
+import { OutfitterProviders } from '@outfitter/next';
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -222,24 +226,24 @@ If we provide a tRPC handler:
 
 ```ts
 // app/api/trpc/[trpc]/route.ts (Next 13 App Router API route)
-import { createNextRouteHandler } from "@outfitter/next";
-import { appRouter } from "@outfitter/trpc-core";
+import { createNextRouteHandler } from '@outfitter/next';
+import { appRouter } from '@outfitter/trpc-core';
 export const { GET, POST } = createNextRouteHandler(appRouter);
 ```
 
 This hypothetical helper would internally call `appRouter.createCaller` or use tRPC's Next adapter.
 
-**Community Evidence:** The Next.js community in 2024 emphasizes leveraging the new App Router for scalability. A guide on Next.js 14 noted that mastering the App Router's features (layouts, streaming, etc.) is *"essential for creating efficient and scalable applications"*. By building those best practices into our package (e.g. encouraging proper use of layouts and parallel routes), we align with the state-of-the-art. Additionally, Next's own release blog for v14 highlighted improvements like stable Server Actions and huge dev server performance boosts – our package can help teams adopt those by default (for instance, enabling the experimental `turbo` bundler, or showing how to use Server Actions safely alongside tRPC).
+**Community Evidence:** The Next.js community in 2024 emphasizes leveraging the new App Router for scalability. A guide on Next.js 14 noted that mastering the App Router's features (layouts, streaming, etc.) is _"essential for creating efficient and scalable applications"_. By building those best practices into our package (e.g. encouraging proper use of layouts and parallel routes), we align with the state-of-the-art. Additionally, Next's own release blog for v14 highlighted improvements like stable Server Actions and huge dev server performance boosts – our package can help teams adopt those by default (for instance, enabling the experimental `turbo` bundler, or showing how to use Server Actions safely alongside tRPC).
 
 **Second-Order Effects & Risks:** One risk is that Next.js can be a moving target. If we abstract too much, an upstream change (say Next 15 introducing a new routing concept) might require a significant refactor of this package, and apps would be abstracted away from Next's docs – we must maintain good documentation so developers know what this package is doing. There's also a risk of **limited flexibility**: apps might have unique needs that our defaults don't cover, so we need to allow escape hatches. For example, `withOutfitterNext(config, overrideOptions)` should allow opting out of certain presets. Vendor lock-in isn't a major concern since this package is internal to our monorepo and just wraps Next (which we're already "locked into" for those apps). Performance-wise, any config we add (like Webpack plugins or React wrappers) should be evaluated for overhead. We should be cautious not to enable Next features that add bundle size or runtime cost without good reason (e.g., don't force Polyfills or heavy analytics scripts; those should be opt-in).
 
 **Quick Win v0.1 Tasks:**
 
-* Implement `withOutfitterNext`: start with enabling `experimental.appDir` (if using App Router), ensuring our monorepo packages are transpiled (Next doesn't transpile node\_modules by default, so include `@outfitter/*` in transpilePackages).
-* Provide a `<OutfitterProviders>` component that wraps children with context providers (this can import things like our theme, TanStack Query provider configured for tRPC caching, etc.).
-* Set up a demo Next app in the repo to test these utilities in development.
-* If using Server Actions alongside tRPC, document how to choose one or use them together (could be in README – e.g., recommend tRPC for complex calls, Server Actions for simple form submits).
-* Write an example of a Next 13 route handler that uses our tRPC adapter, as a reference for app developers.
+- Implement `withOutfitterNext`: start with enabling `experimental.appDir` (if using App Router), ensuring our monorepo packages are transpiled (Next doesn't transpile node_modules by default, so include `@outfitter/*` in transpilePackages).
+- Provide a `<OutfitterProviders>` component that wraps children with context providers (this can import things like our theme, TanStack Query provider configured for tRPC caching, etc.).
+- Set up a demo Next app in the repo to test these utilities in development.
+- If using Server Actions alongside tRPC, document how to choose one or use them together (could be in README – e.g., recommend tRPC for complex calls, Server Actions for simple form submits).
+- Write an example of a Next 13 route handler that uses our tRPC adapter, as a reference for app developers.
 
 ## @outfitter/worker-kit
 
@@ -249,20 +253,21 @@ This hypothetical helper would internally call `appRouter.createCaller` or use t
 
 **Core API surface:** Depending on use case, it will have a few facets:
 
-* **Cloudflare Worker adapter:** e.g. an export like `createWorkerRouter` or `handleFetch` that ties into Cloudflare's `event.respondWith` model. For instance:
+- **Cloudflare Worker adapter:** e.g. an export like `createWorkerRouter` or `handleFetch` that ties into Cloudflare's `event.respondWith` model. For instance:
 
   ```ts
-  import { handleFetch } from "@outfitter/worker-kit/cloudflare";
-  import { appRouter } from "@outfitter/trpc-core";
+  import { handleFetch } from '@outfitter/worker-kit/cloudflare';
+  import { appRouter } from '@outfitter/trpc-core';
   export default {
-    fetch: (request, env, ctx) => handleFetch(request, env, ctx, appRouter)
+    fetch: (request, env, ctx) => handleFetch(request, env, ctx, appRouter),
   };
   ```
 
   This could wrap our tRPC router (or any request handler) to respond to HTTP requests in the Worker context.
-* **Node Worker Threads helper:** e.g. a function to spawn a worker thread easily with type-safe messaging. For example, `runInWorker(func, data) -> Promise<result>` that under the hood creates a Worker thread (using a data blob or file) and returns the result. This abstracts the `new Worker(new URL(..., import.meta.url))` boilerplate and messaging protocol.
-* **Environment polyfills:** Some globals differ between environments. We might export a unified `timers` or `fetch` so that code can import from `@outfitter/worker-kit` instead of assuming a global. For example, if running in Node 18, `fetch` wasn't global by default, but we could provide one (Node 20 has fetch global though, which aligns with Cloudflare's fetch).
-* **Utility for Cron or scheduled jobs:** Cloudflare Workers allow scheduled triggers. We could expose a convention for scheduled tasks (maybe a simple registry where the worker script can call a function on schedule events).
+
+- **Node Worker Threads helper:** e.g. a function to spawn a worker thread easily with type-safe messaging. For example, `runInWorker(func, data) -> Promise<result>` that under the hood creates a Worker thread (using a data blob or file) and returns the result. This abstracts the `new Worker(new URL(..., import.meta.url))` boilerplate and messaging protocol.
+- **Environment polyfills:** Some globals differ between environments. We might export a unified `timers` or `fetch` so that code can import from `@outfitter/worker-kit` instead of assuming a global. For example, if running in Node 18, `fetch` wasn't global by default, but we could provide one (Node 20 has fetch global though, which aligns with Cloudflare's fetch).
+- **Utility for Cron or scheduled jobs:** Cloudflare Workers allow scheduled triggers. We could expose a convention for scheduled tasks (maybe a simple registry where the worker script can call a function on schedule events).
 
 Essentially, this package acts as a bridge between our **runtime-agnostic core logic** and the **specific worker environments**. It might be split internally (like subpath imports for cloudflare vs node), to avoid bundling irrelevant code.
 
@@ -272,12 +277,12 @@ Essentially, this package acts as a bridge between our **runtime-agnostic core l
 
 ```ts
 // worker.js (entry for Cloudflare Worker build)
-import { createFetchHandler } from "@outfitter/worker-kit/cloudflare";
-import { appRouter } from "@outfitter/trpc-core";
-import { createContext } from "./context"; // custom context for tRPC
+import { createFetchHandler } from '@outfitter/worker-kit/cloudflare';
+import { appRouter } from '@outfitter/trpc-core';
+import { createContext } from './context'; // custom context for tRPC
 
 export default {
-  fetch: createFetchHandler(appRouter, createContext)
+  fetch: createFetchHandler(appRouter, createContext),
 };
 ```
 
@@ -285,25 +290,25 @@ This would produce a `fetch` listener that routes requests to tRPC procedures. F
 
 ```ts
 // main-thread code
-import { runJob } from "@outfitter/worker-kit/node";
+import { runJob } from '@outfitter/worker-kit/node';
 
-const result = await runJob("./heavyTask.js", { some: "data" });
+const result = await runJob('./heavyTask.js', { some: 'data' });
 // heavyTask.js would be a module that processes the data and returns result.
 ```
 
 Inside `runJob`, we handle spawning the worker thread and returning a promise.
 
-**Community Evidence:** Cloudflare's developer updates in 2024 emphasize making their Workers dev-friendly – e.g. *"Use a wider set of NPM packages on Cloudflare Workers, via improved Node.js compatibility"*. This indicates that writing isomorphic code (that runs on Node or on Workers) is more feasible than before. Additionally, frameworks like Astro, Remix, and even Next (via OpenNext) have been targeting Cloudflare and other edge platforms, suggesting a general push towards edge-first design. Our worker-kit rides that trend by ensuring our tools (like tRPC or logging) work in those environments with minimal fuss.
+**Community Evidence:** Cloudflare's developer updates in 2024 emphasize making their Workers dev-friendly – e.g. _"Use a wider set of NPM packages on Cloudflare Workers, via improved Node.js compatibility"_. This indicates that writing isomorphic code (that runs on Node or on Workers) is more feasible than before. Additionally, frameworks like Astro, Remix, and even Next (via OpenNext) have been targeting Cloudflare and other edge platforms, suggesting a general push towards edge-first design. Our worker-kit rides that trend by ensuring our tools (like tRPC or logging) work in those environments with minimal fuss.
 
 **Second-Order Effects & Risks:** One potential risk is **platform dependency**: if we abstract Cloudflare Worker details, we might inadvertently lock ourselves to Cloudflare's model. We should design abstractions that could work on other edge runtimes too (like Deno Deploy or Vercel Edge, which also use Web Fetch API). The kit should remain fairly thin to reduce maintenance – if Cloudflare updates their runtime (they often do, e.g. adding native TCP sockets or such), we might need to update our adapters. Another risk is debugging complexity: adding a layer between the environment and our code can make debugging harder when something goes wrong on the edge. We'll mitigate by allowing easy opt-out or verbose logging in development. Performance-wise, our abstractions should add negligible overhead (e.g., our `fetch` handler might wrap request parsing in a try-catch, but that's minimal). The benefits of easier code reuse and fewer bugs (from not duplicating code for different envs) likely outweigh the thin wrapper cost.
 
 **Quick Win v0.1 Tasks:**
 
-* Implement a basic `fetch` request handler for Cloudflare: parse the request URL and body, call `appRouter` (perhaps using tRPC's `resolveHTTPResponse` under the hood) and return a Response.
-* Test the Cloudflare handler by deploying a small Worker with a couple of tRPC routes – ensure it works with real HTTP requests.
-* Implement a simple `runJob` for Node worker threads: using dynamic import of a worker script and setting up `parentPort` messaging. Also consider a convenience to run inline functions (though that might require bundling – maybe v0.2).
-* Provide documentation or examples for using these – e.g. how to bundle a Cloudflare Worker (maybe using `wrangler` or a Vite plugin).
-* If possible, add a detection in our logger or env packages to adapt to Workers (for example, `@outfitter/logger` could use our kit to determine that `console` is the only sink available in a Worker and disable color codes). This cross-package synergy can be tested in this phase.
+- Implement a basic `fetch` request handler for Cloudflare: parse the request URL and body, call `appRouter` (perhaps using tRPC's `resolveHTTPResponse` under the hood) and return a Response.
+- Test the Cloudflare handler by deploying a small Worker with a couple of tRPC routes – ensure it works with real HTTP requests.
+- Implement a simple `runJob` for Node worker threads: using dynamic import of a worker script and setting up `parentPort` messaging. Also consider a convenience to run inline functions (though that might require bundling – maybe v0.2).
+- Provide documentation or examples for using these – e.g. how to bundle a Cloudflare Worker (maybe using `wrangler` or a Vite plugin).
+- If possible, add a detection in our logger or env packages to adapt to Workers (for example, `@outfitter/logger` could use our kit to determine that `console` is the only sink available in a Worker and disable color codes). This cross-package synergy can be tested in this phase.
 
 ## @outfitter/ci
 
@@ -315,9 +320,9 @@ Inside `runJob`, we handle spawning the worker thread and returning a promise.
 
 **Core API surface:** This package will not be imported by application code, but rather used in our CI configuration (GitHub Actions, etc.). It can provide:
 
-* **Reusable workflow templates or action definitions**: For GitHub Actions, we might write JavaScript actions or reusable YAML workflows here, then reference them in the repo's `.github/workflows/*.yml`. For example, an action `ci-cache-turbo` that sets up caching for Turborepo.
-* **CLI commands**: Possibly a small CLI (like `outfitter-ci`) that can run common tasks with proper flags. For instance, a script to run `pnpm install` in all workspaces, or to run `turbo run build --cache-dir=...` with our standardized settings. This could abstract away CI specifics (so switching from GitHub to another CI would be easier).
-* **Configuration**: e.g. a central place for defining which tasks should run on PR vs main branch, etc. This might just be documentation or scripts that are invoked by CI YAML.
+- **Reusable workflow templates or action definitions**: For GitHub Actions, we might write JavaScript actions or reusable YAML workflows here, then reference them in the repo's `.github/workflows/*.yml`. For example, an action `ci-cache-turbo` that sets up caching for Turborepo.
+- **CLI commands**: Possibly a small CLI (like `outfitter-ci`) that can run common tasks with proper flags. For instance, a script to run `pnpm install` in all workspaces, or to run `turbo run build --cache-dir=...` with our standardized settings. This could abstract away CI specifics (so switching from GitHub to another CI would be easier).
+- **Configuration**: e.g. a central place for defining which tasks should run on PR vs main branch, etc. This might just be documentation or scripts that are invoked by CI YAML.
 
 For example, the package might include a shell or Node script for setting up the pnpm store and turbo cache:
 
@@ -361,11 +366,11 @@ Here, `outfitter-ci install-and-build` could be a CLI provided by our package th
 
 **Quick Win v0.1 Tasks:**
 
-* Write a script to set up PNPM on a CI runner (e.g. installing pnpm via corepack or npm). Although GitHub Actions offers `actions/setup-node` with pnpm support, we can encapsulate the steps.
-* Add a script for caching: maybe leveraging `turbo run print-affected` to only run needed builds/tests (or simply rely on turbo's built-in incremental logic).
-* Provide a basic reusable GitHub Actions workflow YAML in the package (actions allows `uses: ./.github/workflows/xxx.yml@ref` but since our monorepo holds it, we might just document it).
-* Test the CI pipeline on a sample branch to ensure cache hits are happening (perhaps intentionally re-run a workflow to see speed gain).
-* Integrate Biome formatting and Vitest tests into the pipeline via this package's scripts, so that `outfitter-ci` can run "verify" (lint + test) easily. For example, `outfitter-ci verify` runs `pnpm biome check && pnpm turbo run test`. This ensures consistency across projects.
+- Write a script to set up PNPM on a CI runner (e.g. installing pnpm via corepack or npm). Although GitHub Actions offers `actions/setup-node` with pnpm support, we can encapsulate the steps.
+- Add a script for caching: maybe leveraging `turbo run print-affected` to only run needed builds/tests (or simply rely on turbo's built-in incremental logic).
+- Provide a basic reusable GitHub Actions workflow YAML in the package (actions allows `uses: ./.github/workflows/xxx.yml@ref` but since our monorepo holds it, we might just document it).
+- Test the CI pipeline on a sample branch to ensure cache hits are happening (perhaps intentionally re-run a workflow to see speed gain).
+- Integrate Biome formatting and Vitest tests into the pipeline via this package's scripts, so that `outfitter-ci` can run "verify" (lint + test) easily. For example, `outfitter-ci verify` runs `pnpm biome check && pnpm turbo run test`. This ensures consistency across projects.
 
 ## @outfitter/env-client
 
@@ -375,22 +380,27 @@ Here, `outfitter-ci install-and-build` could be a CLI provided by our package th
 
 **Core API surface:** Likely, we'll offer:
 
-* **Schema definition** – perhaps a default Zod schema for expected env vars, or a function to create one. For instance:
+- **Schema definition** – perhaps a default Zod schema for expected env vars, or a function to create one. For instance:
 
   ```ts
   // env.mjs in an app
-  import { defineEnv } from "@outfitter/env-client";
+  import { defineEnv } from '@outfitter/env-client';
   export const env = defineEnv({
-    NEXT_PUBLIC_API_URL: { type: "string", required: true },
-    NODE_ENV: { type: "enum", values: ["development","production","test"], default: "development" }
+    NEXT_PUBLIC_API_URL: { type: 'string', required: true },
+    NODE_ENV: {
+      type: 'enum',
+      values: ['development', 'production', 'test'],
+      default: 'development',
+    },
   });
   ```
 
   Under the hood, `defineEnv` could use Zod (or a simpler custom parser) to validate `process.env` at runtime and throw with a clear message if something's missing or invalid.
-* **Type extraction** – The result of `defineEnv` would be a typed object `env` with properties correctly typed (e.g. `env.NEXT_PUBLIC_API_URL` is string).
-* **Client-side usage** – For variables meant to be public, Next.js will embed them at build time. We might provide a helper for non-Next apps (like if we had a pure web app) to inject a subset of env vars into client code (maybe via Vite define plugin, configured through this package).
-* Possibly a utility to load `.env` files in development (similar to dotenv, but Next does this automatically; Node scripts might need it though).
-* Security: we might enforce that any variable not prefixed with `NEXT_PUBLIC_` is not exposed by our library on the client side. Perhaps `defineEnv` can separate the schema into private vs public and we export different objects for server vs client.
+
+- **Type extraction** – The result of `defineEnv` would be a typed object `env` with properties correctly typed (e.g. `env.NEXT_PUBLIC_API_URL` is string).
+- **Client-side usage** – For variables meant to be public, Next.js will embed them at build time. We might provide a helper for non-Next apps (like if we had a pure web app) to inject a subset of env vars into client code (maybe via Vite define plugin, configured through this package).
+- Possibly a utility to load `.env` files in development (similar to dotenv, but Next does this automatically; Node scripts might need it though).
+- Security: we might enforce that any variable not prefixed with `NEXT_PUBLIC_` is not exposed by our library on the client side. Perhaps `defineEnv` can separate the schema into private vs public and we export different objects for server vs client.
 
 **Dependencies & size trade-offs:** We will use `zod` (or similar) as a dependency for validation, which is \~ >100KB but only used at startup (and tree-shakable if not used). That's acceptable given the benefits. The code we run on client will be minimal – ideally just an object of values (no heavy logic, since validation would have run on server build). We should also consider using Node's built-in `process.env` for server values and not polyfill that on client (Next.js replaces process.env.\* at build time for known public vars). So at build, the client bundle might literally have `{"NEXT_PUBLIC_API_URL":"https://prod.api.com"}` in it. Our package could generate that via a small script.
 
@@ -398,7 +408,7 @@ Here, `outfitter-ci install-and-build` could be a CLI provided by our package th
 
 ```ts
 // lib/env.ts
-import { clientEnv, serverEnv } from "@outfitter/env-client";
+import { clientEnv, serverEnv } from '@outfitter/env-client';
 
 // Access validated variables
 export const API_URL = clientEnv.NEXT_PUBLIC_API_URL;
@@ -411,16 +421,16 @@ An example of definition:
 
 ```ts
 // Inside @outfitter/env-client (could be auto-run)
-import { z } from "zod";
+import { z } from 'zod';
 const EnvSchema = z.object({
-  NODE_ENV: z.enum(["development","test","production"]).default("production"),
-  NEXT_PUBLIC_API_URL: z.string().url()
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('production'),
+  NEXT_PUBLIC_API_URL: z.string().url(),
   // ...other vars
 });
 const _env = EnvSchema.parse(process.env);
 export const serverEnv = _env;
 export const clientEnv = {
-  NEXT_PUBLIC_API_URL: _env.NEXT_PUBLIC_API_URL
+  NEXT_PUBLIC_API_URL: _env.NEXT_PUBLIC_API_URL,
 };
 ```
 
@@ -432,12 +442,12 @@ Then apps use `clientEnv` or `serverEnv`. This way, misconfiguration throws earl
 
 **Quick Win v0.1 Tasks:**
 
-* Implement a default schema covering common env vars we use (NODE\_ENV, perhaps API URLs, etc.) – or better, allow apps to pass in a schema extension (so the package isn't rigid).
-* Throw clear errors on validation failure (maybe use colors/red text for visibility in console).
-* Expose `clientEnv` and `serverEnv` objects.
-* Test in a Next.js dev build and production build to ensure that client bundle does not include any server-only vars.
-* Provide docs: e.g. "To add a new env var, update EnvSchema in env-client package and ensure to prefix with NEXT\_PUBLIC\_ if it's needed in frontend." Possibly also integrate with our scaffolding CLI to prompt for adding new env keys.
-* If using Node scripts (like a Node CLI tool in our repo), consider using this package to load `.env` and validate for those too (ensuring our scripts also have required configs).
+- Implement a default schema covering common env vars we use (NODE_ENV, perhaps API URLs, etc.) – or better, allow apps to pass in a schema extension (so the package isn't rigid).
+- Throw clear errors on validation failure (maybe use colors/red text for visibility in console).
+- Expose `clientEnv` and `serverEnv` objects.
+- Test in a Next.js dev build and production build to ensure that client bundle does not include any server-only vars.
+- Provide docs: e.g. "To add a new env var, update EnvSchema in env-client package and ensure to prefix with NEXT_PUBLIC\_ if it's needed in frontend." Possibly also integrate with our scaffolding CLI to prompt for adding new env keys.
+- If using Node scripts (like a Node CLI tool in our repo), consider using this package to load `.env` and validate for those too (ensuring our scripts also have required configs).
 
 ## @outfitter/nextra-theme
 
@@ -447,9 +457,9 @@ Then apps use `clientEnv` or `serverEnv`. This way, misconfiguration throws earl
 
 **Core API surface:** This is primarily an **MDX/React theme**. It will export the components and config that Nextra expects:
 
-* Likely we provide a `theme.config.jsx` template and a set of React components for layout: e.g. `Logo`, `Head`, `Navbar`, `Sidebar` overrides.
-* We might re-export Nextra's defaults and just override some pieces (for example, Nextra's docs theme provides `<NavLink>`, `<ThemeSwitch>`, etc. — we could use them or replace them).
-* Developers using our theme will set `theme: "@outfitter/nextra-theme"` in their Nextra config, and our package will internally call `nextra-theme-docs` with our modifications.
+- Likely we provide a `theme.config.jsx` template and a set of React components for layout: e.g. `Logo`, `Head`, `Navbar`, `Sidebar` overrides.
+- We might re-export Nextra's defaults and just override some pieces (for example, Nextra's docs theme provides `<NavLink>`, `<ThemeSwitch>`, etc. — we could use them or replace them).
+- Developers using our theme will set `theme: "@outfitter/nextra-theme"` in their Nextra config, and our package will internally call `nextra-theme-docs` with our modifications.
 
 This means our package needs to be consumed at build time by Next/Nextra. We should ensure it's ESM and compatible with how Nextra loads themes (which is usually by package name resolution).
 
@@ -457,11 +467,11 @@ We can also expose configuration options via our theme's `theme.config.js`. For 
 
 ```jsx
 // theme.config.jsx in a docs project
-import { defineThemeConfig } from "@outfitter/nextra-theme";
+import { defineThemeConfig } from '@outfitter/nextra-theme';
 
 export default defineThemeConfig({
   logo: <span>Outfitter Docs</span>,
-  primaryColor: "#FF6600",
+  primaryColor: '#FF6600',
   // ...other options
 });
 ```
@@ -473,9 +483,9 @@ Under the hood, `defineThemeConfig` might just return the object, but could vali
 **Example integration snippet:** In the documentation project's `next.config.mjs`:
 
 ```js
-const withNextra = require("nextra")({
-  theme: "@outfitter/nextra-theme",
-  themeConfig: "./theme.config.jsx"
+const withNextra = require('nextra')({
+  theme: '@outfitter/nextra-theme',
+  themeConfig: './theme.config.jsx',
 });
 module.exports = withNextra({});
 ```
@@ -490,12 +500,12 @@ If we extended a component, say the default sidebar, we'd include that in our pa
 
 **Quick Win v0.1 Tasks:**
 
-* Scaffold the theme by starting with Nextra's example theme. Copy the default `nextra-theme-docs` components into our package and change styling (e.g. apply Outfitter brand colors, logo).
-* Implement `defineThemeConfig` to allow projects to easily supply their logo and other preferences.
-* Test the theme by creating a dummy docs site (maybe for this very monorepo or a sub-package) using our theme, verify that all components render (sidebar, prev/next links, code blocks, etc.).
-* Ensure dark mode toggle, search, and other interactive parts work. If we need an Algolia API key for DocSearch, set it via `theme.config`.
-* Optimize any assets (if we include a logo SVG or so).
-* Write usage instructions: developers should simply install `@outfitter/nextra-theme` and set it in nextra config, plus provide a `theme.config.jsx` as needed.
+- Scaffold the theme by starting with Nextra's example theme. Copy the default `nextra-theme-docs` components into our package and change styling (e.g. apply Outfitter brand colors, logo).
+- Implement `defineThemeConfig` to allow projects to easily supply their logo and other preferences.
+- Test the theme by creating a dummy docs site (maybe for this very monorepo or a sub-package) using our theme, verify that all components render (sidebar, prev/next links, code blocks, etc.).
+- Ensure dark mode toggle, search, and other interactive parts work. If we need an Algolia API key for DocSearch, set it via `theme.config`.
+- Optimize any assets (if we include a logo SVG or so).
+- Write usage instructions: developers should simply install `@outfitter/nextra-theme` and set it in nextra config, plus provide a `theme.config.jsx` as needed.
 
 ## @outfitter/create (scaffolder CLI)
 
@@ -503,19 +513,18 @@ If we extended a component, say the default sidebar, we'd include that in our pa
 
 **Mission statement:** Provide a one-command scaffolding tool to bootstrap new projects or packages in our ecosystem with best practices and latest Outfitter presets – essentially our custom "create-app" CLI for rapid, consistent project setup.
 
-**Why now?** The idea of stack-specific CLIs has taken off – notably, *create-t3-app* in 2022-2023 made waves as an easy way to start a typesafe Next.js project. By 2025, even large companies (e.g. Zoom for their reference apps) have embraced the T3 stack or similar because it streamlines setup. Internally, as we plan to spin up multiple services (maybe a new micro-frontend or a new backend service), having to copy-paste configs or remember all steps is inefficient and error-prone. A scaffolder ensures new projects have the correct ts-config, testing setup, CI config, etc., from day one. With all the shared packages we're defining, now is the perfect time to wrap them into templates. Also, Node 20+ and pnpm are fairly standard now, simplifying our CLI (no need to support old Node or other package managers as much). In short, we have a clear stack, and the community expects quick bootstrap tools – providing our own will boost productivity and consistency.
+**Why now?** The idea of stack-specific CLIs has taken off – notably, _create-t3-app_ in 2022-2023 made waves as an easy way to start a typesafe Next.js project. By 2025, even large companies (e.g. Zoom for their reference apps) have embraced the T3 stack or similar because it streamlines setup. Internally, as we plan to spin up multiple services (maybe a new micro-frontend or a new backend service), having to copy-paste configs or remember all steps is inefficient and error-prone. A scaffolder ensures new projects have the correct ts-config, testing setup, CI config, etc., from day one. With all the shared packages we're defining, now is the perfect time to wrap them into templates. Also, Node 20+ and pnpm are fairly standard now, simplifying our CLI (no need to support old Node or other package managers as much). In short, we have a clear stack, and the community expects quick bootstrap tools – providing our own will boost productivity and consistency.
 
 **Core API surface:** The CLI likely runs via `npm create outfitter@latest` or `pnpm dlx @outfitter/create`. It will present an interactive prompt (using something like Inquirer or prompts) asking:
 
-* What type of project? (Options: "Next.js app", "Cloudflare Worker service", "Shared library/package", etc. We can map these to templates.)
-* Name of the project, maybe other details (like choose a CSS framework or database, if we want to incorporate those).
-  Then it will generate files and run install.
+- What type of project? (Options: "Next.js app", "Cloudflare Worker service", "Shared library/package", etc. We can map these to templates.)
+- Name of the project, maybe other details (like choose a CSS framework or database, if we want to incorporate those). Then it will generate files and run install.
 
 We can package it similarly to other create-xx-app CLIs, possibly as a single executable script (with a dependency on degit or using `create-t3-app`'s approach of pulling template from repo). Perhaps simplest is bundling a few template folders within the package and copying them.
 
 For example:
 
-```
+```bash
 $ npm create outfitter@latest my-new-app
 # prompts:
 # √ Project type? (Next.js App)
@@ -526,14 +535,14 @@ $ npm create outfitter@latest my-new-app
 
 It generates `my-new-app/` with:
 
-* A Next.js project that already has `@outfitter/ts-config`, `@outfitter/testing`, etc. installed and configured.
-* Basic pages or API routes if relevant.
-* Possibly a GitHub Actions workflow file using `@outfitter/ci` template.
+- A Next.js project that already has `@outfitter/ts-config`, `@outfitter/testing`, etc. installed and configured.
+- Basic pages or API routes if relevant.
+- Possibly a GitHub Actions workflow file using `@outfitter/ci` template.
 
 For a library, maybe:
 
-```
-$ pnpm dlx @outfitter/create package utils/date-fns
+```bash
+pnpm dlx @outfitter/create package utils/date-fns
 ```
 
 This could scaffold a new package under `packages/utils/date-fns` in the monorepo with boilerplate (tsconfig.json extends our base, index.ts, maybe a sample test).
@@ -565,16 +574,16 @@ Then based on answers, copy template folder and do string replacements for name.
 
 **Quick Win v0.1 Tasks:**
 
-* Set up the CLI command with bin in package.json (`"bin": { "create-outfitter": "dist/index.cjs" }` for example) – though we prefer ESM, Node can handle that by spawning a loader.
-* Implement prompt logic for at least two scenarios: "app" vs "package".
-* Prepare template files:
+- Set up the CLI command with bin in package.json (`"bin": { "create-outfitter": "dist/index.cjs" }` for example) – though we prefer ESM, Node can handle that by spawning a loader.
+- Implement prompt logic for at least two scenarios: "app" vs "package".
+- Prepare template files:
+  - For Next.js app: a Next 14 project with our config (tsconfig extends @outfitter/ts-config, uses our next theme for docs maybe or at least `@outfitter/next` integration, `@outfitter/env-client` for env, etc., plus maybe a simple page and API route).
+  - For a shared package: minimal TypeScript library setup (src/index.ts, test/demo.test.ts, vitest config, package.json with proper name and references).
 
-  * For Next.js app: a Next 14 project with our config (tsconfig extends @outfitter/ts-config, uses our next theme for docs maybe or at least `@outfitter/next` integration, `@outfitter/env-client` for env, etc., plus maybe a simple page and API route).
-  * For a shared package: minimal TypeScript library setup (src/index.ts, test/demo.test.ts, vitest config, package.json with proper name and references).
-* Test running the CLI locally on different inputs.
-* Integrate with our monorepo: we could even use it to scaffold its own example to make sure it works. Possibly add an E2E test for the CLI (spawn it in a temp dir, ensure the output compiles).
-* Ensure the license/copyright and naming are properly applied in templates (e.g., use the project name in package.json).
-* Write documentation: in our repo README or wiki, explain how to use `create-outfitter` for new projects.
+- Test running the CLI locally on different inputs.
+- Integrate with our monorepo: we could even use it to scaffold its own example to make sure it works. Possibly add an E2E test for the CLI (spawn it in a temp dir, ensure the output compiles).
+- Ensure the license/copyright and naming are properly applied in templates (e.g., use the project name in package.json).
+- Write documentation: in our repo README or wiki, explain how to use `create-outfitter` for new projects.
 
 ## Dependency Graph
 
@@ -595,7 +604,7 @@ flowchart LR
         nextra["@outfitter/nextra-theme"]
     end
     create["@outfitter/create"]
-    
+
     %% Runtime usage
     nextpkg --> trpc      %% Next package uses trpc-core (e.g. to create API routes)
     nextpkg --> env       %% Next uses env-client to handle public env vars
@@ -604,7 +613,7 @@ flowchart LR
     worker --> env        %% Workers might use env-client (though fewer env vars likely)
     worker --> logger     %% Workers use logger for console logging
     nextra --> nextpkg    %% Nextra theme is essentially a Next.js app/plugin
-    
+
     %% The create CLI scaffolds projects with various packages:
     create --> testing
     create --> logger
@@ -616,4 +625,4 @@ flowchart LR
     create --> nextra %% (it can scaffold a docs site with our theme)
 ```
 
-*Notation:* An arrow `A --> B` means **A uses or depends on B**. For example, `nextpkg --> trpc` indicates `@outfitter/next` incorporates `@outfitter/trpc-core` functionality. The **DevTooling** subgraph groups packages mainly used at development or CI time, while **Runtime** groups those that become part of application runtime (client or server). The scaffolder `@outfitter/create` ties everything together by generating new projects that include the other packages as needed.
+_Notation:_ An arrow `A --> B` means **A uses or depends on B**. For example, `nextpkg --> trpc` indicates `@outfitter/next` incorporates `@outfitter/trpc-core` functionality. The **DevTooling** subgraph groups packages mainly used at development or CI time, while **Runtime** groups those that become part of application runtime (client or server). The scaffolder `@outfitter/create` ties everything together by generating new projects that include the other packages as needed.

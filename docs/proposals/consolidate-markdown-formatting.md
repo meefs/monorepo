@@ -7,12 +7,14 @@ This proposal outlines a plan to consolidate all markdown formatting and linting
 ## Current State
 
 ### Formatter Responsibilities
+
 1. **Biome**: Formats JS/TS/JSON files (primary formatter)
 2. **Prettier**: Only formats YAML files (mostly redundant)
 3. **markdownlint-cli2**: Lints markdown but doesn't format
 4. **rightdown**: Currently a wrapper around markdownlint-cli2
 
 ### Issues with Current Approach
+
 - Two formatters running in parallel (Biome + Prettier) when Prettier does very little
 - Markdown files are only linted, not properly formatted
 - No unified markdown processing tool with both linting and formatting
@@ -21,6 +23,7 @@ This proposal outlines a plan to consolidate all markdown formatting and linting
 ## Proposed Changes
 
 ### 1. Enhance Rightdown
+
 Transform rightdown from a simple wrapper into a comprehensive markdown processor:
 
 ```typescript
@@ -46,6 +49,7 @@ export interface RightdownCapabilities {
 ```
 
 ### 2. Update Scripts
+
 Modify package.json scripts to use rightdown for all markdown operations:
 
 ```json
@@ -67,21 +71,25 @@ Modify package.json scripts to use rightdown for all markdown operations:
 ### 3. Migration Path
 
 #### Phase 1: Feature Parity (Week 1-2)
+
 - Add formatting capabilities to rightdown
 - Ensure rightdown can handle all current markdownlint-cli2 use cases
 - Add smart typography and code block formatting
 
 #### Phase 2: Integration (Week 3)
+
 - Update all package.json scripts to use rightdown
 - Update CI/CD pipelines
 - Migrate existing markdown lint configs to rightdown format
 
 #### Phase 3: Cleanup (Week 4)
+
 - Remove markdownlint-cli2 dependencies
 - Evaluate if Prettier is still needed (only for YAML)
 - Update documentation
 
 ### 4. Configuration Migration
+
 Convert existing markdownlint configs to rightdown format:
 
 ```yaml
@@ -114,12 +122,15 @@ rules:
 ## Risks and Mitigation
 
 ### Risk 1: Feature Gaps
+
 **Mitigation**: Implement features incrementally, maintain backward compatibility during transition
 
 ### Risk 2: Breaking Existing Workflows
+
 **Mitigation**: Provide migration guide, support both old and new configs temporarily
 
 ### Risk 3: Maintenance Burden
+
 **Mitigation**: Keep rightdown as a thin wrapper where possible, contribute fixes upstream
 
 ## Implementation Details
@@ -127,12 +138,14 @@ rules:
 ### Core Features to Implement
 
 1. **Smart Typography Transformer**
+
    ```typescript
    // Convert straight quotes to smart quotes
    // Convert -- to em dash, ... to ellipsis
    ```
 
 2. **Code Block Enhancer**
+
    ```typescript
    // Validate language tags
    // Add missing language tags based on content
@@ -140,12 +153,14 @@ rules:
    ```
 
 3. **Terminology Enforcer**
+
    ```typescript
    // Use existing consistent-terminology rule
    // Add auto-fix capability
    ```
 
 4. **Table Formatter**
+
    ```typescript
    // Align columns
    // Consistent spacing
@@ -153,6 +168,7 @@ rules:
    ```
 
 ### Configuration Schema
+
 ```typescript
 interface RightdownConfig {
   extends?: 'strict' | 'standard' | 'relaxed';
