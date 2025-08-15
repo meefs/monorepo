@@ -16,7 +16,13 @@ const colors = {
 } as const;
 
 // Valid document types
-const VALID_TYPES = ['convention', 'pattern', 'guide', 'template', 'reference'] as const;
+const VALID_TYPES = [
+  'convention',
+  'pattern',
+  'guide',
+  'template',
+  'reference',
+] as const;
 type ValidType = (typeof VALID_TYPES)[number];
 
 // Files that should NOT have frontmatter
@@ -65,7 +71,8 @@ const validationRules: Record<string, ValidationRule> = {
     required: true,
     validate: (value: unknown): string | null => {
       if (typeof value !== 'string') return 'Must be a string';
-      if (value.length > 60) return `Too long (${value.length} chars) - max 60 characters`;
+      if (value.length > 60)
+        return `Too long (${value.length} chars) - max 60 characters`;
       if (!/^[A-Z]/.test(value)) return 'Should start with a capital letter';
       return null;
     },
@@ -74,7 +81,8 @@ const validationRules: Record<string, ValidationRule> = {
     required: true,
     validate: (value: unknown): string | null => {
       if (typeof value !== 'string') return 'Must be a string';
-      if (value.length > 72) return `Too long (${value.length} chars) - max 72 characters`;
+      if (value.length > 72)
+        return `Too long (${value.length} chars) - max 72 characters`;
       if (!value.endsWith('.')) return 'Should end with a period';
       return null;
     },
@@ -103,7 +111,8 @@ const validationRules: Record<string, ValidationRule> = {
     validate: (value: unknown): string | null => {
       if (value !== undefined && value !== null) {
         if (!Array.isArray(value)) return 'Must be an array';
-        if (value.some((tag) => typeof tag !== 'string')) return 'All tags must be strings';
+        if (value.some((tag) => typeof tag !== 'string'))
+          return 'All tags must be strings';
       }
       return null;
     },
@@ -201,7 +210,8 @@ function validateFile(filePath: string): FileValidationResult {
         errors: [
           {
             field: 'frontmatter',
-            error: 'No frontmatter found - all non-standards files must have frontmatter',
+            error:
+              'No frontmatter found - all non-standards files must have frontmatter',
           },
         ],
         isStandardsFile: false,
@@ -213,7 +223,9 @@ function validateFile(filePath: string): FileValidationResult {
 
     // Validate required fields
     for (const [field, rule] of Object.entries(validationRules)) {
-      const value = (parsed.data as FrontmatterData)[field as keyof FrontmatterData];
+      const value = (parsed.data as FrontmatterData)[
+        field as keyof FrontmatterData
+      ];
 
       if (rule.required && (value === undefined || value === null)) {
         errors.push({
@@ -261,7 +273,9 @@ function validateFile(filePath: string): FileValidationResult {
 }
 
 async function main(): Promise<void> {
-  console.log(`${colors.blue}Validating frontmatter in fieldguides...${colors.reset}\n`);
+  console.log(
+    `${colors.blue}Validating frontmatter in fieldguides...${colors.reset}\n`
+  );
 
   // Find all markdown files in fieldguides
   const files = await glob('fieldguides/**/*.md', {
@@ -277,7 +291,9 @@ async function main(): Promise<void> {
 
   // Display results
   if (validFiles.length > 0) {
-    console.log(`${colors.green}✓ Valid files (${validFiles.length}):${colors.reset}`);
+    console.log(
+      `${colors.green}✓ Valid files (${validFiles.length}):${colors.reset}`
+    );
     validFiles.forEach((result) => {
       console.log(`  ${colors.dim}${result.file}${colors.reset}`);
     });
@@ -285,11 +301,15 @@ async function main(): Promise<void> {
   }
 
   if (invalidFiles.length > 0) {
-    console.log(`${colors.red}✗ Invalid files (${invalidFiles.length}):${colors.reset}`);
+    console.log(
+      `${colors.red}✗ Invalid files (${invalidFiles.length}):${colors.reset}`
+    );
     invalidFiles.forEach((result) => {
       console.log(`  ${colors.red}${result.file}${colors.reset}`);
       result.errors.forEach((error) => {
-        console.log(`    ${colors.yellow}• ${error.field}: ${error.error}${colors.reset}`);
+        console.log(
+          `    ${colors.yellow}• ${error.field}: ${error.error}${colors.reset}`
+        );
       });
       console.log();
     });

@@ -1,56 +1,85 @@
 {
   "name": "@outfitter/baselayer",
-  "version": "1.0.0",
-  "description": "Declarative development toolchain configuration orchestrator - everything you need, nothing you don't",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "version": "0.0.0",
+  "description": "Foundation layer for development tooling - code quality, configs, and build orchestration",
+  "keywords": [
+    "formatter",
+    "linter",
+    "code-quality",
+    "biome",
+    "ultracite",
+    "prettier",
+    "stylelint",
+    "markdownlint",
+    "lefthook",
+    "orchestration",
+    "developer-tools"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
+      "default": "./dist/index.js"
+    },
+    "./typescript/base": "./configs/typescript/base.json",
+    "./typescript/next": "./configs/typescript/next.json",
+    "./typescript/vite": "./configs/typescript/vite.json"
+  },
+  "bin": {
+    "baselayer": "./dist/cli.js"
   },
   "files": [
-    "dist/**",
-    "README.md"
+    "dist",
+    "configs",
+    "templates"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest",
-    "test:run": "vitest --run",
-    "type-check": "tsc --noEmit"
+    "test:run": "vitest run",
+    "type-check": "tsc --noEmit",
+    "lint": "bun x ultracite lint",
+    "format": "bun x ultracite format",
+    "ci": "bun run type-check && bun run test:run",
+    "prepublishOnly": "bun run build",
+    "changeset": "changeset",
+    "version": "changeset version && bun install --lockfile-only",
+    "release": "bun run build && changeset publish"
   },
   "dependencies": {
+    "@inquirer/prompts": "^3.3.0",
     "@outfitter/contracts": "workspace:*",
-    "@outfitter/contracts-zod": "workspace:*",
-    "comment-json": "^4.2.3"
-  },
-  "devDependencies": {
-    "@outfitter/typescript-config": "workspace:*",
-    "@types/node": "^20.10.4",
-    "tsup": "^8.0.1",
-    "typescript": "^5.8.3",
-    "vitest": "^1.6.1"
-  },
-  "peerDependencies": {
-    "@biomejs/biome": "^2.0.0",
-    "eslint": "^9.2.0",
-    "prettier": "^3.5.3",
-    "@outfitter/rightdown": "workspace:*",
+    "commander": "^12.0.0",
+    "glob": "^10.3.10",
+    "picocolors": "^1.1.0",
+    "yaml": "^2.8.0",
     "zod": "^3.23.8"
   },
-  "keywords": [
-    "toolchain",
-    "configuration",
-    "biome",
-    "eslint",
-    "prettier",
-    "outfitter"
-  ],
-  "author": "Outfitter",
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@types/node": "^20.14.0",
+    "lefthook": "^1.12.2",
+    "markdownlint-cli2": "^0.18.1",
+    "prettier": "^3.6.2",
+    "publint": "^0.3.12",
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^39.0.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.4.5",
+    "ultracite": "5.1.2",
+    "vitest": "^2.0.0"
+  },
+  "peerDependencies": {
+    "bun": ">=1.0.0"
+  },
+  "author": "Matt Galligan",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -60,8 +89,11 @@
   "bugs": {
     "url": "https://github.com/outfitter-dev/monorepo/issues"
   },
-  "homepage": "https://github.com/outfitter-dev/monorepo/tree/main/packages/baselayer#readme",
+  "homepage": "https://github.com/outfitter-dev/monorepo/tree/main/packages/baselayer",
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

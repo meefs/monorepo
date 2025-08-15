@@ -19,6 +19,7 @@ Currently, `@outfitter/contracts` only exports through a root barrel (`src/index
 4. **Development experience**: Harder to understand actual dependencies
 
 Example current usage that imports everything:
+
 ```typescript
 import { makeError, success, failure } from '@outfitter/contracts';
 // ^ Bundles ALL contract utilities, not just these three functions
@@ -56,6 +57,7 @@ The sub-paths map 1-for-1 to the existing file structure:
 ### Build Configuration Changes
 
 **1. Update tsup config** (`packages/contracts/typescript/tsup.config.ts`):
+
 ```diff
 export default defineConfig({
 - entry: ['src/index.ts'],
@@ -76,6 +78,7 @@ export default defineConfig({
 ```
 
 **2. Add package.json exports** (`packages/contracts/typescript/package.json`):
+
 ```json
 {
   "exports": {
@@ -128,8 +131,8 @@ Existing build process (`tsc --emitDeclarationOnly`) will automatically generate
 
 Sub-path exports require one of the following:
 
-* **Node.js ≥ 14.13** (or ≥ 12.20 with the `--experimental-exports` flag)
-* A bundler that understands the *exports* field (webpack 5, Rollup ≥ 2.4, esbuild, Vite, etc.)
+- **Node.js ≥ 14.13** (or ≥ 12.20 with the `--experimental-exports` flag)
+- A bundler that understands the *exports* field (webpack 5, Rollup ≥ 2.4, esbuild, Vite, etc.)
 
 For older environments:
 
@@ -162,6 +165,7 @@ The package.json will include an `"engines": { "node": ">=14.13" }` entry to mak
 ## Cross-Linting Compatibility
 
 ### Problem
+
 Our monorepo uses Biome, but external teams may use ESLint and want consistent import standards.
 
 ### Solution: Multi-Tool Documentation
@@ -169,6 +173,7 @@ Our monorepo uses Biome, but external teams may use ESLint and want consistent i
 Provide clear guidance for popular linting tools:
 
 **ESLint users:**
+
 ```javascript
 // .eslintrc.js
 rules: {
@@ -186,6 +191,7 @@ rules: {
 ```
 
 **Biome users (v2.0+):**
+
 ```json
 {
   "linter": {
@@ -204,6 +210,7 @@ rules: {
 ```
 
 **Biome users (v1.x):**
+
 - Documentation-based guidance
 - Optional ESLint bridge for enforcement
 
@@ -245,6 +252,7 @@ const symbolToSubpath: Record<string, string> = {
 ```
 
 Usage:
+
 ```bash
 pnpm run migrate:contracts-imports
 ```
@@ -252,6 +260,7 @@ pnpm run migrate:contracts-imports
 ## Testing Strategy
 
 ### Backward Compatibility Tests
+
 ```typescript
 // Ensure root barrel still works
 import * as rootImports from '@outfitter/contracts';
@@ -270,6 +279,7 @@ test('sub-path exports work correctly', () => {
 ```
 
 ### Bundle Size Testing
+
 - Measure bundle size with/without sub-path imports
 - Document tree-shaking improvements
 - Test across popular bundlers (webpack, rollup, esbuild)
@@ -277,22 +287,27 @@ test('sub-path exports work correctly', () => {
 ## Risks and Mitigations
 
 ### Risk: Build Complexity
+
 **Impact**: More entry points = longer builds, more complex output
 **Mitigation**: Measure build time impact, optimize if needed
 
 ### Risk: Maintenance Overhead  
+
 **Impact**: More exports to test and maintain
 **Mitigation**: Automated testing for all entry points, clear ownership
 
 ### Risk: Tool Compatibility
+
 **Impact**: Some bundlers might not handle exports correctly
 **Mitigation**: Test with popular tools, provide fallback documentation
 
 ### Risk: Developer Confusion
+
 **Impact**: Two ways to import the same symbols
 **Mitigation**: Clear migration guide, consistent documentation
 
 ### Risk: Semantic-Versioning Drift
+
 **Impact**: Once a sub-path is published, its removal would constitute a **breaking** change. Forgetting this could lead to inadvertent majors.
 **Mitigation**: Treat every new sub-path export as part of the public API surface and document it in the contracts changelog. Add an automated check in CI that blocks deleting or renaming an existing export path without a major-version label.
 
@@ -306,24 +321,28 @@ test('sub-path exports work correctly', () => {
 ## Timeline
 
 ### Week 1: Implementation
+
 - [ ] Update build configuration
 - [ ] Add package.json exports
 - [ ] Verify output structure
 - [ ] Add backward compatibility tests
 
 ### Week 2: Documentation & Tooling
+
 - [ ] Update README with migration examples
 - [ ] Create codemod script
 - [ ] Add linting guidance for multiple tools
 - [ ] Internal monorepo testing
 
 ### Week 3: Release & Migration
+
 - [ ] Ship v1.1.0 with sub-path exports
 - [ ] Update internal projects using codemod
 - [ ] Measure bundle size improvements
 - [ ] Gather feedback from early adopters
 
 ### Future: Deprecation (TBD)
+
 - [ ] Monitor adoption metrics
 - [ ] Consider deprecating root barrel in v2.0.0+
 - [ ] Maintain backward compatibility until high adoption
@@ -331,16 +350,19 @@ test('sub-path exports work correctly', () => {
 ## Alternatives Considered
 
 ### 1. Split into Multiple Packages
+
 **Pros**: Maximum granularity, clear separation
 **Cons**: Version management complexity, more publishing overhead
 **Decision**: Sub-path exports provide similar benefits with less complexity
 
 ### 2. Keep Current Barrel-Only Approach
+
 **Pros**: Simple, no migration needed  
 **Cons**: Bundle bloat continues, performance impact for browser/lambda
 **Decision**: Benefits of tree-shaking outweigh migration costs
 
 ### 3. Major Breaking Change (v2.0.0)
+
 **Pros**: Forces adoption, cleaner long-term
 **Cons**: Breaks existing consumers, adoption friction
 **Decision**: Non-breaking approach better for gradual migration

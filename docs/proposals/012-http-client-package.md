@@ -42,14 +42,14 @@ export const post = <T,U>(url:string, body:U, opts?: Omit<HttpOptions<U>,'method
 
 ## Error Mapping
 
-* network failure → `EXTERNAL_SERVICE_ERROR`
-* 4xx → `NOT_FOUND` `FORBIDDEN` `UNAUTHORIZED` `CONFLICT` etc.
-* 5xx → `EXTERNAL_SERVICE_ERROR`
+- network failure → `EXTERNAL_SERVICE_ERROR`
+- 4xx → `NOT_FOUND` `FORBIDDEN` `UNAUTHORIZED` `CONFLICT` etc.
+- 5xx → `EXTERNAL_SERVICE_ERROR`
 
 ## Implementation Notes
 
-* Internally uses `undici` in Node for performance.
-* Body encoding: if `body` is object ⇒ `JSON.stringify` with header.
-* Streaming left for a future extension.
+- Internally uses `undici` in Node for performance.
+- Body encoding: if `body` is object ⇒ `JSON.stringify` with header.
+- Streaming left for a future extension.
 
 ---

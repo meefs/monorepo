@@ -36,7 +36,7 @@ Internally wraps `ErrorBoundary` and converts thrown `AppError` to UI.
 
 ## Non-goals
 
-* UI styling — projects may wrap components with Chakra / Tailwind.
-* State management — leave to Zustand, Redux, etc.
+- UI styling — projects may wrap components with Chakra / Tailwind.
+- State management — leave to Zustand, Redux, etc.
 
 ---

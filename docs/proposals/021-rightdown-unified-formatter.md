@@ -69,6 +69,7 @@ output:
 ### Implementation Details
 
 1. **Config Compilation**: Rightdown reads its config and generates appropriate configs for each tool:
+
    ```
    .rightdown.config.yaml → .markdownlint-cli2.jsonc
                          → .prettierrc.json (scoped to code blocks)
@@ -76,6 +77,7 @@ output:
    ```
 
 2. **Intelligent Routing**: Based on code block languages, route to appropriate formatter:
+
    ```javascript
    async function formatCodeBlock(code, language) {
      const formatter = config.codeFormatters[language] || 'prettier';
@@ -92,6 +94,7 @@ output:
    ```
 
 3. **Single Command Interface**:
+
    ```bash
    rightdown              # Lint and check
    rightdown --fix        # Fix everything (structure + code blocks)
@@ -133,11 +136,13 @@ dependencies: {
 ### Configuration Examples
 
 **Basic Setup**:
+
 ```yaml
 preset: standard
 ```
 
 **Advanced Setup**:
+
 ```yaml
 preset: strict
 
@@ -158,6 +163,7 @@ ignores:
 ```
 
 **IDE Integration**:
+
 ```yaml
 # Also generate configs for IDEs
 ide:

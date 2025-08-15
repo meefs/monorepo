@@ -1,0 +1,30 @@
+# Lefthook configuration
+pre-commit:
+  parallel: false
+  commands:
+    ultracite-lint:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: bunx ultracite lint --fix {staged_files}
+      stage_fixed: true
+    ultracite-format:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: bunx ultracite format {staged_files}
+      stage_fixed: true
+    markdown:
+      glob: "*.{md,mdx,mdc}"
+      run: |
+        bunx prettier --write {staged_files} &&
+        bunx markdownlint-cli2 --fix {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: bunx commitlint --edit
+
+pre-push:
+  commands:
+    types:
+      run: turbo run type-check --affected
+    test:
+      run: turbo run test --affected

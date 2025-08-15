@@ -459,6 +459,7 @@ Based on our current setup, these rules will likely need the ESLint bridge:
 When deploying to other repositories, only one package is needed:
 
 **`@outfitter/biome-config`** includes:
+
 - Primary Biome configuration (`biome.json`)
 - ESLint bridge for gaps (`eslint-bridge.config.js`)
 - All necessary ESLint dependencies
@@ -475,6 +476,7 @@ When deploying to other repositories, only one package is needed:
 ```
 
 Teams can:
+
 - Use **Biome only**: Reference `biome.json` and skip ESLint entirely
 - Use **Biome + bridge**: Add ESLint bridge for full gap coverage
 - **Transition cleanly**: When Biome coverage is complete, just stop using the ESLint bridge - no package changes needed
