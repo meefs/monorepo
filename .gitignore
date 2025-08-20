@@ -20,6 +20,7 @@ coverage/
 .env.test.local
 .env.production.local
 .env.*.local
+.envrc
 
 # IDE and editors
 .vscode/
