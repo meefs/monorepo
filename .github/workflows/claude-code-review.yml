@@ -16,9 +16,7 @@ jobs:
        github.event.issue.pull_request && 
        contains(github.event.comment.body, '@claude review') &&
        (github.event.comment.user.type != 'Bot' || 
-        github.event.comment.user.login == 'copilot[bot]' ||
-        github.event.comment.user.login == 'devin[bot]' ||
-        github.event.comment.user.login == 'coderabbitai[bot]'))
+        contains('["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]', github.event.comment.user.login)))
     
     runs-on: ubuntu-latest
     permissions:
