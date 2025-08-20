@@ -10,8 +10,6 @@ jobs:
   claude-review:
     # Run on PR events (open, ready_for_review, review_requested) OR when someone comments "@claude review"
     # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot]) and all humans
-    env:
-      ALLOWED_BOTS: '["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]'
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'issue_comment' &&
@@ -19,7 +17,7 @@ jobs:
        github.event.comment &&
        contains(github.event.comment.body, '@claude review') &&
        (github.event.comment.user.type != 'Bot' ||
-        contains(fromJSON(env.ALLOWED_BOTS), github.event.comment.user.login)))
+        contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]'), github.event.comment.user.login)))
     
     runs-on: ubuntu-latest
     concurrency:
