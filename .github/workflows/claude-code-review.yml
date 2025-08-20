@@ -9,11 +9,16 @@ on:
 jobs:
   claude-review:
     # Run on ready_for_review OR when someone comments "@claude review"
+    # Allow specific bots (@copilot, @devin, @coderabbitai) and all humans
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'issue_comment' && 
        github.event.issue.pull_request && 
-       contains(github.event.comment.body, '@claude review'))
+       contains(github.event.comment.body, '@claude review') &&
+       (github.event.comment.user.type != 'Bot' || 
+        github.event.comment.user.login == 'copilot[bot]' ||
+        github.event.comment.user.login == 'devin[bot]' ||
+        github.event.comment.user.login == 'coderabbitai[bot]'))
     
     runs-on: ubuntu-latest
     permissions:
@@ -77,9 +82,12 @@ jobs:
 # 1. A PR transitions from draft to ready for review
 # 2. Someone explicitly comments "@claude review" on a PR
 # 
+# Allowed comment sources:
+# - All human users
+# - Specific bots: @copilot[bot], @devin[bot], @coderabbitai[bot]
+# 
 # It will NOT run on:
 # - New commits to existing PRs
 # - Draft PRs
-# - CodeRabbit comments
-# - Other bot comments
+# - Other bot comments (except the allowed ones)
 
