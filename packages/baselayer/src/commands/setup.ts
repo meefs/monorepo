@@ -1,4 +1,4 @@
-import { failure, isFailure, makeError, success } from '@outfitter/contracts';
+import { ErrorCode, failure, isFailure, makeError, success } from '@outfitter/contracts';
 import { LefthookAdapter } from '../adapters/lefthook-adapter.js';
 import { generateLefthookConfig } from '../generators/lefthook.js';
 import type { FlintResult } from '../types.js';
@@ -38,7 +38,7 @@ export async function setup(
       if (isFailure(configResult)) {
         return failure(
           makeError(
-            'SETUP_FAILED',
+            ErrorCode.INTERNAL_ERROR,
             `Failed to generate Lefthook configuration: ${configResult.error.message}`
           )
         );
@@ -61,7 +61,7 @@ export async function setup(
         if (!installResult.success) {
           return failure(
             makeError(
-              'SETUP_FAILED',
+              ErrorCode.INTERNAL_ERROR,
               `Failed to install git hooks: ${installResult.errors.join(', ')}`
             )
           );
@@ -94,7 +94,7 @@ export async function setup(
   } catch (error) {
     return failure(
       makeError(
-        'SETUP_FAILED',
+        ErrorCode.INTERNAL_ERROR,
         `Setup failed with unexpected error: ${(error as Error).message}`
       )
     );
@@ -118,7 +118,7 @@ export async function checkLefthookAvailability(): Promise<
   } catch (error) {
     return failure(
       makeError(
-        'CHECK_FAILED',
+        ErrorCode.INTERNAL_ERROR,
         `Failed to check Lefthook availability: ${(error as Error).message}`
       )
     );
@@ -143,7 +143,7 @@ export async function teardown(
     if (!uninstallResult.success) {
       return failure(
         makeError(
-          'TEARDOWN_FAILED',
+          ErrorCode.INTERNAL_ERROR,
           `Failed to uninstall git hooks: ${uninstallResult.errors.join(', ')}`
         )
       );
@@ -156,7 +156,7 @@ export async function teardown(
   } catch (error) {
     return failure(
       makeError(
-        'TEARDOWN_FAILED',
+        ErrorCode.INTERNAL_ERROR,
         `Teardown failed with unexpected error: ${(error as Error).message}`
       )
     );

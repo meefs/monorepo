@@ -1,4 +1,4 @@
-import { failure, isFailure, type Result, success } from '@outfitter/contracts';
+import { failure, isFailure, makeError, ErrorCode, type Result, success, type AppError } from '@outfitter/contracts';
 import type { BaselayerConfig } from '../schemas/baselayer-config.js';
 import { writeJSON } from '../utils/file-system.js';
 
@@ -183,7 +183,7 @@ export function generateProjectTypeScriptConfigs(
  */
 export async function generateAllTypeScriptConfigs(
   config?: BaselayerConfig
-): Promise<Result<void, Error>> {
+): Promise<Result<void, AppError>> {
   try {
     const configs = generateProjectTypeScriptConfigs(config);
 
@@ -196,7 +196,12 @@ export async function generateAllTypeScriptConfigs(
 
     return success(undefined);
   } catch (error) {
-    return failure(error as Error);
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to generate TypeScript configurations: ${error instanceof Error ? error.message : String(error)}`
+      )
+    );
   }
 }
 
@@ -206,7 +211,7 @@ export async function generateAllTypeScriptConfigs(
 export async function generateTypeScriptConfigFile(
   config?: BaselayerConfig,
   preset: TypeScriptPreset = 'strict'
-): Promise<Result<void, Error>> {
+): Promise<Result<void, AppError>> {
   try {
     const tsConfig = generateTypeScriptConfig(config, preset);
     
@@ -217,6 +222,11 @@ export async function generateTypeScriptConfigFile(
 
     return success(undefined);
   } catch (error) {
-    return failure(error as Error);
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to generate TypeScript configuration file: ${error instanceof Error ? error.message : String(error)}`
+      )
+    );
   }
 }

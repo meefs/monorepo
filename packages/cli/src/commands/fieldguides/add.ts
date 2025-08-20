@@ -36,6 +36,9 @@ export async function addFieldguides(
   const spinner = ora('Adding fieldguides...').start();
 
   try {
+    // Deduplicate input fieldguides first
+    const uniqueInputFieldguides = [...new Set(fieldguides)];
+    
     // Read current config
     const config = (await readJSON(configPath)) as OutfitterConfig;
 
@@ -47,7 +50,7 @@ export async function addFieldguides(
         : [];
 
     // Add new fieldguides (avoiding duplicates)
-    const newFieldguides = fieldguides.filter(
+    const newFieldguides = uniqueInputFieldguides.filter(
       (f) => !existingFieldguides.includes(f)
     );
     config.fieldguides = [...existingFieldguides, ...newFieldguides];
