@@ -138,28 +138,30 @@ export async function cleanupDependencies(
   }
 
   const pm = pmResult.data.type;
-  const command = getRemoveCommand(pm, depsToRemove);
-
-  if (!silent) {
-    console.info(`Removing ${depsToRemove.length} dependencies...`);
-  }
-
-  try {
-    execSync(command, {
-      stdio: silent ? 'ignore' : 'inherit',
-      encoding: 'utf-8',
-    });
+  
+  if (!force) {
+    // Try to remove all dependencies at once when not in force mode
+    const command = getRemoveCommand(pm, depsToRemove);
 
     if (!silent) {
-      console.success(
-        `Successfully removed ${depsToRemove.length} dependencies`
-      );
+      console.info(`Removing ${depsToRemove.length} dependencies...`);
     }
 
-    return success(depsToRemove);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (!force) {
+    try {
+      execSync(command, {
+        stdio: silent ? 'ignore' : 'inherit',
+        encoding: 'utf-8',
+      });
+
+      if (!silent) {
+        console.success(
+          `Successfully removed ${depsToRemove.length} dependencies`
+        );
+      }
+
+      return success(depsToRemove);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       return failure(
         makeError(
           ErrorCode.INTERNAL_ERROR,
@@ -167,12 +169,51 @@ export async function cleanupDependencies(
         )
       );
     }
+  } else {
+    // Force mode: try to remove each dependency individually
+    const successfullyRemoved: string[] = [];
+    const failedToRemove: string[] = [];
 
     if (!silent) {
-      console.warning('Some dependencies could not be removed, continuing...');
+      console.info(`Removing ${depsToRemove.length} dependencies (force mode)...`);
     }
 
-    return success(depsToRemove);
+    for (const dep of depsToRemove) {
+      try {
+        const command = getRemoveCommand(pm, [dep]);
+        execSync(command, {
+          stdio: silent ? 'ignore' : 'pipe',
+          encoding: 'utf-8',
+        });
+        successfullyRemoved.push(dep);
+        if (!silent) {
+          console.success(`Removed: ${dep}`);
+        }
+      } catch (error) {
+        failedToRemove.push(dep);
+        if (!silent) {
+          const message = error instanceof Error ? error.message : String(error);
+          console.warning(`Failed to remove ${dep}: ${message}`);
+        }
+      }
+    }
+
+    if (!silent) {
+      if (successfullyRemoved.length > 0) {
+        console.success(
+          `Successfully removed ${successfullyRemoved.length} dependencies`
+        );
+      }
+      if (failedToRemove.length > 0) {
+        console.warning(
+          `Failed to remove ${failedToRemove.length} dependencies: ${failedToRemove.join(', ')}`
+        );
+      }
+    }
+
+    // In force mode, return the list of successfully removed packages
+    // This allows the caller to know which packages were actually removed
+    return success(successfullyRemoved);
   }
 }
 

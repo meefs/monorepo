@@ -38,6 +38,10 @@ export function deepMerge<T extends Record<string, any>>(
   const result = { ...target };
 
   for (const key in source) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) {
+      continue;
+    }
+    
     const sourceValue = source[key];
     const targetValue = target[key];
 
