@@ -10,26 +10,31 @@ on:
 
 jobs:
   claude:
-    # Allow specific bots (@copilot, @devin, @coderabbitai) and all humans to trigger Claude
+    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot]) and all humans to trigger Claude
+    env:
+      ALLOWED_BOTS: '["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]'
     if: |
-      (github.event_name == 'issue_comment' && 
+      (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request &&
        contains(github.event.comment.body, '@claude') &&
-       (github.event.comment.user.type != 'Bot' || 
-        contains('["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]', github.event.comment.user.login))) ||
-      (github.event_name == 'pull_request_review_comment' && 
+       (github.event.comment.user.type != 'Bot' ||
+        contains(fromJSON(env.ALLOWED_BOTS), github.event.comment.user.login))) ||
+      (github.event_name == 'pull_request_review_comment' &&
        contains(github.event.comment.body, '@claude') &&
        (github.event.comment.user.type != 'Bot' ||
-        contains('["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]', github.event.comment.user.login))) ||
-      (github.event_name == 'pull_request_review' && 
+        contains(fromJSON(env.ALLOWED_BOTS), github.event.comment.user.login))) ||
+      (github.event_name == 'pull_request_review' &&
        contains(github.event.review.body, '@claude') &&
        (github.event.review.user.type != 'Bot' ||
-        contains('["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]', github.event.review.user.login)))
+        contains(fromJSON(env.ALLOWED_BOTS), github.event.review.user.login)))
     runs-on: ubuntu-latest
+    concurrency:
+      group: claude-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+      cancel-in-progress: true
     permissions:
       contents: read
-      pull-requests: read
-      issues: read
+      pull-requests: write
+      issues: write
       id-token: write
       actions: read # Required for Claude to read CI results on PRs
     steps:
@@ -75,9 +80,8 @@ jobs:
 # - PR comments with @claude (not regular issues)
 # - PR review comments with @claude
 # - PR review submissions with @claude
-# 
+#
 # Allowed comment sources:
 # - All human users
-# - Specific bots: @copilot, @devin, @coderabbitai
+# - Specific bots: @copilot[bot], @devin[bot], @coderabbitai[bot]
 # All other bots are ignored to prevent unwanted automation loops
-

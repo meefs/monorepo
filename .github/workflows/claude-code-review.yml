@@ -9,21 +9,27 @@ on:
 jobs:
   claude-review:
     # Run on PR open OR when someone comments "@claude review"
-    # Allow specific bots (@copilot, @devin, @coderabbitai) and all humans
+    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot]) and all humans
+    env:
+      ALLOWED_BOTS: '["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]'
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
-      (github.event_name == 'issue_comment' && 
-       github.event.issue.pull_request && 
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
        contains(github.event.comment.body, '@claude review') &&
-       (github.event.comment.user.type != 'Bot' || 
-        contains('["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]', github.event.comment.user.login)))
+       (github.event.comment.user.type != 'Bot' ||
+        contains(fromJSON(env.ALLOWED_BOTS), github.event.comment.user.login)))
     
     runs-on: ubuntu-latest
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+      cancel-in-progress: true
     permissions:
       contents: read
-      pull-requests: read
-      issues: read
+      pull-requests: write
+      issues: write
       id-token: write
+      actions: read  # Required for Claude to read CI results
     
     steps:
       - name: Checkout repository
@@ -90,18 +96,17 @@ jobs:
 # This workflow runs automatically when:
 # 1. A PR is first opened (not draft)
 # 2. Someone comments "@claude review" on a PR
-# 
+#
 # Review types:
 # - Initial open: Full review with instructions for future reviews
 # - "@claude review": Full review of all changes
 # - "@claude review latest" or "@claude review recent": Incremental review of newest changes only
-# 
+#
 # Allowed comment sources:
 # - All human users
 # - Specific bots: @copilot[bot], @devin[bot], @coderabbitai[bot]
-# 
+#
 # It will NOT run on:
 # - New commits to existing PRs (unless manually triggered)
 # - Draft PRs
 # - Other bot comments (except the allowed ones)
-
