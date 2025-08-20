@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { failure, isFailure, makeError, success } from '@outfitter/contracts';
+import { ErrorCode, failure, isFailure, makeError, success } from '@outfitter/contracts';
 import type { FlintResult, OutfitterConfig } from '../types.js';
 import { backupFile } from '../utils/file-system.js';
 
@@ -327,28 +327,56 @@ export async function cleanOldConfigs(
 
     // Backup files before removal
     const backupDir = '.flint-backup/migration';
+    const backupFailures: string[] = [];
     for (const file of existingFiles) {
       const backupResult = await backupFile(file, backupDir);
       if (isFailure(backupResult)) {
+        backupFailures.push(`${file}: ${backupResult.error.message}`);
       } else if (verbose) {
+        console.log(`Backed up ${file} to ${backupResult.data}`);
       }
+    }
+
+    // If any backup failures occurred, return early unless --force
+    if (backupFailures.length > 0 && !force) {
+      return failure(
+        makeError(
+          ErrorCode.INTERNAL_ERROR,
+          `Backup failures prevented file removal: ${backupFailures.join(', ')}`
+        )
+      );
     }
 
     // Remove files
     const { unlinkSync } = await import('node:fs');
+    const deletionFailures: string[] = [];
     for (const file of existingFiles) {
       try {
         unlinkSync(file);
         if (verbose) {
+          console.log(`Removed ${file}`);
         }
-      } catch (_error) {}
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        deletionFailures.push(`${file}: ${errorMessage}`);
+      }
+    }
+
+    // Report deletion failures if any occurred
+    if (deletionFailures.length > 0) {
+      return failure(
+        makeError(
+          ErrorCode.INTERNAL_ERROR,
+          `File deletion failures: ${deletionFailures.join(', ')}`
+        )
+      );
     }
 
     return success(undefined);
   } catch (error) {
     return failure(
       makeError(
-        'CLEANUP_FAILED',
+        ErrorCode.INTERNAL_ERROR,
         `Cleanup failed with unexpected error: ${(error as Error).message}`
       )
     );

@@ -58,3 +58,4 @@ yarn.lock
 # Agent files
 !.agent/
 .agent/research/
+out/

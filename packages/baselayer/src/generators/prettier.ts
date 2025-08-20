@@ -1,4 +1,4 @@
-import { failure, isFailure, type Result, success } from '@outfitter/contracts';
+import { failure, isFailure, makeError, ErrorCode, type Result, success, type AppError } from '@outfitter/contracts';
 import type { BaselayerConfig } from '../schemas/baselayer-config.js';
 import { writeFile, writeJSON } from '../utils/file-system.js';
 
@@ -139,7 +139,7 @@ export function generatePrettierIgnore(config?: BaselayerConfig): string {
 /**
  * Write Prettier configuration files
  */
-export async function generatePrettierConfig(config?: BaselayerConfig): Promise<Result<void, Error>> {
+export async function generatePrettierConfig(config?: BaselayerConfig): Promise<Result<void, AppError>> {
   try {
     const configObject = generatePrettierConfigObject(config);
     const ignoreContent = generatePrettierIgnore(config);
@@ -158,6 +158,11 @@ export async function generatePrettierConfig(config?: BaselayerConfig): Promise<
     
     return success(undefined);
   } catch (error) {
-    return failure(error as Error);
+    return failure(
+      makeError(
+        ErrorCode.INTERNAL_ERROR,
+        `Failed to generate Prettier configuration: ${error instanceof Error ? error.message : String(error)}`
+      )
+    );
   }
 }

@@ -1,4 +1,6 @@
 import { Command } from 'commander';
+import chalk from 'chalk';
+import { isFailure } from '@outfitter/contracts';
 
 // Re-export functionality from other commands
 import { addFieldguides } from './fieldguides/add.js';
@@ -59,7 +61,12 @@ export const fieldguidesCommand = new Command('fieldguides')
             'fieldguide-config.json'
           )
           .action(async (options: ExportOptions) => {
-            await manageFieldguideConfig('export', options);
+            const result = await manageFieldguideConfig('export', options);
+            if (isFailure(result)) {
+              console.error(chalk.red(`Error: ${result.error.message}`));
+              process.exit(1);
+            }
+            console.log(`${chalk.green('✓')} ${result.data}`);
           })
       )
       .addCommand(
@@ -67,7 +74,12 @@ export const fieldguidesCommand = new Command('fieldguides')
           .description('Import a configuration')
           .argument('<file>', 'Configuration file to import')
           .action(async (file: string) => {
-            await manageFieldguideConfig('import', { file } as ImportOptions);
+            const result = await manageFieldguideConfig('import', { file } as ImportOptions);
+            if (isFailure(result)) {
+              console.error(chalk.red(`Error: ${result.error.message}`));
+              process.exit(1);
+            }
+            console.log(`${chalk.green('✓')} ${result.data}`);
           })
       )
   );
