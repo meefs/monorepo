@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { ErrorCode, failure, isFailure, makeError, success } from '@outfitter/contracts';
+import { ErrorCode, makeError } from '@outfitter/contracts/error';
+import { failure, isFailure, success } from '@outfitter/contracts/result';
 import type { FlintResult, OutfitterConfig } from '../types.js';
 import { backupFile } from '../utils/file-system.js';
 
