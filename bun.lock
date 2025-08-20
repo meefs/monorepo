@@ -39,7 +39,6 @@
         "@changesets/cli": "^2.27.1",
         "@commitlint/cli": "^19.0.0",
         "@commitlint/config-conventional": "^19.0.0",
-        "@outfitter/typescript-config": "workspace:*",
         "@types/node": "^20.14.0",
         "lefthook": "^1.12.2",
         "markdownlint-cli2": "^0.18.1",
@@ -84,27 +83,10 @@
         "vitest": "^1.1.0",
       },
     },
-    "packages/contracts-zod": {
-      "name": "@outfitter/contracts-zod",
-      "version": "1.1.0",
-      "dependencies": {
-        "@outfitter/contracts": "workspace:*",
-      },
-      "devDependencies": {
-        "@outfitter/typescript-config": "workspace:*",
-        "typescript": "^5.8.3",
-        "vitest": "^1.6.1",
-        "zod": "^3.23.8",
-      },
-      "peerDependencies": {
-        "zod": "^3.23.8",
-      },
-    },
     "packages/contracts/ts": {
       "name": "@outfitter/contracts",
       "version": "1.1.0",
       "devDependencies": {
-        "@outfitter/typescript-config": "workspace:*",
         "typescript": "^5.3.3",
         "vitest": "^1.0.4",
         "zod": "^3.23.8",
@@ -136,14 +118,10 @@
         "type-fest": "^4.41.0",
       },
       "devDependencies": {
-        "@outfitter/typescript-config": "workspace:*",
+        "@outfitter/baselayer": "workspace:*",
         "typescript": "^5.9.2",
         "vitest": "^1.6.1",
       },
-    },
-    "packages/typescript-config": {
-      "name": "@outfitter/typescript-config",
-      "version": "1.0.4",
     },
     "shared": {
       "name": "@outfitter/shared",
@@ -370,15 +348,11 @@
 
     "@outfitter/contracts": ["@outfitter/contracts@workspace:packages/contracts/ts"],
 
-    "@outfitter/contracts-zod": ["@outfitter/contracts-zod@workspace:packages/contracts-zod"],
-
     "@outfitter/fieldguides": ["@outfitter/fieldguides@workspace:packages/fieldguides"],
 
     "@outfitter/shared": ["@outfitter/shared@workspace:shared"],
 
     "@outfitter/types": ["@outfitter/types@workspace:packages/types"],
-
-    "@outfitter/typescript-config": ["@outfitter/typescript-config@workspace:packages/typescript-config"],
 
     "@oven/bun-darwin-aarch64": ["@oven/bun-darwin-aarch64@1.2.19", "", { "os": "darwin", "cpu": "arm64" }, "sha512-pJBuez9gwR03Wjtk4hSSBA6QgNdhvPLbrxU4DDzVY8Ee+Q67xNkU0CMK6rFdQF8Qetj2R+Vf8AJDlwAc1QdG1w=="],
 

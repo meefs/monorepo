@@ -11,7 +11,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "bunx tsc",
+    "build": "npx tsc",
     "dev": "bun src/index.ts",
     "test": "bun test",
     "type-check": "bunx tsc --noEmit",

@@ -76,8 +76,8 @@
     "build:tsc": "tsc --project tsconfig.build.json",
     "dev": "tsc --project tsconfig.build.json --watch",
     "clean": "rm -rf dist",
-    "test": "vitest",
-    "test:run": "vitest --run",
+    "test": "bun test",
+    "test:run": "bun test --run",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
