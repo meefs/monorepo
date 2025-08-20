@@ -16,13 +16,14 @@
     "developer-tools"
   ],
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./typescript/base": "./configs/typescript/base.json",
     "./typescript/next": "./configs/typescript/next.json",
@@ -39,8 +40,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest",
-    "test:run": "vitest run",
+    "test": "bun test",
+    "test:run": "bun test --run",
     "type-check": "tsc --noEmit",
     "lint": "bun x ultracite lint",
     "format": "bun x ultracite format",

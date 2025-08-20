@@ -23,8 +23,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
-    "test": "vitest",
-    "prepublishOnly": "pnpm run build"
+    "test": "bun test",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
     "@eslint/js": "^9.2.0",
