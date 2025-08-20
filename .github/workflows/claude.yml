@@ -12,20 +12,28 @@ on:
 
 jobs:
   claude:
-    # Only trigger for human comments, not bot comments
+    # Allow specific bots (@copilot, @devin, @coderabbitai) and all humans to trigger Claude
     if: |
       (github.event_name == 'issue_comment' && 
        contains(github.event.comment.body, '@claude') &&
-       github.event.comment.user.type != 'Bot') ||
+       (github.event.comment.user.type != 'Bot' || 
+        github.event.comment.user.login == 'copilot[bot]' ||
+        github.event.comment.user.login == 'devin[bot]' ||
+        github.event.comment.user.login == 'coderabbitai[bot]')) ||
       (github.event_name == 'pull_request_review_comment' && 
        contains(github.event.comment.body, '@claude') &&
-       github.event.comment.user.type != 'Bot') ||
+       (github.event.comment.user.type != 'Bot' ||
+        github.event.comment.user.login == 'copilot[bot]' ||
+        github.event.comment.user.login == 'devin[bot]' ||
+        github.event.comment.user.login == 'coderabbitai[bot]')) ||
       (github.event_name == 'pull_request_review' && 
        contains(github.event.review.body, '@claude') &&
-       github.event.review.user.type != 'Bot') ||
+       (github.event.review.user.type != 'Bot' ||
+        github.event.review.user.login == 'copilot[bot]' ||
+        github.event.review.user.login == 'devin[bot]' ||
+        github.event.review.user.login == 'coderabbitai[bot]')) ||
       (github.event_name == 'issues' && 
-       (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) &&
-       github.event.issue.user.type != 'Bot')
+       (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,6 +79,9 @@ jobs:
           # claude_env: |
           #   NODE_ENV: test
 
-# This workflow responds to explicit @claude mentions only
-# It ignores bot comments to prevent infinite loops with CodeRabbit and other bots
+# This workflow responds to explicit @claude mentions
+# Allowed triggers:
+# - All human comments with @claude
+# - Specific bot comments: @copilot, @devin, @coderabbitai
+# All other bots are ignored to prevent unwanted automation loops
 
