@@ -2,13 +2,13 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened]  # Trigger when PR is first opened
+    types: [opened, ready_for_review, review_requested]  # Trigger on open, draft→ready, or review request
   issue_comment:
     types: [created]
 
 jobs:
   claude-review:
-    # Run on PR open OR when someone comments "@claude review"
+    # Run on PR events (open, ready_for_review, review_requested) OR when someone comments "@claude review"
     # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot]) and all humans
     env:
       ALLOWED_BOTS: '["copilot[bot]", "devin[bot]", "coderabbitai[bot]"]'
@@ -95,7 +95,9 @@ jobs:
 
 # This workflow runs automatically when:
 # 1. A PR is first opened (not draft)
-# 2. Someone comments "@claude review" on a PR
+# 2. A draft PR is marked as ready for review
+# 3. Someone requests a review on the PR
+# 4. Someone comments "@claude review" on a PR
 #
 # Review types:
 # - Initial open: Full review with instructions for future reviews
