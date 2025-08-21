@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
+import { logger } from '../../utils/logger.js';
 
 const { readJSON, pathExists } = fsExtra;
 
@@ -45,40 +46,40 @@ export async function listFieldguides(options: {
       installedFieldguides = config.fieldguides || config.supplies || []; // Support old 'supplies' key for backwards compatibility
     }
   } catch (e) {
-    console.error(
-      chalk.red('Failed to read .outfitter/config.json:'),
-      (e as Error).message
+    logger.error(
+      `Failed to read .outfitter/config.json: ${(e as Error).message}`
     );
     return;
   }
 
   if (options.installed) {
     if (installedFieldguides.length === 0) {
-      console.log(chalk.yellow('No fieldguides installed yet.'));
+      logger.warn('No fieldguides installed yet.');
       return;
     }
 
-    console.log(chalk.cyan('Installed fieldguides:\n'));
+    logger.info(chalk.cyan('Installed fieldguides:'));
+    logger.newline();
     installedFieldguides.forEach((fieldguide) => {
-      console.log(`  ${chalk.green('✓')} ${fieldguide}`);
+      logger.log(`  ${chalk.green('✓')} ${fieldguide}`);
     });
   } else {
-    console.log(chalk.cyan('Available fieldguides:\n'));
+    logger.info(chalk.cyan('Available fieldguides:'));
+    logger.newline();
     Object.entries(availableFieldguides).forEach(
       ([fieldguide, description]) => {
         const isInstalled = installedFieldguides.includes(fieldguide);
         const status = isInstalled ? chalk.green('✓') : chalk.gray('○');
         const name = isInstalled ? chalk.green(fieldguide) : fieldguide;
-        console.log(`  ${status} ${name}`);
-        console.log(`    ${chalk.gray(description)}\n`);
+        logger.log(`  ${status} ${name}`);
+        logger.log(`    ${chalk.gray(description)}`);
+        logger.newline();
       }
     );
 
     if (installedFieldguides.length === 0) {
-      console.log(
-        chalk.yellow(
-          '\nNo fieldguides installed yet. Run "outfitter fg add <fieldguide>" to get started.'
-        )
+      logger.warn(
+        'No fieldguides installed yet. Run "outfitter fg add <fieldguide>" to get started.'
       );
     }
   }

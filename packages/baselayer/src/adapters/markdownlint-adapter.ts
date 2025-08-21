@@ -35,8 +35,8 @@ export class MarkdownlintAdapter extends BaseAdapter {
       args.push('--fix');
     }
 
-    // Use glob pattern to match template behavior
-    args.push('"**/*.{md,mdx,mdc}"');
+    // Use filtered files instead of ignoring them
+    args.push(...filteredFiles);
 
     const result = await this.executeCommand('bunx', args);
 
@@ -72,8 +72,8 @@ export class MarkdownlintAdapter extends BaseAdapter {
       args.push('--fix');
     }
 
-    // Use glob pattern to match template behavior
-    args.push('"**/*.{md,mdx,mdc}"');
+    // Use filtered files instead of ignoring them
+    args.push(...filteredFiles);
 
     const result = await this.executeCommand('bunx', args);
 

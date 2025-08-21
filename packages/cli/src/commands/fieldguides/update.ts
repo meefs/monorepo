@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import ora from 'ora';
+import { logger } from '../../utils/logger.js';
 
 const { pathExists } = fsExtra;
 
@@ -32,22 +33,22 @@ export async function updateFieldguides(options: {
   // TODO: validate config schema once implemented
 
   if (options.check) {
-    console.log(chalk.cyan('Checking for updates...\n'));
+    logger.info(chalk.cyan('Checking for updates...'));
+    logger.newline();
 
     // TODO: In real implementation, check against registry
-    console.log(
+    logger.log(
       chalk.yellow('⚠') +
         '  typescript-standards: ' +
         chalk.green('v1.2.0') +
         ' → ' +
         chalk.cyan('v1.3.0')
     );
-    console.log(`${chalk.green('✓')}  react-patterns: up to date`);
-    console.log(`${chalk.green('✓')}  testing-standards: up to date`);
+    logger.log(`${chalk.green('✓')}  react-patterns: up to date`);
+    logger.log(`${chalk.green('✓')}  testing-standards: up to date`);
 
-    console.log(
-      `\n${chalk.gray('Run "outfitter fg update" to install updates')}`
-    );
+    logger.newline();
+    logger.log(chalk.gray('Run "outfitter fg update" to install updates'));
   } else {
     const spinner = ora('Updating fieldguides...').start();
 
@@ -57,8 +58,9 @@ export async function updateFieldguides(options: {
 
       spinner.succeed('Fieldguides updated successfully!');
 
-      console.log(`\n${chalk.green('Updated:')}`);
-      console.log('  • typescript-standards: v1.2.0 → v1.3.0');
+      logger.newline();
+      logger.success('Updated:');
+      logger.log('  • typescript-standards: v1.2.0 → v1.3.0');
     } catch (error) {
       spinner.fail('Failed to update fieldguides');
       throw error;
