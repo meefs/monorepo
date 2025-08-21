@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import { ErrorCode, failure, type Result, success, makeError, type AppError } from '@outfitter/contracts';
+import { logger } from '../../utils/logger.js';
 
 const { readJSON, writeJSON, pathExists } = fsExtra;
 
@@ -98,7 +99,7 @@ export async function manageFieldguideConfig(
       // Initialize if needed
       if (!(await pathExists(configPath))) {
         // TODO: Create minimal config
-        console.log(chalk.yellow('Initializing fieldguide configuration...'));
+        logger.warn('Initializing fieldguide configuration...');
       }
 
       const fieldguideCount = (

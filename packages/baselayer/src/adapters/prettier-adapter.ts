@@ -37,8 +37,8 @@ export class PrettierAdapter extends BaseAdapter {
       args.push('--write');
     }
 
-    // Use glob pattern to match template behavior
-    args.push('"**/*.{json,yaml,yml}"');
+    // Use filtered files instead of ignoring them
+    args.push(...filteredFiles);
 
     const result = await this.executeCommand('bunx', args);
 
@@ -76,8 +76,8 @@ export class PrettierAdapter extends BaseAdapter {
       args.push('--check');
     }
 
-    // Use glob pattern to match template behavior
-    args.push('"**/*.{json,yaml,yml}"');
+    // Use filtered files instead of ignoring them
+    args.push(...filteredFiles);
 
     const result = await this.executeCommand('bunx', args);
 

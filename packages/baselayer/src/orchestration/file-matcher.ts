@@ -102,7 +102,17 @@ export class FileMatcher {
     const { cwd = process.cwd(), ignore = [], onlyStaged = false } = options;
 
     if (onlyStaged) {
-      return this.getStagedFiles(cwd);
+      const stagedFiles = await this.getStagedFiles(cwd);
+      
+      // Filter staged files by provided patterns
+      if (patterns.length === 0) {
+        return stagedFiles;
+      }
+
+      const { minimatch } = await import('minimatch');
+      return stagedFiles.filter((file) =>
+        patterns.some((pattern) => minimatch(file, pattern))
+      );
     }
 
     const defaultIgnore = [

@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import ora from 'ora';
+import { logger } from '../../utils/logger.js';
 
 const { readJSON, writeJSON, pathExists } = fsExtra;
 
@@ -68,15 +69,15 @@ export async function addFieldguides(
     spinner.succeed(`Added ${newFieldguides.length} new fieldguides`);
 
     if (newFieldguides.length > 0) {
-      console.log(`\n${chalk.green('Added:')}`);
-      newFieldguides.forEach((f) => console.log(`  • ${f}`));
+      logger.newline();
+      logger.success('Added:');
+      newFieldguides.forEach((f) => logger.log(`  • ${f}`));
     }
 
     const skipped = fieldguides.length - newFieldguides.length;
     if (skipped > 0) {
-      console.log(
-        `\n${chalk.yellow(`Skipped ${skipped} already installed fieldguides`)}`
-      );
+      logger.newline();
+      logger.warn(`Skipped ${skipped} already installed fieldguides`);
     }
   } catch (error) {
     spinner.fail('Failed to add fieldguides');

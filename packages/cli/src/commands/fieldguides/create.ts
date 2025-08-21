@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import inquirer from 'inquirer';
 import ora from 'ora';
+import { logger } from '../../utils/logger.js';
 
 const { ensureDir, writeJSON, pathExists } = fsExtra;
 
@@ -49,10 +50,8 @@ export async function createFieldguideConfig(
 
   // Check if already initialized
   if ((await pathExists(outfitterDir)) && !options.force) {
-    console.error(
-      chalk.red(
-        'Fieldguide configuration already exists. Use --force to reinitialize.'
-      )
+    logger.error(
+      'Fieldguide configuration already exists. Use --force to reinitialize.'
     );
     process.exit(1);
   }
@@ -94,12 +93,14 @@ export async function createFieldguideConfig(
 
     spinner.succeed('Fieldguide configuration created successfully!');
 
-    console.log(`\n${chalk.green('✓')} Created .outfitter/config.json`);
-    console.log(`\n${chalk.cyan('Next steps:')}`);
-    console.log(
+    logger.newline();
+    logger.success('✓ Created .outfitter/config.json');
+    logger.newline();
+    logger.info(chalk.cyan('Next steps:'));
+    logger.log(
       `  1. Run ${chalk.yellow('outfitter fg add <fieldguide>')} to add specific fieldguides`
     );
-    console.log(
+    logger.log(
       `  2. Run ${chalk.yellow('outfitter fg list')} to see available fieldguides`
     );
   } catch (error) {
