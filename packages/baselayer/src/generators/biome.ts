@@ -1,54 +1,93 @@
-import { execSync } from 'node:child_process';
+import { $ } from 'bun';
 import { failure, type Result, success } from '@outfitter/contracts';
 import type { BaselayerConfig } from '../schemas/baselayer-config.js';
 
+interface BiomeConfig {
+  $schema: string;
+  extends: string[];
+  javascript?: {
+    globals: string[];
+  };
+  json?: {
+    parser: {
+      allowComments: boolean;
+      allowTrailingCommas: boolean;
+    };
+  };
+  files?: {
+    ignoreUnknown?: boolean;
+    ignore?: string[];
+  };
+  vcs?: {
+    useIgnoreFile: boolean;
+  };
+  [key: string]: unknown;
+}
+
 /**
- * Generate biome.json configuration with Ultracite base and smart overrides
+ * Generate biome.json configuration with Ultracite zero-config approach
+ * 
+ * When using Ultracite, we should use minimal configuration and let
+ * the preset handle all the rule configurations. This makes the setup
+ * more durable and automatically compatible with Biome updates.
  */
 export function generateBiomeConfig(config?: BaselayerConfig): string {
-  const base = {
-    $schema: 'https://biomejs.dev/schemas/1.9.4/schema.json',
+  // Use latest Biome schema version
+  // Note: Ultracite will handle all rule configurations
+  const base: BiomeConfig = {
+    $schema: 'https://biomejs.dev/schemas/2.2.0/schema.json',
     extends: ['ultracite'],
   };
 
-  // Smart exclusions based on enabled tools
-  const excludes: string[] = [];
+  // Only add project-specific configuration that doesn't conflict with Ultracite
   
-  // Always exclude common build/dependency files
-  excludes.push(
-    'node_modules/**',
-    'dist/**',
-    'build/**',
-    '.next/**',
-    'out/**',
-    'coverage/**',
-    '*.min.js',
-    '*.min.css'
-  );
-
-  // Add project-specific exclusions
-  if (config?.project?.type === 'monorepo') {
-    excludes.push('packages/**/node_modules/**');
+  // Add global variables if needed (e.g., for Bun projects)
+  if (config?.project?.packageManager === 'bun') {
+    base.javascript = {
+      globals: ['Bun'],
+    };
   }
 
-  // Add custom ignore patterns
-  if (config?.ignore) {
-    excludes.push(...config.ignore);
-  }
-
-  const result = {
-    ...base,
-    files: {
-      ignore: excludes,
+  // Add JSON parser settings for better developer experience
+  base.json = {
+    parser: {
+      allowComments: true,
+      allowTrailingCommas: true,
     },
   };
 
-  // Apply user overrides
-  if (config?.overrides?.biome) {
-    Object.assign(result, config.overrides.biome);
+  // Configure file handling
+  const files: NonNullable<BiomeConfig['files']> = {
+    ignoreUnknown: true,
+  };
+
+  // Only add ignore patterns if custom ones are provided
+  // Let Ultracite handle the default ignores
+  if (config?.ignore && config.ignore.length > 0) {
+    files.ignore = config.ignore;
   }
 
-  return JSON.stringify(result, null, 2);
+  // For monorepos, add specific ignore patterns
+  if (config?.project?.type === 'monorepo') {
+    files.ignore = files.ignore || [];
+    files.ignore.push('packages/**/node_modules/**');
+  }
+
+  // Always add files config if we have any settings
+  base.files = files;
+
+  // Enable VCS integration for better Git support
+  base.vcs = {
+    useIgnoreFile: true,
+  };
+
+  // Apply user overrides last (but warn that this might conflict with Ultracite)
+  let finalConfig = base;
+  if (config?.overrides?.biome) {
+    finalConfig = { ...base, ...config.overrides.biome };
+  }
+
+  return JSON.stringify(finalConfig, null, 2);
 }
 
 /**
@@ -57,10 +96,10 @@ export function generateBiomeConfig(config?: BaselayerConfig): string {
 export async function installBiomeConfig(config?: BaselayerConfig): Promise<Result<void, Error>> {
   try {
     // Ultracite init handles installation and basic setup
-    execSync('bunx ultracite init --yes', {
-      stdio: 'inherit',
+    await $({
       env: { ...process.env, FORCE_COLOR: '1' },
-    });
+      stdio: ['inherit', 'inherit', 'inherit'],
+    })`bunx ultracite init --yes`;
     return success(undefined);
   } catch (error) {
     const err = error as Error;
