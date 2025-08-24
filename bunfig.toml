@@ -1,5 +1,6 @@
 # Bun configuration for @outfitter/monorepo
 # https://bun.sh/docs/runtime/configuration
+# Optimized for both local development and remote agent environments
 
 [install]
 # Match pnpm's behavior for workspace packages

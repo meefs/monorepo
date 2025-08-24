@@ -33,15 +33,23 @@ import { prettierConfig } from '@outfitter/baselayer/prettier-config';
 import { changesetConfig } from '@outfitter/baselayer/changeset-config';
 ```
 
-## Development
+## Quick Start
 
 **Requirements:**
 
-- Bun 1.2.19+
-- Node.js 18+ LTS
+- Bun 1.2.19
+- Node.js ≥ 20
 
 ```bash
-# Install dependencies
+# One-command setup (installs tools, dependencies, and verifies setup)
+bun run setup
+# or
+./scripts/setup.sh
+
+# Windows users (if Git Bash/WSL not available)
+bun run setup:win
+
+# Manual setup
 bun install
 
 # Build all packages (contracts builds first, then everything else)

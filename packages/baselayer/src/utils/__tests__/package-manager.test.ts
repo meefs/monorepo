@@ -73,9 +73,9 @@ describe('package-manager utilities', () => {
       }
     });
 
-    it('should detect bun from bun.lockb', async () => {
+    it('should detect bun from bun.lock', async () => {
       vi.mocked(fs.fileExists).mockImplementation(async (path) =>
-        success(path.endsWith('bun.lockb'))
+        success(path.endsWith('bun.lock'))
       );
 
       const result = await detectPackageManager();
@@ -84,7 +84,7 @@ describe('package-manager utilities', () => {
       if (isSuccess(result)) {
         expect(result.data).toEqual({
           type: 'bun',
-          lockFile: 'bun.lockb',
+          lockFile: 'bun.lock',
         });
       }
     });

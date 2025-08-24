@@ -55,6 +55,8 @@ yarn.lock
 
 # Bun
 .bun/
+# Ignore binary lockfiles (we use text-based bun.lock)
+bun.lockb
 
 # Agent files
 !.agent/

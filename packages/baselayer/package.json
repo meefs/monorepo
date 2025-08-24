@@ -61,7 +61,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "2.2.2",
     "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
@@ -73,7 +73,7 @@
     "stylelint": "^16.23.1",
     "stylelint-config-standard": "^39.0.0",
     "typescript": "^5.9.2",
-    "ultracite": "5.1.2",
+    "ultracite": "5.2.5",
     "vitest": "^2.0.0"
   },
   "peerDependencies": {

@@ -14,6 +14,9 @@
     "shared"
   ],
   "scripts": {
+    "setup": "bash ./setup.sh",
+    "setup:ci": "bash ./setup.sh --skip-build",
+    "setup:win": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1",
     "dev": "echo 'Use bun run dev in specific package directory'",
     "build": "bun --filter=\"@outfitter/contracts\" run build && bun --filter=\"@outfitter/baselayer\" run build && bun --filter=\"*\" run build",
     "build:all": "bun run build",
@@ -36,10 +39,10 @@
     "check:all": "bun run format && bun run lint && bun run lint:md && bun run type-check",
     "config:mdlint": "bun ./scripts/generate-mdlint-config.mjs",
     "check:imports": "bun ./scripts/check-contracts-imports.ts",
-    "prepare": "lefthook install && bun config:mdlint"
+    "prepare": "lefthook install && bun run config:mdlint"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
+    "@biomejs/biome": "2.2.2",
     "@changesets/cli": "^2.29.5",
     "@types/bun": "latest",
     "@types/glob": "^8.1.0",
@@ -49,7 +52,7 @@
     "markdownlint-cli2": "^0.15.0",
     "type-fest": "^4.41.0",
     "typescript": "^5.9.2",
-    "ultracite": "^5.2.4",
+    "ultracite": "5.2.4",
     "vitest": "^1.6.1"
   },
   "license": "MIT",

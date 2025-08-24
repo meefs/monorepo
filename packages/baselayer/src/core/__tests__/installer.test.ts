@@ -163,7 +163,7 @@ describe('installer', () => {
 
     it('should suppress output when silent', async () => {
       vi.mocked(pm.getPackageManager).mockResolvedValue(
-        success({ type: 'bun', lockFile: 'bun.lockb' })
+        success({ type: 'bun', lockFile: 'bun.lock' })
       );
 
       vi.mocked(execSync).mockImplementation(() => '');
