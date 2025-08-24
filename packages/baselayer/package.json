@@ -38,11 +38,11 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "bun ./build.mjs",
+    "dev": "bun --watch src/index.ts",
     "test": "bun test",
     "test:run": "bun test --run",
-    "type-check": "tsc --noEmit",
+    "type-check": "bunx tsc --noEmit",
     "lint": "bun x ultracite lint",
     "format": "bun x ultracite format",
     "ci": "bun run type-check && bun run test:run",
@@ -61,7 +61,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "2.2.2",
     "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
@@ -72,9 +72,8 @@
     "publint": "^0.3.12",
     "stylelint": "^16.23.1",
     "stylelint-config-standard": "^39.0.0",
-    "tsup": "^8.1.0",
-    "typescript": "^5.4.5",
-    "ultracite": "5.1.2",
+    "typescript": "^5.9.2",
+    "ultracite": "5.2.5",
     "vitest": "^2.0.0"
   },
   "peerDependencies": {

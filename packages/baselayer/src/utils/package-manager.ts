@@ -24,7 +24,7 @@ const LOCK_FILES: Record<PackageManager, string> = {
   npm: 'package-lock.json',
   yarn: 'yarn.lock',
   pnpm: 'pnpm-lock.yaml',
-  bun: 'bun.lockb',
+  bun: 'bun.lock',
 };
 
 const COMMANDS = {
@@ -115,7 +115,7 @@ export function getInstallCommand(pm: PackageManager): string {
  */
 export function getAddCommand(
   pm: PackageManager,
-  dev,
+  dev: boolean,
   packages: string[]
 ): string {
   const command = dev ? COMMANDS.addDev[pm] : COMMANDS.add[pm];
@@ -225,7 +225,7 @@ export function getCIFlags(pm: PackageManager): string {
     npm: '--ci',
     yarn: '--frozen-lockfile',
     pnpm: '--frozen-lockfile',
-    bun: '',
+    bun: '--frozen-lockfile',
   };
 
   return flags[pm];

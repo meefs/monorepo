@@ -1,6 +1,6 @@
 # @outfitter/monorepo
 
-[![Built with Bun](https://img.shields.io/badge/Built%20with-Bun-pink?logo=bun)](https://bun.sh) [![Powered by Turborepo](https://img.shields.io/badge/Powered%20by-Turborepo-blue?logo=turborepo)](https://turbo.build/repo) [![Cached by Cloudflare](https://img.shields.io/badge/Cached%20by-Cloudflare-orange?logo=cloudflare)](https://workers.cloudflare.com) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Built with Bun](https://img.shields.io/badge/Built%20with-Bun-pink?logo=bun)](https://bun.sh) [![Native Workspaces](https://img.shields.io/badge/Native-Workspaces-blue?logo=bun)](https://bun.sh) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Core shared configurations and utilities for Outfitter projects.
 
@@ -33,15 +33,23 @@ import { prettierConfig } from '@outfitter/baselayer/prettier-config';
 import { changesetConfig } from '@outfitter/baselayer/changeset-config';
 ```
 
-## Development
+## Quick Start
 
 **Requirements:**
 
-- Bun 1.2.19+
-- Node.js 18+ LTS
+- Bun 1.2.19
+- Node.js ≥ 20
 
 ```bash
-# Install dependencies
+# One-command setup (installs tools, dependencies, and verifies setup)
+bun run setup
+# or
+./scripts/setup.sh
+
+# Windows users (if Git Bash/WSL not available)
+bun run setup:win
+
+# Manual setup
 bun install
 
 # Build all packages (contracts builds first, then everything else)
@@ -63,7 +71,7 @@ This monorepo is optimized for speed:
 
 - **Full build**: ~626ms (5-6x faster than baseline)
 - **Individual packages**: 18-24ms bundling (8-10x faster)
-- **Turborepo + Cloudflare caching**: Intelligent build acceleration
+- **Bun native workspace filtering**: Intelligent task orchestration
 - **Bun hybrid builds**: JavaScript bundling + TypeScript declarations
 
 ## Publishing

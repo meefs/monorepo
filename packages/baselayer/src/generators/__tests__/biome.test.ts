@@ -71,7 +71,17 @@ describe('generateBiomeConfig', () => {
     expect(parsed.files.ignore).toBeUndefined();
   });
 
+<<<<<<< HEAD
+  it('should apply user overrides with warning', () => {
+    const originalWarn = console.warn;
+    let warnMessage = '';
+    console.warn = (msg: string) => {
+      warnMessage = msg;
+    };
+    
+=======
   it('should apply user overrides', () => {
+>>>>>>> origin/main
     const baselayerConfig: BaselayerConfig = {
       overrides: {
         biome: {
@@ -88,25 +98,56 @@ describe('generateBiomeConfig', () => {
     expect(parsed.formatter).toMatchObject({
       indentStyle: 'tab'
     });
+    
+    expect(warnMessage).toContain('Warning: Applying custom Biome overrides may conflict');
+    
+    console.warn = originalWarn;
   });
+<<<<<<< HEAD
+});
+
+describe('installBiomeConfig', () => {
+  it('should run ultracite init with correct arguments', async () => {
+    // Mock execSync using module replacement
+    const mockModule = mock.module('node:child_process', () => ({
+      execSync: mock((...args: any[]) => {
+        expect(args[0]).toBe('bunx ultracite init --yes');
+        expect(args[1]).toMatchObject({
+          stdio: 'inherit',
+          env: expect.objectContaining({
+            FORCE_COLOR: '1',
+          }),
+        });
+        return '';
+=======
           }),
           stdio: ['inherit', 'inherit', 'inherit'],
         });
         return Promise.resolve();
+>>>>>>> origin/main
       }),
     }));
 
     const result = await installBiomeConfig();
     expect(isSuccess(result)).toBe(true);
+<<<<<<< HEAD
+=======
   });
+>>>>>>> origin/main
   });
 
   it('should handle errors from ultracite init', async () => {
     const error = new Error('Command failed');
     
+<<<<<<< HEAD
+    // Mock execSync to throw an error
+    const mockModule = mock.module('node:child_process', () => ({
+      execSync: mock(() => {
+=======
     // Mock Bun.$ to throw an error
     mock.module('bun', () => ({
       $: mock(() => {
+>>>>>>> origin/main
         throw error;
       }),
     }));

@@ -8,7 +8,7 @@ pre-commit:
       stage_fixed: false
     ultracite-format:
       glob: "*.{js,ts,jsx,tsx}"
-      run: bunx ultracite format --write {staged_files}
+      run: bunx ultracite format {staged_files}
       stage_fixed: true
     markdown:
       glob: "*.{md,mdx,mdc}"
@@ -25,6 +25,6 @@ commit-msg:
 pre-push:
   commands:
     types:
-      run: turbo run type-check --affected
+      run: bun --filter="*" run type-check
     test:
-      run: turbo run test --affected
+      run: bun --filter="*" run test

@@ -102,8 +102,12 @@ export async function installBiomeConfig(config?: BaselayerConfig): Promise<Resu
     })`bunx ultracite init --yes`;
     return success(undefined);
   } catch (error) {
-    const err = error as Error;
-    return failure(err);
+    const e = error as any;
+    const enriched = new Error(
+      `Failed to initialise Biome via Ultracite (command: "bunx ultracite init --yes", status: ${e?.status ?? 'unknown'}, signal: ${e?.signal ?? 'unknown'})`,
+      { cause: e as Error }
+    );
+    return failure(enriched);
   }
 }
 
